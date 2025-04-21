@@ -1,4 +1,103 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – Kitex</title><link>https://www.cloudwego.io/zh/projects/kitex/</link><description>Recent content in Kitex on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Fri, 03 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudwego.io/zh/projects/kitex/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release</title><link>https://www.cloudwego.io/zh/blog/releases/kitex/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/releases/kitex/</guid><description/></item><item><title>Blog: Kitex Release v0.12.0</title><link>https://www.cloudwego.io/zh/blog/2025/01/03/kitex-release-v0.12.0/</link><pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/01/03/kitex-release-v0.12.0/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – Kitex</title><link>https://www.cloudwego.io/zh/projects/kitex/</link><description>Recent content in Kitex on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>zh</language><lastBuildDate>Wed, 09 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudwego.io/zh/projects/kitex/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release</title><link>https://www.cloudwego.io/zh/blog/releases/kitex/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/releases/kitex/</guid><description/></item><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/zh/blog/2025/04/09/kitex-release-v0.13.0/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/04/09/kitex-release-v0.13.0/</guid><description>
+&lt;blockquote>
+&lt;p>建议直接升级 Kitex 版本到 v0.13.1，因为我们对 v0.13.0 里 gRPC Client 潜在的 Goroutine 泄漏问题进行了修复&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="重要变更介绍">&lt;strong>重要变更介绍&lt;/strong>&lt;/h2>
+&lt;h3 id="新特性">&lt;strong>新特性&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>新流式接口 StreamX 支持 gRPC，存量 Kitex gRPC 用户可迁移&lt;/strong>&lt;/p>
+&lt;p>v0.12.0 发布了 StreamX 接口优化流式体验，支持了自定义流式协议 TTHeader Streaming，但未支持 gRPC，导致存量用户无法迁移。&lt;/p>
+&lt;p>v0.13.0 对 StreamX 支持 gRPC 后，用户可迁移至 StreamX 新接口，Server 端可以同时兼容两个流式协议，无需担心接口迁移后的协议兼容性问题。&lt;/p>
+&lt;p>特别地，StreamX 在适配 gRPC 时，发现依然有一些不便利的问题，为带来更好的接口使用体验，因此对 StreamX 接口做了二次调整。&lt;/p>
+&lt;p>已经使用 v0.12.* 的 StreamX 用户会带来影响，在这里表示抱歉。&lt;/p>
+&lt;p>详见 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/basic-feature/streamx">StreamX 用户文档&lt;/a>。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Prutal - Protobuf 的无生成代码序列化库&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://github.com/cloudwego/prutal">Prutal&lt;/a> 正式开源，对标 Thrift 的 &lt;a href="https://github.com/cloudwego/frugal">Frugal&lt;/a> 库，新版本 Kitex 默认集成 Prutal。特点：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>产物体积最小化，只需生成结构体&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>使用与 Frugal 相似的反射优化，性能优于官方 Protobuf&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>兼容官方 Protobuf 及衍生版本的生成代码&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>详细信息参考 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/code-gen/prutal">Prutal&lt;/a>。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="功能体验优化">&lt;strong>功能/体验优化&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>TTHeader Streaming 支持配置接口级别 Recv 超时&lt;/strong>&lt;/p>
+&lt;p>本版本 TTHeader Streaming 在原有的 Kitex Client 级别基础上，额外支持接口级别的 Recv 超时配置，配置更为灵活。&lt;/p>
+&lt;p>详见 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/basic-feature/streamx/stream&amp;#43;timeout&amp;#43;control/">StreamX 流超时控制&lt;/a>。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Thrift 默认传输协议由 Buffered 改为 Framed&lt;/strong>&lt;/p>
+&lt;p>这个变更可以利用 FastCodec 以获得更高的编解码性能。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="其他">&lt;strong>其他&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>产物简化&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>默认不生成 Set 数据结构的重复校验代码与各结构体的 DeepEqual 函数&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>若只想恢复 DeepEqual，生成命令追加&lt;code>-thrift gen_deep_equal=true&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>若想恢复 Set 的重复校验，生成命令追加&lt;code>-thrift validate_set=true, -thrift gen_deep_equal=true&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>默认不生成 Apache Codec 相关代码&lt;/p>
+&lt;ul>
+&lt;li>若想恢复这部分代码，生成命令追加&lt;code>-thrift no_default_serdes=false&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Go 支持版本变化&lt;/p>
+&lt;p>支持版本 Go 1.19~1.24，最低支持版本变为 Go 1.19，如果 Go 版本过低，编译时会有提示：&lt;code>note: module requires Go 1.19&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="详细变更">&lt;strong>详细变更&lt;/strong>&lt;/h2>
+&lt;h3 id="feature">Feature&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1719">#1719&lt;/a>] feat: prutal for replacing protoc&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1736">#1736&lt;/a>] feat(ttstream): support WithRecvTimeout stream call option&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1702">#1702&lt;/a>] feat(gRPC): add grpc client conn dump to help debug the conn and stream status&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1723">#1723&lt;/a>] feat(codec/thrift): use fastcodec/frugal if apache codec not available&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1724">#1724&lt;/a>] feat: add tail option to support for delayed initialization of some client options&lt;/p>
+&lt;h3 id="optimize">Optimize&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1728">#1728&lt;/a>] optimize(apache): remove apache codec gen and set default protocol from buffered to framed&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1732">#1732&lt;/a>] optimize(rpcinfo): purify the transport protocol of rpcinfo in a single rpc request&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1711">#1711&lt;/a>] optimize(tool): disable set validate and deep equal code gen to simplify kitex_gen&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1717">#1717&lt;/a>] optimize(gRPC): return more detailed error when received invalid http2 frame&lt;/p>
+&lt;h3 id="fix">Fix&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1734">#1734&lt;/a>] fix(ttstream): adjust stream state transition and remove all SetFinalizer to avoid memory leak&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1735">#1735&lt;/a>] fix(generic): support both relative and absolute check for idl includes parse to make it compatible with generation tool&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1725">#1725&lt;/a>] fix: code gen import issue for streamx mode, stream call judgement bug and set ttheader streaming as default&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1727">#1727&lt;/a>] fix(tool): fix tool UseStdLib remains unexcepted lib issue.&lt;/p>
+&lt;h3 id="refactor">Refactor&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1658">#1658&lt;/a>] refactor: streamx api to adapt both grpc and ttheader streaming protocol and provide more user-friendly interface&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1729">#1729&lt;/a>] refactor(tool): move pb tpl code to sep pkg&lt;/p>
+&lt;h3 id="chore">Chore&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1743">#1743&lt;/a>] chore: update dependencies version&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1740">#1740&lt;/a>] chore(generic): deprecate NewThriftContentProvider&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1741">#1741&lt;/a>] chore(streamx): remove redundant streamx package&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1738">#1738&lt;/a>] ci: fix typos &amp;amp; crate-ci/typos&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1737">#1737&lt;/a>] chore: update dependency and change go support to 1.19-1.24&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1720">#1720&lt;/a>] Revert &amp;ldquo;fix(ttstream): pingpong method refers to server interface defined in Kitex generation code when streamx is enabled and there are other streaming methods&amp;rdquo;&lt;/p></description></item><item><title>Blog: Kitex Release v0.12.0</title><link>https://www.cloudwego.io/zh/blog/2025/01/03/kitex-release-v0.12.0/</link><pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/01/03/kitex-release-v0.12.0/</guid><description>
 &lt;h2 id="重要变更介绍">&lt;strong>重要变更介绍&lt;/strong>&lt;/h2>
 &lt;h3 id="精简产物建议---去-apache-thrift">精简产物建议 - 去 Apache Thrift&lt;/h3>
 &lt;p>强烈建议去 Apache Codec，解决 Apache 不兼容变更带来的编译体验问题，并能&lt;strong>减少 50% 产物体积&lt;/strong>。&lt;/p>
