@@ -1,104 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – CloudWeGo</title><link>https://www.cloudwego.io/</link><description>Recent content on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudwego.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</link><pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</guid><description>
-&lt;blockquote>
-&lt;p>We recommend upgrading directly to Kitex version v0.13.1, as we have fixed a potential Goroutine leak issue of the gRPC Client in v0.13.0.&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="introduction-to-key-changes">&lt;strong>Introduction to Key Changes&lt;/strong>&lt;/h2>
-&lt;h3 id="new-features">&lt;strong>New Features&lt;/strong>&lt;/h3>
-&lt;ol>
-&lt;li>
-&lt;p>&lt;strong>New streaming interface StreamX supports gRPC, existing Kitex gRPC users can migrate&lt;/strong>&lt;/p>
-&lt;p>v0.12.0 released the StreamX interface to optimise the streaming experience, and supported the custom streaming protocol TTHeader Streaming, but did not support gRPC. So existing users could not migrate.&lt;/p>
-&lt;p>This version supports gRPC for StreamX, users can migrate to StreamX, and the Server side can be compatible with two streaming protocols at the same time. So there is no need to worry about protocol compatibility after interface migration.&lt;/p>
-&lt;p>In particular, when adapting gRPC with StreamX, we found that there are still some inconvenient problems. In order to bring a better experience of using the interface, we have adjusted the StreamX interface for the second time, which will affect the users who have already been using StreamX. We apologise for that.&lt;/p>
-&lt;p>User documentation: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/basic-feature/streamx/">StreamX User Documentation&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>Prutal - Protobuf&amp;rsquo;s non-generated code serialisation library&lt;/strong>&lt;/p>
-&lt;p>&lt;a href="https://github.com/cloudwego/prutal">Prutal&lt;/a> is officially open source, on par with Thrift&amp;rsquo;s &lt;a href="https://github.com/cloudwego/frugal">Frugal&lt;/a>, and the new version of Kitex integrates Prutal by default.&lt;/p>
-&lt;p>Advantages:&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>Minimized Code Product Size: Generating Only Structures, No Runtime Code&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Leveraging Reflection Optimization Similar to Frugal, Achieving Over 50% Speed Increase&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Generating Code Compatible with Existing Protobuf and Derivative Versions&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>User documentation: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/code-gen/prutal/">Prutal&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="featureexperience-optimization">&lt;strong>Feature/Experience Optimization&lt;/strong>&lt;/h3>
-&lt;ol>
-&lt;li>
-&lt;p>&lt;strong>TTHeader Streaming: Support interface-level Recv timeout control&lt;/strong>&lt;/p>
-&lt;p>In addition to the existing Client level, this release of TTHeader Streaming supports interface-level Recv timeout configuration, making configuration more flexible.&lt;/p>
-&lt;p>User documentation: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/basic-feature/streamx/kitex&amp;#43;streamx&amp;#43;-&amp;#43;stream&amp;#43;timeout&amp;#43;control/">StreamX Timeout Control&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>Default Thrift transport protocol changed from Buffered to Framed&lt;/strong>&lt;/p>
-&lt;p>This change can leverage FastCodec for better performance.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="others">&lt;strong>Others&lt;/strong>&lt;/h3>
-&lt;ol>
-&lt;li>&lt;strong>Code Product Simplification&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>
-&lt;p>Kitex Tool would not generate the repeated verification code for Set data structure and the &lt;code>DeepEqual&lt;/code> function for each structure by default.&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>If you only want to restore&lt;code>DeepEqual&lt;/code>, add&lt;code>-thrift gen_deep_equal=true&lt;/code>to the generation command.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>If you want to restore the repeated verification of Set, add&lt;code>-thrift validate_set=true, -thrift gen_deep_equal=true&lt;/code>to the generation command.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>Kitex Tool would not generate the Apache Codec related code by default.&lt;/p>
-&lt;ul>
-&lt;li>If you want to restore it, add&lt;code>-thrift no_default_serdes=false&lt;/code>to the generation command.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>
-&lt;p>&lt;strong>Go Supported Version Change&lt;/strong>&lt;/p>
-&lt;p>Support version Go 1.19~1.24, the lowest supported version becomes Go 1.19.&lt;/p>
-&lt;p>if Go version is too low, there will be a prompt when compiling:&lt;code>note: module requires Go 1.19&lt;/code>.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h2 id="full-change">&lt;strong>Full Change&lt;/strong>&lt;/h2>
-&lt;h3 id="feature">Feature&lt;/h3>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1719">#1719&lt;/a>] feat: prutal for replacing protoc&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1736">#1736&lt;/a>] feat(ttstream): support WithRecvTimeout stream call option&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1702">#1702&lt;/a>] feat(gRPC): add grpc client conn dump to help debug the conn and stream status&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1723">#1723&lt;/a>] feat(codec/thrift): use fastcodec/frugal if apache codec not available&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1724">#1724&lt;/a>] feat: add tail option to support for delayed initialization of some client options&lt;/p>
-&lt;h3 id="optimize">Optimize&lt;/h3>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1728">#1728&lt;/a>] optimize(apache): remove apache codec gen and set default protocol from buffered to framed&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1732">#1732&lt;/a>] optimize(rpcinfo): purify the transport protocol of rpcinfo in a single rpc request&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1711">#1711&lt;/a>] optimize(tool): disable set validate and deep equal code gen to simplify kitex_gen&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1717">#1717&lt;/a>] optimize(gRPC): return more detailed error when received invalid http2 frame&lt;/p>
-&lt;h3 id="fix">Fix&lt;/h3>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1734">#1734&lt;/a>] fix(ttstream): adjust stream state transition and remove all SetFinalizer to avoid memory leak&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1735">#1735&lt;/a>] fix(generic): support both relative and absolute check for idl includes parse to make it compatible with generation tool&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1725">#1725&lt;/a>] fix: code gen import issue for streamx mode, stream call judgement bug and set ttheader streaming as default&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1727">#1727&lt;/a>] fix(tool): fix tool UseStdLib remains unexcepted lib issue&lt;/p>
-&lt;h3 id="refactor">Refactor&lt;/h3>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1658">#1658&lt;/a>] refactor: streamx api to adapt both grpc and ttheader streaming protocol and provide more user-friendly interface&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1729">#1729&lt;/a>] refactor(tool): move pb tpl code to sep pkg&lt;/p>
-&lt;h3 id="chore">Chore&lt;/h3>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1743">#1743&lt;/a>] chore: update dependencies version&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1740">#1740&lt;/a>] chore(generic): deprecate NewThriftContentProvider&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1741">#1741&lt;/a>] chore(streamx): remove redundant streamx package&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1738">#1738&lt;/a>] ci: fix typos &amp;amp; crate-ci/typos&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1737">#1737&lt;/a>] chore: update dependency and change go support to 1.19-1.24&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1720">#1720&lt;/a>] Revert &amp;ldquo;fix(ttstream): pingpong method refers to server interface defined in Kitex generation code when streamx is enabled and there are other streaming methods&amp;rdquo;&lt;/p></description></item><item><title>Blog: Kitex Release v0.12.0</title><link>https://www.cloudwego.io/blog/2025/01/03/kitex-release-v0.12.0/</link><pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/01/03/kitex-release-v0.12.0/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – CloudWeGo</title><link>https://www.cloudwego.io/</link><description>Recent content on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudwego.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release v0.12.0</title><link>https://www.cloudwego.io/blog/2025/01/03/kitex-release-v0.12.0/</link><pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/01/03/kitex-release-v0.12.0/</guid><description>
 &lt;h2 id="introduction-to-key-changes">&lt;strong>Introduction to Key Changes&lt;/strong>&lt;/h2>
 &lt;h3 id="simplified-product-recommendation---remove-apache-thrift-dependency">Simplified Product Recommendation - Remove Apache Thrift Dependency&lt;/h3>
 &lt;p>We strongly recommend removing Apache Codec to resolve the compilation issues caused by Apache&amp;rsquo;s incompatible changes and to &lt;strong>reduce the product size by 50%&lt;/strong>.&lt;/p>
@@ -3826,4 +3726,52 @@ In such a large-scale scenario, Hertz demonstrates remarkable stability and perf
 &lt;ul>
 &lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/60">#60&lt;/a>] docs: add icon in README.md and README_cn.md.&lt;/li>
 &lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/54">#54&lt;/a>] docs: Update README.md.&lt;/li>
+&lt;/ul></description></item><item><title>Blog: Kitex Release v0.3.2</title><link>https://www.cloudwego.io/blog/2022/06/02/kitex-release-v0.3.2/</link><pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2022/06/02/kitex-release-v0.3.2/</guid><description>
+&lt;h2 id="feature">Feature&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/473">#473&lt;/a>] feat(grpc): support short connection for gRPC unary.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/431">#431&lt;/a>] feat(limiter): extend outside limiter implementation and fix problems of rate limiter of multiplexed server.&lt;/li>
+&lt;/ul>
+&lt;h2 id="optimize">Optimize&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/465">#465&lt;/a>] optimize(ttheader): set remote address for client-side after decoding TTHeader.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/466">#466&lt;/a>] optimize(mux): wrap ErrReadTimeout with ErrRPCTimeout in mux scenario.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/425">#425&lt;/a>] optimize(limiter): promise tokens of the first second don&amp;rsquo;t exceed limit significantly.&lt;/li>
+&lt;/ul>
+&lt;h2 id="bugfix">Bugfix&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/485">#485&lt;/a>] fix(grpc): fix the incorrect integer conversion.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/474">#474&lt;/a>] fix(trans): fix detection handler panic when conn inactive early.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/445">#445&lt;/a>] fix(retry): race problems of callTimes in retry and some fields of rpcStats.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/471">#471&lt;/a>] fix(retry): callCosts race in backup request.&lt;/li>
+&lt;/ul>
+&lt;h2 id="test">Test&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/404">#404&lt;/a>] test: add unit test for pkg/retry.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/439">#439&lt;/a>, &lt;a href="https://github.com/cloudwego/kitex/pull/472">#472&lt;/a>] test: add unit test for pkg/remote/remotecli.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/462">#462&lt;/a>, &lt;a href="https://github.com/cloudwego/kitex/pull/457">#457&lt;/a>] test: add unit test for pkg/remote/trans/nphttp2/grpc.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/420">#420&lt;/a>] test: add ut for pkg/remote/trans/nphttp2.&lt;/li>
+&lt;/ul>
+&lt;h2 id="refactor">Refactor&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/464">#464&lt;/a>] refactor(ttheader): change protocol id of Kitex Protobuf in TTHeader and promise the change is compatible with the old version.&lt;/li>
+&lt;/ul>
+&lt;h2 id="chore">Chore&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/453">#453&lt;/a>, &lt;a href="https://github.com/cloudwego/kitex/pull/475">#475&lt;/a>] chore: upgrade netpoll and bytedance/gopkg.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/458">#458&lt;/a>] chore: fix ci reviewdog and pr ut didn&amp;rsquo;t run.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/454">#454&lt;/a>] chore: use self-hosted ci to optimize speed.&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/449">#449&lt;/a>] chore: fix github issue template.&lt;/li>
+&lt;/ul>
+&lt;h2 id="style">Style&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/486">#486&lt;/a>] style(trans): add comment for detection trans handler.&lt;/li>
+&lt;/ul>
+&lt;h2 id="docs">Docs&lt;/h2>
+&lt;ul>
+&lt;li>[&lt;a href="https://github.com/cloudwego/kitex/pull/482">#482&lt;/a>] docs: update FAQ of readme.&lt;/li>
+&lt;/ul>
+&lt;h2 id="dependency-change">Dependency Change&lt;/h2>
+&lt;ul>
+&lt;li>github.com/cloudwego/netpoll: v0.2.2 -&amp;gt; v0.2.4&lt;/li>
 &lt;/ul></description></item></channel></rss>
