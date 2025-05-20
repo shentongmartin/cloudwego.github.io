@@ -87,7 +87,7 @@
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1734">#1734&lt;/a>] fix(ttstream): adjust stream state transition and remove all SetFinalizer to avoid memory leak&lt;/p>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1735">#1735&lt;/a>] fix(generic): support both relative and absolute check for idl includes parse to make it compatible with generation tool&lt;/p>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1725">#1725&lt;/a>] fix: code gen import issue for streamx mode, stream call judgement bug and set ttheader streaming as default&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1727">#1727&lt;/a>] fix(tool): fix tool UseStdLib remains unexcepted lib issue.&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1727">#1727&lt;/a>] fix(tool): fix tool UseStdLib remains unexpected lib issue.&lt;/p>
 &lt;h3 id="refactor">Refactor&lt;/h3>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1658">#1658&lt;/a>] refactor: streamx api to adapt both grpc and ttheader streaming protocol and provide more user-friendly interface&lt;/p>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1729">#1729&lt;/a>] refactor(tool): move pb tpl code to sep pkg&lt;/p>
@@ -119,7 +119,7 @@
 &lt;li>
 &lt;p>&lt;strong>JSON 泛化调用支持 gRPC Streaming&lt;/strong>&lt;/p>
 &lt;p>JSON 泛化调用支持 gRPC Streaming 流式接口（仅限 client），经过 v0.10.0 试用，正式发布。&lt;/p>
-&lt;p>用户文档：&lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming">User Guide to Generic Call for Streaming&lt;/a>&lt;/p>
+&lt;p>用户文档：&lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">User Guide to Generic Call for Streaming&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
 &lt;h3 id="体验优化">体验优化&lt;/h3>
@@ -497,7 +497,7 @@ server.WithPayloadCodec(thrift.NewThriftCodecWithConfig(thrift.FrugalWrite|thrif
 &lt;li>&lt;strong>Frugal ARM 性能优化&lt;/strong>：Frugal 支持了基于反射的高性能编解码，升级到 Frugal v0.2.0 即可&lt;/li>
 &lt;li>&lt;strong>Kitex Tool 代码生成提速&lt;/strong>：提供了 &lt;code>-rapid&lt;/code> 参数，可以无需安装 Thriftgo ，且速度略有提高。下个版本之后将作为默认行为。&lt;/li>
 &lt;li>&lt;strong>多 Service 多 Handler 生成&lt;/strong>：从该版本开始，Kitex Tool 支持为每个 service 生成 handler 并统一注册到 server，详见 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/multi_service/multi_handler/">多 Service 多 Handler 生成&lt;/a>&lt;/li>
-&lt;li>&lt;strong>Streaming JSON 泛化[试用阶段]&lt;/strong>：JSON 泛化调用支持了 streaming 流式接口（仅限 client），目前正在持续优化中，并未正式发布，有兴趣可以试用，详见 &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">Generic Streaming&lt;/a>&lt;/li>
+&lt;li>&lt;strong>Streaming JSON 泛化[试用阶段]&lt;/strong>：JSON 泛化调用支持了 streaming 流式接口（仅限 client），目前正在持续优化中，并未正式发布，有兴趣可以试用，详见 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">Generic Streaming&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h3 id="其他">其他&lt;/h3>
 &lt;ol>

@@ -88,7 +88,7 @@
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1734">#1734&lt;/a>] fix(ttstream): adjust stream state transition and remove all SetFinalizer to avoid memory leak&lt;/p>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1735">#1735&lt;/a>] fix(generic): support both relative and absolute check for idl includes parse to make it compatible with generation tool&lt;/p>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1725">#1725&lt;/a>] fix: code gen import issue for streamx mode, stream call judgement bug and set ttheader streaming as default&lt;/p>
-&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1727">#1727&lt;/a>] fix(tool): fix tool UseStdLib remains unexcepted lib issue&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1727">#1727&lt;/a>] fix(tool): fix tool UseStdLib remains unexpected lib issue&lt;/p>
 &lt;h3 id="refactor">Refactor&lt;/h3>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1658">#1658&lt;/a>] refactor: streamx api to adapt both grpc and ttheader streaming protocol and provide more user-friendly interface&lt;/p>
 &lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1729">#1729&lt;/a>] refactor(tool): move pb tpl code to sep pkg&lt;/p>
@@ -988,7 +988,7 @@ The original intention is to provide valuable references for enterprise users to
 &lt;h3 id="optimization">&lt;strong>Optimization&lt;/strong>&lt;/h3>
 &lt;ol>
 &lt;li>&lt;strong>Frugal Performance Optimization&lt;/strong> : Support frugal precompile (pretouch) when new client or server, which is to reduce the impact of dynamic compilation on latency.&lt;/li>
-&lt;li>&lt;strong>Connpool Optimiztion&lt;/strong> : Refactor connection pool to improve the idle connections cleanup.&lt;/li>
+&lt;li>&lt;strong>Connpool Optimization&lt;/strong> : Refactor connection pool to improve the idle connections cleanup.&lt;/li>
 &lt;/ol>
 &lt;hr>
 &lt;h2 id="full-release-log">&lt;strong>Full Release Log&lt;/strong>&lt;/h2>
