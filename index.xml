@@ -1,4 +1,112 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – CloudWeGo</title><link>https://www.cloudwego.io/</link><description>Recent content on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudwego.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</link><pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – CloudWeGo</title><link>https://www.cloudwego.io/</link><description>Recent content on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://www.cloudwego.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release v0.14.0</title><link>https://www.cloudwego.io/blog/2025/06/26/kitex-release-v0.14.0/</link><pubDate>Thu, 26 Jun 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/06/26/kitex-release-v0.14.0/</guid><description>
+&lt;h2 id="introduction-to-key-changes">&lt;strong>Introduction to Key Changes&lt;/strong>&lt;/h2>
+&lt;h3 id="new-features">&lt;strong>New Features&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Generic Call: The generic Client supports streaming calls, allowing a single Client to handle both streaming and non-streaming scenarios&lt;/strong>&lt;/p>
+&lt;p>It supports streaming generic calls, adapting to gRPC/TTHeader Streaming and supporting map/JSON and Protobuf binary generic calls.&lt;/p>
+&lt;p>A brief code example is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">genericclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewClient&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;actualServiceName&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">g&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// Ping-Pong generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">resp&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GenericCall&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;PingPongTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">req&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// ClientStreaming generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">cliStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ClientStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;ClientStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// ServerStreaming generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">srvStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ServerStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;ServerStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">req&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// BidiStreaming generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">bidiStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">BidiStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;BidiStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Refer to this document for details: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/basic_usage/">Generic Call&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="featureexperience-optimization">&lt;strong>Feature/Experience Optimization&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Streaming: Improved observability and debugging experience&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>TTHeader Streaming&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>If Tracer configured, failure to create a stream will now be reported with metrics.&lt;/li>
+&lt;li>When a panic occurs on the Server side, the full stack trace will now be printed for easier troubleshooting.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>gRPC Streaming&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>If Tracer configured, failure to create a stream will now be reported with metrics.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="others">&lt;strong>Others&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Code Product Simplification&lt;/strong>&lt;/p>
+&lt;p>Kitex tool no longer generates fastpb, only affecting Protobuf users.&lt;/p>
+&lt;p>If high-performance Protobuf encoding/decoding is required, you can enable prutal by configuring environment variable &lt;code>KITEX_TOOL_USE_PRUTAL_MARSHAL=1&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="full-change">&lt;strong>Full Change&lt;/strong>&lt;/h2>
+&lt;h3 id="feature">Feature&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1759">#1759&lt;/a>] feat(tool): add env for using prutal to marshal&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1782">#1782&lt;/a>] feat(ttstream): process MetaFrame and reflect to rpcinfo&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1777">#1777&lt;/a>] feat(client): report err when create Stream failed&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1763">#1763&lt;/a>] feat: support ttheader streaming generic call&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1771">#1771&lt;/a>] feat(tool): add thriftgo patcher extension&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1755">#1755&lt;/a>] feat: add generic binary pb for streamx&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1752">#1752&lt;/a>] feat(generic): support generic pb binary for streaming&lt;/p>
+&lt;h3 id="optimize">Optimize&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1788">#1788&lt;/a>] optimize: go net implementation&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1786">#1786&lt;/a>] optimize(tool): remove tool fastpb generation&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1783">#1783&lt;/a>] optimize(gRPC): parse PayloadCodec in server side&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1780">#1780&lt;/a>] optimize(ttstream): log the error thrown by invoking handler&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1769">#1769&lt;/a>] optimize: injection of options in ttstream&lt;/p>
+&lt;h3 id="fix">Fix&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1792">#1792&lt;/a>] fix(gRPC): inject current method name to rpcinfo in server-side to fix FROM_METHOD missing&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1787">#1787&lt;/a>] fix(ttstream): metrics missing caused by server-side rpcinfo not set correctly&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1778">#1778&lt;/a>] fix: enabling json mode of map generic not work&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1774">#1774&lt;/a>] fix(server): trans server conn count race issue&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1742">#1742&lt;/a>] fix(generic): align dynamicgo&amp;rsquo;s write base behavior with old generic (only for internal logic)&lt;/p>
+&lt;h3 id="refactor">Refactor&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1770">#1770&lt;/a>] refactor: refactor generic streaming&lt;/p>
+&lt;h3 id="test">Test&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1793">#1793&lt;/a>] test: add go1.18 to scenario-test&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1765">#1765&lt;/a>] refactor: refactor generic streaming&lt;/p>
+&lt;h3 id="docs">Docs&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1794">#1794&lt;/a>] docs: update CONTRIBUTING.md to change PR base branch to main&lt;/p>
+&lt;h3 id="chore">Chore&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1795">#1795&lt;/a>] chore: update dependency&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1776">#1776&lt;/a>] chore: remove testify dependency&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1757">#1757&lt;/a>] chore: update prutal to v0.1.1&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1753">#1753&lt;/a>] ci: disable codecov annotations&lt;/p></description></item><item><title>Blog: Hertz Release v0.10.0</title><link>https://www.cloudwego.io/blog/2025/05/21/hertz-release-v0.10.0/</link><pubDate>Wed, 21 May 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/05/21/hertz-release-v0.10.0/</guid><description>
+&lt;p>The Hertz v0.10.0 release adds two features and some fixes.&lt;/p>
+&lt;ol>
+&lt;li>Integrate SSE functionality. Refer to &lt;a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/sse/">SSE&lt;/a> for usage.&lt;/li>
+&lt;li>Added http.Handler adaptor, extending Hertz using the official net/http ecosystem. Refer to &lt;a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/http-adaptor/">Adaptor&lt;/a> for usage.&lt;/li>
+&lt;/ol>
+&lt;h2 id="feature">Feature&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1327">#1327&lt;/a>] feat(adaptor): new HertzHandler for http.Handler&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1349">#1349&lt;/a>] feat(sse): SetLastEventID&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1343">#1343&lt;/a>] feat(sse): reader supports cancel stream&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1341">#1341&lt;/a>] feat(server): detect request race&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1339">#1339&lt;/a>] feat(sse): add LastEventID helpers&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1335">#1335&lt;/a>] feat(protocol): new sse pkg&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1322">#1322&lt;/a>] feat: std transport sense client connection close&lt;/li>
+&lt;/ol>
+&lt;h2 id="fix">Fix&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1340">#1340&lt;/a>] fix: only use netpoll &amp;amp; sonic on amd64/arm64 linux/darwin&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1333">#1333&lt;/a>] fix(protocol): unexpected set resp.bodyStream&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1329">#1329&lt;/a>] fix(client): stream body for sse instead of timeout&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1332">#1332&lt;/a>] fix(server): Shutdown checks ExitWaitTimeout&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1316">#1316&lt;/a>] fix: prioritize custom validator&lt;/li>
+&lt;/ol>
+&lt;h2 id="tests">Tests&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1336">#1336&lt;/a>] test(protocol): fix hardcoded listen addr&lt;/li>
+&lt;/ol>
+&lt;h2 id="chore">Chore&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1353">#1353&lt;/a>] chore: update netpoll dependency&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1337">#1337&lt;/a>] chore(hz): update hz tool v0.9.7&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1328">#1328&lt;/a>] ci: disable codecov annotations&lt;/li>
+&lt;/ol></description></item><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</link><pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</guid><description>
 &lt;blockquote>
 &lt;p>We recommend upgrading directly to Kitex version v0.13.1, as we have fixed a potential Goroutine leak issue of the gRPC Client in v0.13.0.&lt;/p>
 &lt;/blockquote>
@@ -117,11 +225,6 @@
 &lt;p>Added support for a graceful shutdown feature to address upstream errors caused by service upgrades or updates.&lt;/p>
 &lt;p>For usage: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/basic-feature/protocol/streaming/grpc/graceful_shutdown/">gRPC Streaming Graceful Shutdown&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li>
-&lt;p>&lt;strong>JSON Generic Call Supports gRPC Streaming&lt;/strong>&lt;/p>
-&lt;p>JSON generic calls now support gRPC Streaming interfaces (client-side only). This is the official release after trial in v0.10.0.&lt;/p>
-&lt;p>For usage: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">User Guide to Generic Call for Streaming&lt;/a>&lt;/p>
-&lt;/li>
 &lt;/ol>
 &lt;h3 id="experience-optimization">Experience Optimization&lt;/h3>
 &lt;ol>
@@ -218,7 +321,6 @@ If you think that it has an impact on performance, you can fork the old version 
 &lt;li>&lt;strong>Frugal ARM Optimization&lt;/strong>: Frugal v0.2.0 now supports a new implement by reflection&lt;/li>
 &lt;li>&lt;strong>Kitex Tool Improvement&lt;/strong>: Kitex Tool provide a new param &lt;code>-rapid&lt;/code> to integrates Thriftgo and there&amp;rsquo;s a slightly improved speed.&lt;/li>
 &lt;li>&lt;strong>Generating Multiple Handlers for Multiple Services&lt;/strong>：Since this version, Kitex tool provide each service with independent handler file and register them into server，for more details: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/multi_service/multi_handler/">Generating Multiple Handlers for Multiple Services&lt;/a>&lt;/li>
-&lt;li>&lt;strong>Generic Streaming for JSON [on trial]&lt;/strong>：JSON generic streaming has now support streaming (client only)，currently we&amp;rsquo;re doing some optimization, you can have a try by following this doc: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">Generic Streaming&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h3 id="others">Others&lt;/h3>
 &lt;ol>
@@ -3751,79 +3853,4 @@ We encourage everyone to contribute their own extensions to volo-rs, which will 
 &lt;h2 id="docs">Docs&lt;/h2>
 &lt;ul>
 &lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/97">#97&lt;/a>] docs: use comma to separate &amp;amp;&amp;amp; remove extra space.&lt;/li>
-&lt;/ul></description></item><item><title>Blog: Hertz, an Ultra Large Scale Enterprise-Level Microservice HTTP Framework, is Now Officially Open Source!</title><link>https://www.cloudwego.io/blog/2022/06/21/hertz-an-ultra-large-scale-enterprise-level-microservice-http-framework-is-now-officially-open-source/</link><pubDate>Tue, 21 Jun 2022 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2022/06/21/hertz-an-ultra-large-scale-enterprise-level-microservice-http-framework-is-now-officially-open-source/</guid><description>
-&lt;p>Today, after more than a year of internal use and iteration at ByteDance, &lt;strong>&lt;a href="https://github.com/cloudwego/hertz">Hertz&lt;/a>&lt;/strong>, a &lt;strong>high-performance enterprise-level HTTP framework&lt;/strong>, is officially open-sourced on &lt;a href="https://github.com/cloudwego">CloudWeGo&lt;/a>! Hertz has become the largest HTTP framework within ByteDance, with more than &lt;strong>10,000&lt;/strong> online services and a peak QPS (Query Per Second) of more than &lt;strong>40 million&lt;/strong>. It has the characteristics of high usability, easy expansion, and low latency. For the ByteDance service framework team and CloudWeGo, &lt;a href="https://github.com/cloudwego/hertz">Hertz&lt;/a> will not only be an open source project, but also a real ultra-large-scale enterprise-level practice.&lt;/p>
-&lt;p>Project website: &lt;a href="https://github.com/cloudwego/hertz">https://github.com/cloudwego/hertz&lt;/a>&lt;/p>
-&lt;p>In the future, ByteDance infrastructure team will iterate on the Hertz open source library, maintaining a unified codebase both internally and externally, and facilitating iterative evolution to enhance user experience.&lt;/p>
-&lt;h2 id="hertz-overview">Hertz Overview&lt;/h2>
-&lt;p>&lt;a href="https://github.com/cloudwego/hertz">Hertz&lt;/a> is a high-usability, high-performance, highly extensible, and low-latency Golang HTTP framework that assists developers in building microservices. Originally, the HTTP framework used within ByteDance was an encapsulation of the Gin framework, which offered advantages such as ease of use and a comprehensive ecosystem. However, as the internal business continued to grow, the demand for high performance and versatility rapidly increased.&lt;/p>
-&lt;p>&lt;a href="https://github.com/gin-gonic/gin">Gin&lt;/a>, being a secondary development of Golang&amp;rsquo;s native net/http, faced limitations in terms of on-demand expansion and performance optimization. In order to meet the evolving business needs and effectively serve major functions, the ByteDance service framework team embarked on research based on their self-developed networking library, &lt;a href="https://github.com/cloudwego/netpoll">Netpoll&lt;/a>. This research led to the development of the internal framework, Hertz, which exhibits enhanced performance and stability when faced with enterprise-level requirements. Hertz also facilitates business development and addresses evolving technical requirements. In July 2021, Hertz officially launched version 1.0.&lt;/p>
-&lt;p>After over a year of internal usage at ByteDance, the Hertz framework has become the largest HTTP framework within the organization. It boasts more than 10,000 online services and reaches a peak QPS of over 40 million. In addition to being utilized by various business lines, Hertz also serves numerous internal core components, such as the function computing platform FaaS, stress testing platform, gateways, and Service Mesh control plane. It has received positive feedback regarding its usage.
-In such a large-scale scenario, Hertz demonstrates remarkable stability and performance. Bugs and kernel issues are promptly identified and rectified. Furthermore, Hertz maintains a set of codes both internally and externally, providing a strong foundation for the open-source Hertz framework.&lt;/p>
-&lt;h2 id="features">Features&lt;/h2>
-&lt;p>Key features of Hertz include:&lt;/p>
-&lt;h3 id="stability">Stability&lt;/h3>
-&lt;p>In a large-scale environment, Hertz exercises caution during every PR integration and release. Great care is taken to avoid any potential losses, which can amount to millions or even more. A standardized PR and release process has been formulated, requiring review by experienced developers for every code merge. Each PR and version release is to be tested for a period of time, and fully tested. Various testing scenarios, including compatibility, high concurrency, and package size, are employed to minimize risks.&lt;/p>
-&lt;h3 id="high-usability">High Usability&lt;/h3>
-&lt;p>Hertz prioritizes the ability to write correct code quickly during development. When designing the API, Hertz considers user usage habits and draws inspiration from the industry&amp;rsquo;s mainstream framework API usage. Continuous iteration and user feedback contribute to the framework&amp;rsquo;s refinement. For instance, many users hope that the Client also has the ability to trace. For this reason, Hertz Client supports middleware capabilities. Additionally, the Client supports stream processing in proxy scenarios. Middleware and stream processing are designed with the user&amp;rsquo;s actual habits in mind, promoting faster development of correct code. Hertz also provides a one-click command-line tool for code generation, enhancing the framework&amp;rsquo;s ease of use.&lt;/p>
-&lt;h3 id="easy-expandability">Easy expandability&lt;/h3>
-&lt;p>Hertz employs a layered design, offering a range of interfaces and default extension implementations for users to expand upon. Details regarding &lt;a href="https://www.cloudwego.io/zh/docs/hertz/tutorials/framework-exten/">Hertz extension&lt;/a> can be found on the &lt;a href="https://www.cloudwego.io/">CloudWeGo official website&lt;/a>. The framework&amp;rsquo;s layered design enhances its scalability. Currently, only stable capabilities are open-sourced, with more planned for the future. Please refer to the &lt;a href="https://github.com/cloudwego/hertz/blob/develop/ROADMAP.md">Hertz roadmap&lt;/a> for further details.&lt;/p>
-&lt;h3 id="low-latency">Low latency&lt;/h3>
-&lt;p>Hertz utilizes the internally developed high-performance network library, &lt;a href="https://github.com/cloudwego/netpoll">Netpoll&lt;/a>, by default. In certain special scenarios, Hertz demonstrates advantages in terms of QPS and delay compared to the go net package.&lt;/p>
-&lt;p>For performance data, please refer to the Echo data in the figure below. Internal testing has shown significant reduction in resource usage, including a &lt;strong>30%-60% decrease in CPU usage&lt;/strong> for services predominantly utilizing frameworks and gateway services. For detailed performance data, please refer to: &lt;a href="https://github.com/cloudwego/hertz-benchmark">https://github.com/cloudwego/hertz-benchmark&lt;/a>.&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Hertz_Open_Source/Echo.png" alt="image">&lt;/p>
-&lt;h3 id="command-line-tool">Command line tool&lt;/h3>
-&lt;p>Hertz provides a simple and user-friendly command-line tool called Hz. Users simply need to provide an Interface Definition Language (IDL). Based on the defined interface information, Hz can generate project scaffolding with a single click, enabling users to use Hertz out of the box. Additionally, Hz offers update capabilities, allowing users to update the scaffolding when changes are made to the IDL. Currently, Hz supports two IDL definitions: Thrift and Protobuf. The command-line tool provides a range of built-in options that can be tailored to individual needs. It relies on the official Protobuf compiler and the self-developed Thriftgo compiler, both of which support custom code plug-ins for generating templates that meet specific requirements.&lt;/p>
-&lt;p>Since the launch of Hertz, the internal response has been excellent. It has been extensively used in various scenarios including front-end and back-end communication, as well as gateway, upload, download, and proxy scenarios. The supported interaction modes encompass not only ping-pong but also streaming and chunk interactions. Hertz supports multiple protocols such as HTTP1, HTTP2, and Websocket. Managing such complex interaction scenarios and modes poses significant challenges to the usability and stability of Hertz&amp;rsquo;s Server and Client components. In response, Hertz promptly addresses user needs and establishes a stability test service that simulates real-world and complex online scenarios as accurately as possible. With a high single-test coverage rate, Hertz ensures that the code logic functions normally and reliably.&lt;/p>
-&lt;h2 id="internal-and-external-version-maintenance">Internal and external version maintenance&lt;/h2>
-&lt;p>ByteDance possesses a comprehensive internal microservice system, and the team places significant emphasis on open source development and commitment. This principle applies to both the Hertz project and CloudWeGo&amp;rsquo;s &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> project, ensuring consistency between internal and external versions. The core capabilities of the project have been migrated to the open source library, with only one internal layer of encapsulation. This approach facilitates enterprise upgrades without disruptions, thus guaranteeing long-term maintenance commitments. All open source features will be released after undergoing internal stability verification.&lt;/p>
-&lt;p>Moving forward, the team will continue to iterate based on the Hertz open source library, promptly addressing community needs and issues to enhance user experience and ensure a reliable framework. Hertz developers can also leverage its flexible expansion capabilities to meet specific business requirements. Furthermore, external developers are encouraged to &lt;a href="https://github.com/cloudwego/hertz/blob/develop/CONTRIBUTING.md">contribute&lt;/a> to the community, collaboratively constructing an HTTP framework with a comprehensive ecosystem, exceptional performance, and user-friendly features.&lt;/p>
-&lt;h2 id="roadmap">Roadmap&lt;/h2>
-&lt;p>For the infrastructure team, Hertz represents not only an open source project but also a genuine ultra-large-scale enterprise-level practice. By open sourcing Hertz, our aim is to enrich the Golang middleware system within the cloud-native community, enhance the CloudWeGo ecosystem, and enable more developers and enterprises to build cloud-native large-scale distributed systems. We aspire to provide modern, resource-efficient technical solutions.&lt;/p>
-&lt;p>As mentioned earlier, Hertz has currently open sourced only the internally verified stable components. However, we intend to further enhance the framework by pursuing the following objectives:&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>Cloud native capability support&lt;/strong>: Integrate support for the xDS API to dynamically obtain service configurations from Istio.&lt;/li>
-&lt;li>&lt;strong>Multi-protocol support&lt;/strong>: Hertz currently only open-sources HTTP1. In the future, we will open-source other protocols, such as HTTP2, Websocket, ALPN, etc., to provide developers with support for micro-service requirements in more scenarios. If you have a need, you can also submit an issue and let us know your needs for quick support.&lt;/li>
-&lt;li>&lt;strong>Improved command-line tools&lt;/strong>: Continuously iterate on Hz, integrating various commonly used middleware and providing modular construction capabilities, enabling users to select the required components as needed.&lt;/li>
-&lt;li>&lt;strong>Enhanced ecosystem support&lt;/strong>: Since Hertz does not adopt go net&amp;rsquo;s data structure, additional ecosystem support is required. In the initial batch of open source releases, we have included CORS, Trace, and Metrics. In the future, we plan to support additional aspects such as reverse proxy and Session.&lt;/li>
-&lt;li>&lt;strong>Iteration based on user feedback&lt;/strong>: Following the project&amp;rsquo;s open sourcing, we will iterate based on developer feedback and requirements.&lt;/li>
-&lt;/ul>
-&lt;p>We welcome everyone to &lt;a href="https://github.com/cloudwego/hertz/blob/develop/CONTRIBUTING.md">contribute&lt;/a> by submitting issues and PRs to &lt;a href="https://github.com/cloudwego/hertz">Hertz&lt;/a>, fostering collaborative development. We eagerly anticipate the involvement of more developers and anticipate Hertz aiding enterprises in swiftly constructing cloud-native architectures. Enterprise users are invited to migrate and utilize Hertz, and we will provide dedicated technical support and communication. Feel free to &lt;a href="https://discord.gg/jceZSE7DsW">join our Discord community&lt;/a> for further consultations and assistance.&lt;/p>
-&lt;h2 id="related-links">Related Links&lt;/h2>
-&lt;ul>
-&lt;li>Project &lt;a href="https://github.com/cloudwego/hertz">address&lt;/a>&lt;/li>
-&lt;li>Community &lt;a href="https://github.com/hertz-contrib">ecosystem&lt;/a>&lt;/li>
-&lt;li>Hertz benchmark &lt;a href="https://www.cloudwego.io/blog/2023/02/24/getting-started-with-hertz-performance-testing-guide/">blog&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Blog: Hertz Release v0.1.0</title><link>https://www.cloudwego.io/blog/2022/06/20/hertz-release-v0.1.0/</link><pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2022/06/20/hertz-release-v0.1.0/</guid><description>
-&lt;h2 id="feature">Feature&lt;/h2>
-&lt;ul>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/31">#31&lt;/a>] feat: close connection after responding to the short-connection request.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/44">#44&lt;/a>] feat: add the VisitAllCustomHeader method.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/59">#59&lt;/a>] feat: support windows.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/70">#70&lt;/a>] feat: add code generator hz.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/64">#64&lt;/a>] feat: add adaptor for Hertz Request &amp;amp; Response to net/http Request &amp;amp; ResponseWriter.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/45">#45&lt;/a>] feat: add ctx.Body().&lt;/li>
-&lt;/ul>
-&lt;h2 id="optimize">Optimize&lt;/h2>
-&lt;ul>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/57">#57&lt;/a>] optimize: use http.TimeFormat as layout for http date, which can avoid more copying.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/58">#58&lt;/a>] optimize: add remote address to the error log when server processes the error.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/41">#41&lt;/a>] optimize: use CtxErrorf instead of ‘Errorf’ when server panic.&lt;/li>
-&lt;/ul>
-&lt;h2 id="refactor">Refactor&lt;/h2>
-&lt;ul>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/37">#37&lt;/a>] refactor: unify the entry of setting request options to prevent options uninitialized from causing panic.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/52">#52&lt;/a>] refactor: omit redundant nil check around loop.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/33">#33&lt;/a>] refactor: simplify code in AddMissingPort.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/27">#27&lt;/a>] refactor: use errors.NewPublic rather than fmt.Errorf.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/34">#34&lt;/a>] refactor: remove fshandler and related tests.&lt;/li>
-&lt;/ul>
-&lt;h2 id="style">Style&lt;/h2>
-&lt;ul>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/29">#29&lt;/a>] style(*): fix typos.&lt;/li>
-&lt;/ul>
-&lt;h2 id="docs">Docs&lt;/h2>
-&lt;ul>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/60">#60&lt;/a>] docs: add icon in README.md and README_cn.md.&lt;/li>
-&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/54">#54&lt;/a>] docs: Update README.md.&lt;/li>
 &lt;/ul></description></item></channel></rss>

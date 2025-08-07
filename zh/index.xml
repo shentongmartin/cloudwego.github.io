@@ -1,4 +1,111 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – CloudWeGo</title><link>https://www.cloudwego.io/zh/</link><description>Recent content on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudwego.io/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/zh/blog/2025/04/09/kitex-release-v0.13.0/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/04/09/kitex-release-v0.13.0/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – CloudWeGo</title><link>https://www.cloudwego.io/zh/</link><description>Recent content on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://www.cloudwego.io/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release v0.14.0</title><link>https://www.cloudwego.io/zh/blog/2025/06/26/kitex-release-v0.14.0/</link><pubDate>Thu, 26 Jun 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/06/26/kitex-release-v0.14.0/</guid><description>
+&lt;h2 id="重要变更介绍">&lt;strong>重要变更介绍&lt;/strong>&lt;/h2>
+&lt;h3 id="新特性">&lt;strong>新特性&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>泛化调用：泛化 Client 支持流式调用，一个 Client 搞定流式/非流式调用场景&lt;/strong>&lt;/p>
+&lt;p>泛化 Client 支持流式泛化调用，适配 gRPC/TTHeader Streaming 并支持 map / json 和 protobuf 二进制泛化调用。&lt;/p>
+&lt;p>简要代码示例如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">genericclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewClient&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;actualServiceName&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">g&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// Ping-Pong 泛化&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">resp&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GenericCall&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;PingPongTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">req&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// ClientStreaming 泛化&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">cliStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ClientStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;ClientStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// ServerStreaming 泛化&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">srvStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ServerStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;ServerStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">req&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// BidiStreaming 泛化&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">bidiStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">BidiStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;BidiStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>各场景使用细节请参考&lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/generic-call/basic_usage">泛化调用&lt;/a>。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="功能体验优化">&lt;strong>功能/体验优化&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Streaming： 观测/排错体验优化&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>TTHeader Streaming&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>若配置了 Tracer，创建 Stream 失败将打点上报&lt;/li>
+&lt;li>当 Server 侧发生 panic 时，将打印完整堆栈，方便排查问题&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>gRPC Streaming&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>若配置了 Tracer，创建 Stream 失败将打点上报&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="其他">&lt;strong>其他&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>产物简化&lt;/p>
+&lt;p>Kitex Tool 不再生成 fastpb，只影响 protobuf 的用户。若有高性能 protobuf 编解码需求，可配置环境变量 &lt;code>KITEX_TOOL_USE_PRUTAL_MARSHAL=1&lt;/code>启用 prutal。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="详细变更">&lt;strong>详细变更&lt;/strong>&lt;/h2>
+&lt;h3 id="feature">Feature&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1759">#1759&lt;/a>] feat(tool): add env for using prutal to marshal&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1782">#1782&lt;/a>] feat(ttstream): process MetaFrame and reflect to rpcinfo&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1777">#1777&lt;/a>] feat(client): report err when create Stream failed&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1763">#1763&lt;/a>] feat: support ttheader streaming generic call&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1771">#1771&lt;/a>] feat(tool): add thriftgo patcher extension&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1755">#1755&lt;/a>] feat: add generic binary pb for streamx&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1752">#1752&lt;/a>] feat(generic): support generic pb binary for streaming&lt;/p>
+&lt;h3 id="optimize">Optimize&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1788">#1788&lt;/a>] optimize: go net implementation&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1786">#1786&lt;/a>] optimize(tool): remove tool fastpb generation&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1783">#1783&lt;/a>] optimize(gRPC): parse PayloadCodec in server side&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1780">#1780&lt;/a>] optimize(ttstream): log the error thrown by invoking handler&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1769">#1769&lt;/a>] optimize: injection of options in ttstream&lt;/p>
+&lt;h3 id="fix">Fix&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1792">#1792&lt;/a>] fix(gRPC): inject current method name to rpcinfo in server-side to fix FROM_METHOD missing&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1787">#1787&lt;/a>] fix(ttstream): metrics missing caused by server-side rpcinfo not set correctly&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1778">#1778&lt;/a>] fix: enabling json mode of map generic not work&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1774">#1774&lt;/a>] fix(server): trans server conn count race issue&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1742">#1742&lt;/a>] fix(generic): align dynamicgo&amp;rsquo;s write base behavior with old generic (only for internal logic)&lt;/p>
+&lt;h3 id="refactor">Refactor&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1770">#1770&lt;/a>] refactor: refactor generic streaming&lt;/p>
+&lt;h3 id="test">Test&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1793">#1793&lt;/a>] test: add go1.18 to scenario-test&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1765">#1765&lt;/a>] refactor: refactor generic streaming&lt;/p>
+&lt;h3 id="docs">Docs&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1794">#1794&lt;/a>] docs: update CONTRIBUTING.md to change PR base branch to main&lt;/p>
+&lt;h3 id="chore">Chore&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1795">#1795&lt;/a>] chore: update dependency&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1776">#1776&lt;/a>] chore: remove testify dependency&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1757">#1757&lt;/a>] chore: update prutal to v0.1.1&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1753">#1753&lt;/a>] ci: disable codecov annotations&lt;/p></description></item><item><title>Blog: Hertz Release v0.10.0</title><link>https://www.cloudwego.io/zh/blog/2025/05/21/hertz-release-v0.10.0/</link><pubDate>Wed, 21 May 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/05/21/hertz-release-v0.10.0/</guid><description>
+&lt;p>Hertz v0.10.0 版本新增两项功能并修复了一些问题。&lt;/p>
+&lt;ol>
+&lt;li>集成 SSE 功能。使用方法请参阅 &lt;a href="https://www.cloudwego.io/zh/docs/hertz/tutorials/basic-feature/sse/">SSE&lt;/a>。&lt;/li>
+&lt;li>添加 http.Handler 适配器，使用官方 net/http 生态系统扩展 Hertz。使用方法请参阅 &lt;a href="https://www.cloudwego.io/zh/docs/hertz/tutorials/basic-feature/http-adaptor/">Adaptor&lt;/a>。&lt;/li>
+&lt;/ol>
+&lt;h2 id="feature">Feature&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1327">#1327&lt;/a>] feat(adaptor): 为 http.Handler 添加新的 HertzHandler&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1349">#1349&lt;/a>] feat(sse): SetLastEventID&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1343">#1343&lt;/a>] feat(sse): reader 支持取消流&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1341">#1341&lt;/a>] feat(server): 检测请求 race&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1339">#1339&lt;/a>] feat(sse): 添加 LastEventID helper&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1335">#1335&lt;/a>] feat(protocol): 新的 sse 包&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1322">#1322&lt;/a>] feat: server 使用标准 go net 传输时感知客户端连接关闭&lt;/li>
+&lt;/ol>
+&lt;h2 id="fix">Fix&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1340">#1340&lt;/a>] fix:仅在 amd64/arm64 linux/darwin 上使用 netpoll 和 sonic&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1333">#1333&lt;/a>] fix(protocol): 非预期的设置 resp.bodyStream&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1329">#1329&lt;/a>] fix(client): sse 场景下自动切换为 stream body 模式&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1332">#1332&lt;/a>] fix(server): server 关闭时检查 ExitWaitTimeout&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1316">#1316&lt;/a>] fix: 优先使用自定义 validator&lt;/li>
+&lt;/ol>
+&lt;h2 id="tests">Tests&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1336">#1336&lt;/a>] test(protocol): 修复硬编码的监听地址&lt;/li>
+&lt;/ol>
+&lt;h2 id="chore">Chore&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1353">#1353&lt;/a>] chore：更新 netpoll 依赖&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1337">#1337&lt;/a>] chore(hz): 更新 hz 工具 v0.9.7&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1328">#1328&lt;/a>] ci: 禁用 codecov 注释&lt;/li>
+&lt;/ol></description></item><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/zh/blog/2025/04/09/kitex-release-v0.13.0/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2025/04/09/kitex-release-v0.13.0/</guid><description>
 &lt;blockquote>
 &lt;p>建议直接升级 Kitex 版本到 v0.13.1，因为我们对 v0.13.0 里 gRPC Client 潜在的 Goroutine 泄漏问题进行了修复&lt;/p>
 &lt;/blockquote>
@@ -115,11 +222,6 @@
 &lt;p>&lt;strong>gRPC Streaming 支持优雅退出&lt;/strong>&lt;/p>
 &lt;p>支持了优雅退出功能，用于解决因为服务升级/更新而导致的上游报错问题。&lt;/p>
 &lt;p>用户文档：&lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/basic-feature/protocol/streaming/grpc/graceful_shutdown/">gRPC Streaming 优雅退出&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>JSON 泛化调用支持 gRPC Streaming&lt;/strong>&lt;/p>
-&lt;p>JSON 泛化调用支持 gRPC Streaming 流式接口（仅限 client），经过 v0.10.0 试用，正式发布。&lt;/p>
-&lt;p>用户文档：&lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">User Guide to Generic Call for Streaming&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
 &lt;h3 id="体验优化">体验优化&lt;/h3>
@@ -497,7 +599,6 @@ server.WithPayloadCodec(thrift.NewThriftCodecWithConfig(thrift.FrugalWrite|thrif
 &lt;li>&lt;strong>Frugal ARM 性能优化&lt;/strong>：Frugal 支持了基于反射的高性能编解码，升级到 Frugal v0.2.0 即可&lt;/li>
 &lt;li>&lt;strong>Kitex Tool 代码生成提速&lt;/strong>：提供了 &lt;code>-rapid&lt;/code> 参数，可以无需安装 Thriftgo ，且速度略有提高。下个版本之后将作为默认行为。&lt;/li>
 &lt;li>&lt;strong>多 Service 多 Handler 生成&lt;/strong>：从该版本开始，Kitex Tool 支持为每个 service 生成 handler 并统一注册到 server，详见 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/multi_service/multi_handler/">多 Service 多 Handler 生成&lt;/a>&lt;/li>
-&lt;li>&lt;strong>Streaming JSON 泛化[试用阶段]&lt;/strong>：JSON 泛化调用支持了 streaming 流式接口（仅限 client），目前正在持续优化中，并未正式发布，有兴趣可以试用，详见 &lt;a href="https://www.cloudwego.io/zh/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">Generic Streaming&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h3 id="其他">其他&lt;/h3>
 &lt;ol>
@@ -4299,269 +4400,4 @@ xDS 支持的扩展单独开源到了 &lt;a href="https://github.com/kitex-contr
 &lt;li>推进高性能 Rust 解决方案的落地，持续探索 Rust 高性能技术解决方案，构建 Rust 相关生态。&lt;/li>
 &lt;/ul>
 &lt;p>如果大家对 CloudWeGo 开源社区，以及刚才提到的一些技术解决方案、企业的落地支持有任何的疑问，可以关注 CloudWeGo 公众号，
-我们会在公众号上发布一些新闻动态以及各个相关场景的案例报道，同时我们也会在公众号上提供相关的技术支持。感谢大家的关注！&lt;/p></description></item><item><title>Blog: 选择 Go 还是 Rust？CloudWeGo-Volo 基于 Rust 语言的探索实践</title><link>https://www.cloudwego.io/zh/blog/2022/09/06/%E9%80%89%E6%8B%A9-go-%E8%BF%98%E6%98%AF-rustcloudwego-volo-%E5%9F%BA%E4%BA%8E-rust-%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A2%E7%B4%A2%E5%AE%9E%E8%B7%B5/</link><pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2022/09/06/%E9%80%89%E6%8B%A9-go-%E8%BF%98%E6%98%AF-rustcloudwego-volo-%E5%9F%BA%E4%BA%8E-rust-%E8%AF%AD%E8%A8%80%E7%9A%84%E6%8E%A2%E7%B4%A2%E5%AE%9E%E8%B7%B5/</guid><description>
-&lt;h2 id="cloudwego-选择-rust-语言进行探索的原因">CloudWeGo 选择 Rust 语言进行探索的原因&lt;/h2>
-&lt;p>CloudWeGo 正式官宣新一代 Rust RPC 框架 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 开源！CloudWeGo 为什么会选择 Rust 这门语言进行探索呢？本文首先介绍一下其中的原因。&lt;/p>
-&lt;h3 id="go-的代价">Go 的代价&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>深度优化困难&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 早期的团队成员来自于 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 项目（CloudWeGo 开源的 Golang 微服务 RPC 框架）。当时我们投入了大量的时间和精力优化 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 以及其他相关基础库的性能，最终却发现实现 Go 的深度优化有些困难。
-我们仅仅可以做一些算法层面和实现层面的优化，如果想往下继续做其他层面的优化，比如指令层面的优化，是很难以低成本的方式实现的。而且在大多数情况下很多优化是要和 runtime 以及编译器作斗争的。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>工具链和包管理不够成熟&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>例如，使用 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 框架时需要先使用对应的 kitex 工具生成代码，才能正常编译使用。虽然这种情况可能在 &lt;a href="https://github.com/cloudwego/frugal">Frugal&lt;/a> 工具成熟之后有所改善，但是在 IDL 有更新的情况下，还是需要使用 kitex 重新生成对应的结构体。
-这个问题并不是 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 的问题，而是 Go 语言本身的问题，Go 语言在编译时没有提供类似的能力。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>抽象能力较弱&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>Go 语言的抽象能力是比较弱的，而且 Go 语言里面的抽象并不是零成本抽象，而是有代价的抽象。&lt;/p>
-&lt;p>那么使用 Go 语言需要付出的三个代价具体应该如何理解呢？下面进行具体分析。&lt;/p>
-&lt;h3 id="深度优化困难">深度优化困难&lt;/h3>
-&lt;p>如图所示，这是 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 项目生成代码的简单示例。这两段代码的目的是在解析出错的时候，把一些信息返回给上层。在 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 新版本代码公开之后，
-业务团队同学反映他们线上序列化和反序列化这部分的性能相差了 20%，经排查之后，我们发现了这个改动。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/2.png" alt="image">&lt;/p>
-&lt;p align="center">
-Kitex 新版本的代码
-&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/3.png" alt="image">&lt;/p>
-&lt;p align="center">
-Kitex 旧版本的代码
-&lt;/p>
-&lt;p>这个改动的本意是希望能给客户提供更多错误上下文的信息。但是它带来了什么问题呢？如下图，它把汇编代码直接一对一地生成到主流程之中，也就是说 Go 语言的编译器会逐行逐句地进行翻译，并且不会做重排。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/4.png" alt="image">&lt;/p>
-&lt;p>那么这会带来什么问题呢？由于我们主流程中的代码与正常流程相比变多了，所以我们重点关注一下 &lt;code>L1-icache-load-misses&lt;/code> 这一行，
-新版本的代码比旧版本的代码在 L1 指令 &lt;code>cache&lt;/code> 层面 &lt;code>cache-misses&lt;/code> 高出 20%，这也就是我们的代码效率降低 20% 的原因。那么我们是如何解决这个问题的呢？&lt;/p>
-&lt;p>我们的解决方案如下图所示。在 &lt;code>err != nil&lt;/code> 的情况下，直接手动加一条 &lt;code>goto&lt;/code> 语句，把所有错误处理这部分的代码放到函数末尾，即 &lt;code>return&lt;/code> 之后。
-这相当于在编译器没有实现指令重排的情况下，用人工方式做一次指令重排。最后优化的效果是非常明显的，可以看到 &lt;code>cache-misses&lt;/code> 比之前的那一次还要降低 25%。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/5.png" alt="image">&lt;/p>
-&lt;p>上述例子只是使用 Go 语言时在做深度优化方面遇到的难题。在抽象能力方面，使用 Go 语言也会遇到一些困难。&lt;/p>
-&lt;h3 id="零成本抽象zero-cost-abstraction">零成本抽象(Zero-Cost Abstraction)&lt;/h3>
-&lt;p>什么是零成本抽象呢？使用 C++ 和 Rust 的同学对这个概念可能有所了解。零成本抽象是指我们不需要对没有使用的功能付出编译和运行的开销，也就是用户不需要给没有使用的东西付费。
-对应地，如果用户对于已经使用的东西也没有再继续优化的空间，因为它已经默认提供了最佳实践。总结如下：&lt;/p>
-&lt;ul>
-&lt;li>不用的东西，不需要为之付出代价；&lt;/li>
-&lt;li>用到的东西，你也不可能做得更好。&lt;/li>
-&lt;/ul>
-&lt;p>那么为什么说 Go 语言里面没有零成本抽象呢？以 Thrift 编解码为例，我们最开始使用的是 Apache Thrift，它为了支持多种不同 Protocol、Transport 组合，
-抽象出了 TProtocol Interface、TTransport Interface，但 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 直接依赖具体的 BinaryProtocol 的实现（struct）。可以试想，Apache Thrift 这么做的代价是什么呢？这就是 Go 里面 Interface 带来的代价。&lt;/p>
-&lt;p>Go 里面 Interface 是动态分发的，也就是运行时通过类型元数据和指针去动态调用所需方法，它会在运行时多做一次内存寻址。但这并不是最关键的，最关键的是它会使得编译器没有办法 inline 以及没有办法做很多优化。
-一般比较注重性能的语言都会同时提供静态分发和动态分发两种方式的抽象能力，但是 Go 语言只提供了 Interface 动态分发能力，也就可以理解为在 Go 语言中抽象和性能是不可兼得的，这也就是 Go 语言抽象能力比较弱的原因。&lt;/p>
-&lt;h3 id="sonic">Sonic&lt;/h3>
-&lt;p>&lt;a href="https://github.com/bytedance/sonic">Sonic&lt;/a> 是 CloudWeGo 开源的一个 JSON 库，这个库有很多 CloudWeGo 的用户都使用过。最初这个库组成部分如下图所示，有 2/3 的代码都是 Assembly 汇编。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/6.png" alt="image">&lt;/p>
-&lt;p>在 &lt;a href="https://github.com/bytedance/sonic">Sonic&lt;/a> 库中仅有的 27% 的 Go 源代码如下图所示。虽然它被统计到了 Go 代码中，但实际上是汇编代码。所以我们可以总结出，世界上最快的 Go 语言程序大概就是用汇编代码写就的。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/7.png" alt="image">&lt;/p>
-&lt;h3 id="性能最好的-go-json-库">性能最好的 Go JSON 库&lt;/h3>
-&lt;p>尽管 &lt;a href="https://github.com/bytedance/sonic">Sonic&lt;/a> 里面采用了各种黑科技，甚至有 2/3 的代码都是经过人工精调的汇编代码，但是 &lt;a href="https://github.com/bytedance/sonic">Sonic&lt;/a> 的综合性能还是不如 Rust 最通用的 Serde JSON 库。
-如图所示，绿色柱状图代表 Serde JSON 库，蓝色柱状图代表 &lt;a href="https://github.com/bytedance/sonic">Sonic&lt;/a> 库。根据这个 Benchmark，即使是和 C、C++ 的库相比，用 Rust 语言编写的这个库在各方面综合表现也是最佳的。&lt;/p>
-&lt;p>试想，又有多少 Go 组件能够得到如此大量的人力投入从而进行深度优化呢？这只是一个例子，其实我们之前在 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 中的很多优化也是要和编译器以及 runtime 作斗争的。因此我们认识到在 Go 语言中想做深度优化是非常困难的。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/8.png" alt="image">&lt;/p>
-&lt;h3 id="关于-rust">关于 Rust&lt;/h3>
-&lt;p>我们为什么要选择 Rust 这门语言呢？在解答这个问题之前，要先了解这门语言。所以先介绍一下 Rust 语言的发展历史。&lt;/p>
-&lt;h3 id="rust-的历史">Rust 的历史&lt;/h3>
-&lt;p>Rust 语言由 Graydon Hoare 私人研发，他是 Mozilla 做编程语言的工程师，专门给语言开发编译器和工具集。当时 Mozilla 要开发 Servo 引擎，想要保证安全的同时又能拥有高性能，
-于是就选择了 Rust 语言。2010 - 2015 年期间，Rust 是有 GC 的，后来社区一致表示支持 Rust 必须要有高性能，所以 GC 被取缔。2015 年，Rust 发布 1.0 版本，这也表示正式官宣 Rust 的稳定性。&lt;/p>
-&lt;p>Rust 是以三年为单位进行社区规划和迭代的。2015 - 2018 年，Rust 达成了生产力的承诺，也就是它的工具文档还有编译器变得更加智能，也对开发者更加友好了。
-2018 - 2021 年，Rust 做了更多异步生态的完善。之前的 Rust 是没有异步生态的，但是自 2018 年开始，它正式引入了异步功能。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/9.png" alt="image">&lt;/p>
-&lt;h3 id="rust-2024">Rust 2024&lt;/h3>
-&lt;p>2021 - 2024 年，Rust 有一个 2024 规划，主题叫做 Scaling Enpowerment（扩展授权）。之所以取这个名字，是因为 Rust 有一个目标——“empower everyone to build reliable and efficient software”。
-Rust 最关注也是大家经常诟病的一点，就是 Rust 的整个学习曲线非常陡峭，所以在这个规划中写道 “Flatten the learning curve”。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/10.png" alt="image">&lt;/p>
-&lt;h3 id="rust-三大优势">Rust 三大优势&lt;/h3>
-&lt;p>在 2022 年，很多开源项目已经呈现爆炸式增长。我们了解到 Rust 这门语言后，发现它有三大非常重要的优势：第一是高性能；第二是很强的安全性；第三是协作方便。
-因此我们想尝试在服务端使用 Rust 语言开发微服务，以此解决我们面临的一些性能上的问题。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>性能&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>很多用户都对性能有很高的要求，也想知道 Rust 的性能如何。下图是各语言的 Benchmark 对比结果，可以看出 Rust 的性能是非常优秀的，远超过 Go 语言，甚至比 C++ 的性能更好。&lt;/p>
-&lt;p>当然我们要着重说明，这个 Benchmark 要求所有语言必须使用相同的算法，并且不得经过额外优化。毕竟如果都用汇编代码写，其实各语言性能相差无几。
-但是在真正的开发过程中，又有多少代码能够经过那么大量的人工精细优化呢？另外，有人可能会对 Rust 的性能比 C 和 C++ 更优秀产生质疑，其实这也是因为 Rust 对于程序员的输入要求得更加严格，所以编译器可以做更进一步的优化。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/11.png" alt="image">&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>安全性&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>因为在 Rust 语言的安全性方面可查阅到大量资料，因此不再过多赘述。只阐述一个重要结论：Rust 1.0 之后，在非 Unsafe 代码中是不可能出现内存安全问题的。
-这个结论是通过数学证明过的，因此非常可靠。我们应该如何理解这个结论呢？可以从它的推论入手，即：一切内存/并发安全问题，都是 unsafe 代码导致的。
-也就是如果真的出现安全问题，我们可以限制在一个非常小的范围内进行排查。因为毕竟绝大多数的 Rust 语言代码都是 Safe Rust，而不是 Unsafe Rust。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>协作&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>Rust 是一门真正通过工程实践形成的语言，它有非常 &lt;strong>智能的编译器&lt;/strong> 、 &lt;strong>完善的文档&lt;/strong> 、&lt;strong>集群的工具链&lt;/strong>和 &lt;strong>成熟的包管理&lt;/strong> ，因此 Rust 非常适合协作。
-我们在使用时可以专注于逻辑功能的实现，而不用担心内存安全和并发安全的问题等等。还有非常重要的一点就是可以限制别人的代码，因为如果别人的代码有内存安全问题或并发安全问题，将无法进行编译。
-所以在做 Code Review 时，我们只需关注逻辑上的功能正确性就可以，因为只要能够通过编译提交上来的代码，安全性是不必担心的。
-这虽然是 Rust 语言的优点，但也给使用者带来一些不便之处。我们常听说 Rust 开发者很难，也正是因为编译。&lt;/p>
-&lt;h3 id="rust-的影响力">Rust 的影响力&lt;/h3>
-&lt;p>如下图，Rust 已经连续七年位居 Stack Overflow 最受开发者喜爱的编程语言榜榜首。此外，有一个非常重量级的项目叫做 “Rust for Linux”，
-除了 C 语言之外，Rust 是 Linux 内核迄今为止接受的唯一语言。这些成绩足以看出 Rust 在开源业界的重量级和影响力。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/12.png" alt="image">&lt;/p>
-&lt;h2 id="创建-rpc-框架-volo-的原因">创建 RPC 框架 Volo 的原因&lt;/h2>
-&lt;p>明确了 CloudWeGo 选择 Rust 语言的原因以及 Rust 的优势，我也阐述一下创造 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架的原因以及 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 的特点。&lt;/p>
-&lt;h3 id="生态现状">生态现状&lt;/h3>
-&lt;p>创造 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架与当时的生态情况是有关的。我们当时调研过整个社区的生态，发现没有生产可用的 Async Thrift 实现。哪怕是社区中最成熟的 Tonic 框架，它的服务治理功能也是比较弱的，而且易用性也不够强。
-更重要的是当时在 Rust 语言社区，还没有基于 Generic Associated Type（GAT，Rust 语言最新的⼀个重量级 Feature）和 Type Alias Impl Trait（TAIT，另⼀个重量级 Feature）的易用性强的抽象。&lt;/p>
-&lt;h3 id="易用性">易用性&lt;/h3>
-&lt;p>为什么单独说明 GAT 和 TAIT 这两个特性呢？按照 Rust 官方团队的说法，这是自 Rust 1.0 以来语言层面和 Type System 层面最大的变化。
-举例简单说明，下图是一个现有的社区方案，代码是没有使用 GAT 和 TAIT 的超时中间件的编写，我们可以发现如果要保证性能不受损耗，需要编写大量代码。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/13.png" alt="image">&lt;/p>
-&lt;p>而在 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架中，因为采用了 GAT 和 TAIT 这两个特性，编写代码如下图所示。我们可以明显对比出代码量和易用性方面的差距是非常明显的。
-Rust 以难学难用而闻名，我们希望尽可能地降低用户使用 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架和 Rust 语言编写微服务的难度，提供给用户最符合人体工程学和直觉的编码体验，因此我们把框架易用性作为重要目标之一。
-只有让大家真正地使用 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a>，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 才能体现它的价值。所以 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架 &lt;strong>基于 GAT 和 TAIT 特性&lt;/strong> ， &lt;strong>大大提升了用户编写中间件的便利程度&lt;/strong> 。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/14.png" alt="image">&lt;/p>
-&lt;p>除此之外，我们提供了 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> &lt;strong>命令行工具生成默认 Layout&lt;/strong> ，并且 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 的命令行工具提供 &lt;strong>IDL 管理的能力&lt;/strong> ，这在业界是首例。
-我们还提供了过程宏等能够再度降低 Service 编写难度的功能。当然还有很多其他的精心设计，比如很多 API 都是尽量以最符合人体工程学的方式给出的，也可以避免误用。&lt;/p>
-&lt;h3 id="扩展性">扩展性&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>基于 Service 的抽象&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>受益于 Rust 强大的表达和抽象能力，开发者可以基于非常灵活的 Service 抽象，用统一的形式对 RPC 的元信息请求和响应做一些处理，比如服务发现、负载均衡等服务治理功能都是直接实现 Service 即可。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/15.png" alt="image">&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>基于 RPC 元信息的控制&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>另外，在我们的框架设计中，所有框架行为都是受到 RPC 元信息控制的。因此我们只要在 Service 中对 RPC 元信息进行修改，就能直接控制框架的行为，从而实现所需的功能。&lt;/p>
-&lt;p>下图是 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 自带的负载均衡中间件实现中最关键的一部分，即红色线框圈出的代码。只要把 Load Balance 选出来的地址放到 RPC 元信息中就可以，其他代码可以直接忽视掉。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/16.png" alt="image">&lt;/p>
-&lt;h3 id="性能">性能&lt;/h3>
-&lt;p>如果过多谈论框架的性能对比，容易引战。但是基于 Rust 语言的性能优势以及 CloudWeGo 团队对于极致性能的追求，我们可以预想到 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 的性能也是非常高的。&lt;/p>
-&lt;p>如果把 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 和 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 进行跨语言的对比也是不太公平的，但是因为很多用户都关注性能数据，为了让使用者对 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架的性能有大致的了解，我们只给出比较简单的性能数据。
-在与 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 相同的测试条件（限制 4C）下，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 极限 QPS 为 35W。同时，我们内部正在验证基于 &lt;a href="https://github.com/bytedance/monoio">Monoio&lt;/a>（CloudWeGo 开源的 Rust Async Runtime）的版本，极限 QPS 可以达到 44W。&lt;/p>
-&lt;p>当然还有很多其他的性能指标，比如响应时间也是非常影响用户体验的。所以除了 Benchmark，我们选取了由 Go 迁移到 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架的两个业务，呈现真实的业务落地收益。&lt;/p>
-&lt;ol>
-&lt;li>&lt;strong>业务 A（Proxy 类）&lt;/strong> 。A 业务的 IO 比较多，迁移到 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架后的各方面数据如下：&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>CPU Usage 630% -&amp;gt; 380%&lt;/li>
-&lt;li>MEM 9GB -&amp;gt; 2GB&lt;/li>
-&lt;li>P99 150-200ms -&amp;gt; 20-35ms&lt;/li>
-&lt;li>AVG 4-5ms -&amp;gt; 1.5ms&lt;/li>
-&lt;/ul>
-&lt;p>可以看出不论是 CPU、内存还是延时的指标，都有非常明显的提升。下图中间红线代表 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 上线的时间，也就是红线左侧这一部分是 Go 的指标，红线右侧是 Rust 的指标，左右对比可以更直观看出 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架给业务 A 带来的收益。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/17.png" alt="image">&lt;/p>
-&lt;ol start="2">
-&lt;li>&lt;strong>业务 B（有大量业务逻辑）&lt;/strong> 。业务 B 是一个计算密集型的业务，使用 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架后 CPU 400% -&amp;gt; 130%。因此在计算密集型的业务中，CPU 的提升更加明显。&lt;/li>
-&lt;/ol>
-&lt;h3 id="相关生态">相关生态&lt;/h3>
-&lt;p>随着 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架开源，一起开源的所有生态如下：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>Volo&lt;/strong> 是 RPC 框架的名字，包含了 Volo-Thrift 和 Volo-gRPC 两部分。&lt;/li>
-&lt;li>&lt;strong>Volo-rs 组织&lt;/strong> ：Volo 的相关生态。&lt;/li>
-&lt;li>&lt;strong>Pilota&lt;/strong> ：Volo 使用的 Thrift 与 Protobuf 编译器及编解码的纯 Rust 实现（不依赖 protoc）。&lt;/li>
-&lt;li>&lt;strong>Motore&lt;/strong> ：Volo 参考 Tower 设计的，使用了 GAT 和 TAIT 的 middleware 抽象层。&lt;/li>
-&lt;li>&lt;strong>Metainfo&lt;/strong> ：Volo 用于进行元信息透传的组件，定义了一套元信息透传的标准。&lt;/li>
-&lt;/ul>
-&lt;p>全景图如下：&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/18.png" alt="image">&lt;/p>
-&lt;h3 id="仓库地址">仓库地址&lt;/h3>
-&lt;p>以下是所有相关生态的仓库地址。欢迎大家来提 Issue 或 PR，一起共建 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a>！&lt;/p>
-&lt;ul>
-&lt;li>Volo：https://github.com/cloudwego/volo&lt;/li>
-&lt;li>Volo-rs：https://github.com/volo-rs&lt;/li>
-&lt;li>Pilota：https://github.com/cloudwego/pilota&lt;/li>
-&lt;li>Motore：https://github.com/cloudwego/motore&lt;/li>
-&lt;li>Metainfo：https://github.com/cloudwego/metainfo&lt;/li>
-&lt;/ul>
-&lt;h2 id="rust-语言和-go-语言如何选择">Rust 语言和 Go 语言如何选择&lt;/h2>
-&lt;p>了解 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架后，关于 Rust 语言和 Go 如何选择的问题，我有一些主观的建议和想法。&lt;/p>
-&lt;h3 id="和-cgo-对比">和 C++、Go 对比&lt;/h3>
-&lt;p>如果 Go 的服务想用另一种语言重写，目前还是 Rust 语言和 C++ 可选性高一些，因此我将这三种语言进行对比，以期为面临选择编程语言的用户提供一些参考。&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/Rust_or_Go/19.png" alt="image">&lt;/p>
-&lt;p>&lt;strong>在学习难度方面&lt;/strong>，Rust 语言和 C++ 学习难度比较高，而 Go 语言的学习难度比较低。&lt;/p>
-&lt;p>&lt;strong>在性能方面&lt;/strong>，Rust 语言和 C++ 的性能比较高。我给 Go 语言的性能评级为中等，毕竟和 Python 这些服务相比，Go 语言还是要强很多的。&lt;/p>
-&lt;p>&lt;strong>在安全性方面&lt;/strong>，C++ 的安全性比较低，Go 语言安全性中等，Rust 语言安全性比较高。因为 Go 语言 虽然能够通过 GC 防住一些内存安全的问题，但是它没有办法防住类似 Data Race 这种并发安全的问题，
-而且大多数时候这类问题其实很难排查。Rust 能够做到可防可控，应防尽防，只要有内存安全问题或并发安全问题，都无法成功编译。&lt;/p>
-&lt;p>&lt;strong>在协作方面&lt;/strong>，Rust 语言的协作能力比较高，Go 语言和 C++ 的协作等级是中等。首先，C++ 没有官方提供的包管理工具，它必须借助第三方社区提供的包管理工具，但是不同的项目使用的包管理工具可能是不一样的，
-所以这是对用户来说非常不便的；其次，在开发者可以保证自己的代码没有 Bug、符合最佳实践的情况下，还是不可避免地会和一些第三方的库以及比较老旧社区一流的库产生交集，并且产生混用的情形；
-最后，如果涉及到大型项目，需要团队协作开发，我们无法保证团队中其他人写出的代码也不存在内存安全问题。至于 Go 语言，它的编译时及工具链的能力相对来说比较弱，因此也定级为中等。&lt;/p>
-&lt;p>&lt;strong>在特性和使用成本方面&lt;/strong>，用户应该都有所了解，不再过多赘述。从使用成本上来讲，我的评级为给 C++ 为高使用成本，Go 语言和 Rust 语言的使用成本是中等。C++ 的业务上线之后经常出状况，
-而且排查问题困难是很常见的情况。而使用 Go 语言做一些通用的编程是可以的，但是一旦涉及到定制化的需求在实现上就有一定的困难，比如需要根据不同的平台系统做系统级编程，
-使用 Go 语言做起来就非常麻烦。语言只是工具，我们还是要根据不同的场景选用更为合适的语言。&lt;/p>
-&lt;p>那么 Go 语言和 Rust 语言的使用成本为什么是中等呢？因为我们不能只关注编写代码的效率，还要考虑运维和 Debug 的成本。Go 语言可能也会产生 Panic，我们内部也经常会有一些并发的问题，然后需要不断地排查。
-而 Rust 语言前置了这部分成本，相比于其他语言框架在上线之后测试、保证稳定性，我们把这部分的时间精力用在了开发期间，这样也避免了线上事故带来的损失。因此我给 Go 语言和 Rust 语言评定的使用成本是中等。&lt;/p>
-&lt;h3 id="rust--go">Rust &amp;amp; Go&lt;/h3>
-&lt;p>如果将 Rust 语言和 Go 语言单独做对比，我们应该如何解读它们呢？这是一个非常经典的问题。可以尝试从以下四方面考虑：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>合作关系，取长补短&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>我们团队认为其实二者并不是对立关系，而是合作关系，它们是取长补短的。毕竟语言只是工具，很多时候我们只是需要一个更加得心应手的工具而已。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>(性能 &amp;raquo; 开发效率) || (安全性 &amp;raquo; 开发效率) -&amp;gt; Rust&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>对于需要极致性能，重计算的应用，以及需要稳定性并能接受一定开发速度损失的应用，推荐使用 Rust，Rust 在极致性能优化和安全性上的优势可以在这类应用中得以发挥。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>迭代速度要求高 -&amp;gt; Go&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>对于性能不敏感的应用、重 IO 的应用以及需要快速开发快速迭代胜过稳定性的应用，推荐使用 Go 语言，这种应用使用 Rust 并不会带来明显的收益。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>考虑团队技术储备和人才储备&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>当然，还有一个很重要的考虑因素，是团队现有的技术栈，即技术储备和人才储备。&lt;/p>
-&lt;h3 id="小结">小结&lt;/h3>
-&lt;p>希望以上内容能让大家初步了解 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 以及相关的生态。目前 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 还处于早期发展阶段，欢迎各位感兴趣的同学加入我们，共同建设 CloudWeGo 以及 Rust 开源社区。
-我们诚心期待更多开发者加入，也期待 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 能够助力越来越多的企业快速构建云原生架构。&lt;/p></description></item><item><title>Blog: 国内首个基于 Rust 语言的 RPC 框架 — Volo 正式开源！</title><link>https://www.cloudwego.io/zh/blog/2022/08/30/%E5%9B%BD%E5%86%85%E9%A6%96%E4%B8%AA%E5%9F%BA%E4%BA%8E-rust-%E8%AF%AD%E8%A8%80%E7%9A%84-rpc-%E6%A1%86%E6%9E%B6-volo-%E6%AD%A3%E5%BC%8F%E5%BC%80%E6%BA%90/</link><pubDate>Tue, 30 Aug 2022 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/zh/blog/2022/08/30/%E5%9B%BD%E5%86%85%E9%A6%96%E4%B8%AA%E5%9F%BA%E4%BA%8E-rust-%E8%AF%AD%E8%A8%80%E7%9A%84-rpc-%E6%A1%86%E6%9E%B6-volo-%E6%AD%A3%E5%BC%8F%E5%BC%80%E6%BA%90/</guid><description>
-&lt;p>&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 是字节跳动服务框架团队研发的&lt;strong>轻量级&lt;/strong>、&lt;strong>高性能&lt;/strong>、 &lt;strong>可扩展性强&lt;/strong>、&lt;strong>易用性好&lt;/strong>的 Rust RPC 框架，使用了 Rust 最新的 GAT 和 TAIT 特性。&lt;/p>
-&lt;p>在字节内部，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 已经落地多个业务和基础组件，并且取得了超预期的性能收益（与 Go 版本对比，不那么公平）。&lt;/p>
-&lt;p>&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 与其它 CloudWeGo 开源项目一样，坚持内外维护一套代码，为开源使用提供了强有力的保障。同时，我们观察到 Rust 开源社区在 RPC 框架这块还比较薄弱，
-&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 的开源希望能为社区的完善贡献一份力量，同时也能完善 CloudWeGo 生态矩阵，为追求性能、安全性和最新技术的开发者、企业以及 Rustaceans 开发 RPC 微服务、搭建云原生分布式系统提供强有力的支持。&lt;/p>
-&lt;p>本文会为大家简单介绍 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 及其相关生态，并为大家提供一个简单的 Rust 与 Go 的选型建议。&lt;/p>
-&lt;h2 id="01-项目缘起">01 项目缘起&lt;/h2>
-&lt;p>其实 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 的创始成员来自于 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 团队（CloudWeGo 开源的 Go RPC 框架），当时我们在 Go 上做了非常深度的性能优化，也因此深刻感受到了在 Go 上做性能优化所面临的阻碍。
-因此，我们选择了 Rust，期望能够给需求极致性能、安全和指令级掌控能力的业务一个合适的选择。而 RPC 框架是分布式系统中重要的组成部分，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 就这么诞生了。&lt;/p>
-&lt;h2 id="02-特性">02 特性&lt;/h2>
-&lt;h3 id="高性能">高性能&lt;/h3>
-&lt;p>Rust 以高性能和安全著称，我们在设计和实现过程中也时刻以高性能作为我们的目标，尽可能降低每一处的开销，提升每一处实现的性能。&lt;/p>
-&lt;p>首先要说明，&lt;strong>和 Go 的框架对比性能是极不公平的&lt;/strong>，因此我们不会着重比较 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 和 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 的性能，并且我们给出的数据仅能作为参考，希望大家能够客观看待。
-同时，由于在开源社区并没有找到另一款成熟的 Rust 语言的 Async 版本 Thrift RPC 框架，而且性能对比总是容易引战，因此我们希望尽可能弱化性能数据的对比，仅会公布我们自己极限 QPS 的数据。&lt;/p>
-&lt;p>在和 &lt;a href="https://github.com/cloudwego/kitex">Kitex&lt;/a> 相同的测试条件（限制 4C）下，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 极限 QPS 为 35W。同时，我们内部正在验证基于 &lt;a href="https://github.com/bytedance/monoio">Monoio&lt;/a>（CloudWeGo 开源的 Rust Async Runtime）的版本，极限 QPS 可以达到 44W。&lt;/p>
-&lt;p>从我们线上业务的火焰图来看，得益于 Rust 的静态分发和优秀的编译优化，框架部分的开销基本可以忽略不计（不包含 syscall 开销）。&lt;/p>
-&lt;h3 id="基于-gat-设计">基于 GAT 设计&lt;/h3>
-&lt;p>我们热爱并追随最新的技术，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 的核心抽象使用了 Rust 最新的 GAT 特性，在这个过程中我们也借鉴了 &lt;strong>Tower&lt;/strong> 的设计。Tower 是一个非常优秀的抽象层设计，适用于非 GAT 的情况下。在此我们非常感谢 Tower 团队。&lt;/p>
-&lt;p>Tower：https://github.com/tower-rs/tower&lt;/p>
-&lt;p>通过 GAT，我们可以避免很多不必要的 Box 内存分配，以及提升易用性，给用户提供更友好的编程接口和更符合人体工程学的编程范式。&lt;/p>
-&lt;p>我们的核心抽象如下：&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/opensource_volo/1.png" alt="image">&lt;/p>
-&lt;p>由于使用了 Rust 的 GAT 特性，因此我们可以解决返回异步 Future 带来的生命周期问题。同时，如果配合 &lt;code>impl_trait_in_assoc_type&lt;/code> 使用，效果更佳，比如实现 Timeout 可以使用如下方式：&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/opensource_volo/2.png" alt="image">&lt;/p>
-&lt;h3 id="易用性好">易用性好&lt;/h3>
-&lt;p>Rust 以难学难用而闻名，我们希望尽可能降低用户使用 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 框架以及使用 Rust 语言编写微服务的难度，提供最符合人体工程学和直觉的编码体验。因此，我们把易用性作为我们重要的目标之一。&lt;/p>
-&lt;p>比如，我们提供了 Volo 命令行工具，用于初始化项目以及管理 IDL。同时，我们将 Thrift 及 gRPC 拆分为两个独立（但共用一些组件）的框架，以提供最符合不同协议语义的编程范式及接口。&lt;/p>
-&lt;p>我们还提供了 &lt;code>#[service]&lt;/code> 宏（可以理解为不需要 &lt;code>Box&lt;/code> 的 &lt;code>async_trait&lt;/code>）来使得用户可以无心理负担地使用异步来编写 &lt;code>Service&lt;/code> 中间件。&lt;/p>
-&lt;p>通过这个宏，我们编写 &lt;code>Service&lt;/code> 中间件可以简化到如下图：&lt;/p>
-&lt;p>&lt;img src="https://www.cloudwego.io/img/blog/opensource_volo/3.png" alt="image">&lt;/p>
-&lt;h3 id="扩展性强">扩展性强&lt;/h3>
-&lt;p>受益于 Rust 强大的表达和抽象能力，通过灵活的中间件 Service 抽象，开发者可以以非常统一的形式，对 RPC 元信息、请求和响应做处理。&lt;/p>
-&lt;p>比如，服务发现、负载均衡等服务治理功能，都可以以 Service 形式进行实现，而不需要独立实现 Trait。&lt;/p>
-&lt;p>相关的扩展，我们会放在 github.com/volo-rs 组织下，也欢迎大家贡献自己的扩展到 volo-rs。&lt;/p>
-&lt;h2 id="03-生态系统">03 生态系统&lt;/h2>
-&lt;p>&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 是 RPC 框架的名字，随着 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 一起开源的有以下几个项目：&lt;/p>
-&lt;ol>
-&lt;li>Volo-rs：Volo 的相关生态。&lt;/li>
-&lt;li>Pilota：Volo 使用的 Thrift 与 Protobuf 编译器及编解码的纯 Rust 实现（不依赖 protoc）。&lt;/li>
-&lt;li>Motore：Volo 参考 Tower 设计的、使用了 GAT 和 TAIT 的 middleware 抽象层。&lt;/li>
-&lt;li>Metainfo：Volo 用于进行元信息透传的组件，期望定义一套元信息透传的标准。&lt;/li>
-&lt;/ol>
-&lt;h2 id="04-选型建议">04 选型建议&lt;/h2>
-&lt;p>“什么情况下应该用 Rust、什么情况下应该用 Go？”这是一个非常经典的问题。在 Volo 团队看来，Rust 和 Go 并不是对立关系，而是合作关系，取长补短。&lt;/p>
-&lt;p>对于性能不敏感的应用、重 IO 的应用以及需要快速开发快速迭代胜过稳定性的应用，推荐使用 Go，这种应用使用 Rust 并不会带来明显的收益。&lt;/p>
-&lt;p>对于 &lt;strong>需要极致性能&lt;/strong>，&lt;strong>重计算&lt;/strong>的应用，以及&lt;strong>需要稳定性并能接受一定开发速度损失&lt;/strong>的应用，推荐使用 Rust，Rust 在极致性能优化和安全性上的优势可以在这类应用中得以发挥。&lt;/p>
-&lt;p>当然，还有一个很重要的考虑因素，是团队现有的技术栈，即技术储备和人才储备。&lt;/p>
-&lt;h2 id="05-总结">05 总结&lt;/h2>
-&lt;p>希望本文能让大家对于 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 及相关生态有一个基本的了解。同时，&lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 还处于早期阶段，欢迎各位感兴趣的同学一起加入，共同建设 CloudWeGo 及 Rust 开源社区，向 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 提交 Issue 和 PR 一起来共建。
-我们诚心期待更多的开发者加入，也期待 &lt;a href="https://github.com/cloudwego/volo">Volo&lt;/a> 助力越来越多的企业快速构建云原生架构。如果企业客户想内部试用，我们可以排期提供专项技术支持和交流。&lt;/p>
-&lt;h3 id="参考资料">参考资料&lt;/h3>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;a href="https://github.com/cloudwego/volo">Volo 概览&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a href="https://www.cloudwego.io/zh/docs/volo/">Volo Tutorial&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a href="https://docs.rs/volo">Volo 文档&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a href="https://github.com/volo-rs">Volo-rs 组织&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ul></description></item></channel></rss>
+我们会在公众号上发布一些新闻动态以及各个相关场景的案例报道，同时我们也会在公众号上提供相关的技术支持。感谢大家的关注！&lt;/p></description></item></channel></rss>

@@ -1,4 +1,37 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – Hertz</title><link>https://www.cloudwego.io/projects/hertz/</link><description>Recent content in Hertz on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 30 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudwego.io/projects/hertz/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Hertz Release</title><link>https://www.cloudwego.io/blog/releases/hertz/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/releases/hertz/</guid><description/></item><item><title>Blog: Hertz Release v0.9.0</title><link>https://www.cloudwego.io/blog/2024/05/30/hertz-release-v0.9.0/</link><pubDate>Thu, 30 May 2024 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2024/05/30/hertz-release-v0.9.0/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – Hertz</title><link>https://www.cloudwego.io/projects/hertz/</link><description>Recent content in Hertz on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 21 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudwego.io/projects/hertz/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Hertz Release</title><link>https://www.cloudwego.io/blog/releases/hertz/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/releases/hertz/</guid><description/></item><item><title>Blog: Hertz Release v0.10.0</title><link>https://www.cloudwego.io/blog/2025/05/21/hertz-release-v0.10.0/</link><pubDate>Wed, 21 May 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/05/21/hertz-release-v0.10.0/</guid><description>
+&lt;p>The Hertz v0.10.0 release adds two features and some fixes.&lt;/p>
+&lt;ol>
+&lt;li>Integrate SSE functionality. Refer to &lt;a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/sse/">SSE&lt;/a> for usage.&lt;/li>
+&lt;li>Added http.Handler adaptor, extending Hertz using the official net/http ecosystem. Refer to &lt;a href="https://www.cloudwego.io/docs/hertz/tutorials/basic-feature/http-adaptor/">Adaptor&lt;/a> for usage.&lt;/li>
+&lt;/ol>
+&lt;h2 id="feature">Feature&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1327">#1327&lt;/a>] feat(adaptor): new HertzHandler for http.Handler&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1349">#1349&lt;/a>] feat(sse): SetLastEventID&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1343">#1343&lt;/a>] feat(sse): reader supports cancel stream&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1341">#1341&lt;/a>] feat(server): detect request race&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1339">#1339&lt;/a>] feat(sse): add LastEventID helpers&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1335">#1335&lt;/a>] feat(protocol): new sse pkg&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1322">#1322&lt;/a>] feat: std transport sense client connection close&lt;/li>
+&lt;/ol>
+&lt;h2 id="fix">Fix&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1340">#1340&lt;/a>] fix: only use netpoll &amp;amp; sonic on amd64/arm64 linux/darwin&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1333">#1333&lt;/a>] fix(protocol): unexpected set resp.bodyStream&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1329">#1329&lt;/a>] fix(client): stream body for sse instead of timeout&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1332">#1332&lt;/a>] fix(server): Shutdown checks ExitWaitTimeout&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1316">#1316&lt;/a>] fix: prioritize custom validator&lt;/li>
+&lt;/ol>
+&lt;h2 id="tests">Tests&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1336">#1336&lt;/a>] test(protocol): fix hardcoded listen addr&lt;/li>
+&lt;/ol>
+&lt;h2 id="chore">Chore&lt;/h2>
+&lt;ol>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1353">#1353&lt;/a>] chore: update netpoll dependency&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1337">#1337&lt;/a>] chore(hz): update hz tool v0.9.7&lt;/li>
+&lt;li>[&lt;a href="https://github.com/cloudwego/hertz/pull/1328">#1328&lt;/a>] ci: disable codecov annotations&lt;/li>
+&lt;/ol></description></item><item><title>Blog: Hertz Release v0.9.0</title><link>https://www.cloudwego.io/blog/2024/05/30/hertz-release-v0.9.0/</link><pubDate>Thu, 30 May 2024 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2024/05/30/hertz-release-v0.9.0/</guid><description>
 &lt;p>The Hertz v0.9.0 release mainly supports general iteration and optimization.&lt;/p>
 &lt;h2 id="feature">Feature&lt;/h2>
 &lt;ol>

@@ -1,4 +1,79 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – Kitex</title><link>https://www.cloudwego.io/projects/kitex/</link><description>Recent content in Kitex on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudwego.io/projects/kitex/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release</title><link>https://www.cloudwego.io/blog/releases/kitex/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/releases/kitex/</guid><description/></item><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</link><pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CloudWeGo – Kitex</title><link>https://www.cloudwego.io/projects/kitex/</link><description>Recent content in Kitex on CloudWeGo</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 26 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.cloudwego.io/projects/kitex/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Kitex Release</title><link>https://www.cloudwego.io/blog/releases/kitex/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/releases/kitex/</guid><description/></item><item><title>Blog: Kitex Release v0.14.0</title><link>https://www.cloudwego.io/blog/2025/06/26/kitex-release-v0.14.0/</link><pubDate>Thu, 26 Jun 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/06/26/kitex-release-v0.14.0/</guid><description>
+&lt;h2 id="introduction-to-key-changes">&lt;strong>Introduction to Key Changes&lt;/strong>&lt;/h2>
+&lt;h3 id="new-features">&lt;strong>New Features&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Generic Call: The generic Client supports streaming calls, allowing a single Client to handle both streaming and non-streaming scenarios&lt;/strong>&lt;/p>
+&lt;p>It supports streaming generic calls, adapting to gRPC/TTHeader Streaming and supporting map/JSON and Protobuf binary generic calls.&lt;/p>
+&lt;p>A brief code example is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">genericclient&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">NewClient&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;actualServiceName&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">g&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// Ping-Pong generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">resp&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">GenericCall&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;PingPongTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">req&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// ClientStreaming generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">cliStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ClientStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;ClientStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// ServerStreaming generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">srvStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">ServerStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;ServerStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">req&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// BidiStreaming generic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">bidiStream&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">err&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:=&lt;/span> &lt;span style="color:#000">cli&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">BidiStreaming&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;BidiStreamingTest&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Refer to this document for details: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/basic_usage/">Generic Call&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="featureexperience-optimization">&lt;strong>Feature/Experience Optimization&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Streaming: Improved observability and debugging experience&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>TTHeader Streaming&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>If Tracer configured, failure to create a stream will now be reported with metrics.&lt;/li>
+&lt;li>When a panic occurs on the Server side, the full stack trace will now be printed for easier troubleshooting.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>gRPC Streaming&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>If Tracer configured, failure to create a stream will now be reported with metrics.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="others">&lt;strong>Others&lt;/strong>&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Code Product Simplification&lt;/strong>&lt;/p>
+&lt;p>Kitex tool no longer generates fastpb, only affecting Protobuf users.&lt;/p>
+&lt;p>If high-performance Protobuf encoding/decoding is required, you can enable prutal by configuring environment variable &lt;code>KITEX_TOOL_USE_PRUTAL_MARSHAL=1&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="full-change">&lt;strong>Full Change&lt;/strong>&lt;/h2>
+&lt;h3 id="feature">Feature&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1759">#1759&lt;/a>] feat(tool): add env for using prutal to marshal&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1782">#1782&lt;/a>] feat(ttstream): process MetaFrame and reflect to rpcinfo&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1777">#1777&lt;/a>] feat(client): report err when create Stream failed&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1763">#1763&lt;/a>] feat: support ttheader streaming generic call&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1771">#1771&lt;/a>] feat(tool): add thriftgo patcher extension&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1755">#1755&lt;/a>] feat: add generic binary pb for streamx&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1752">#1752&lt;/a>] feat(generic): support generic pb binary for streaming&lt;/p>
+&lt;h3 id="optimize">Optimize&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1788">#1788&lt;/a>] optimize: go net implementation&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1786">#1786&lt;/a>] optimize(tool): remove tool fastpb generation&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1783">#1783&lt;/a>] optimize(gRPC): parse PayloadCodec in server side&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1780">#1780&lt;/a>] optimize(ttstream): log the error thrown by invoking handler&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1769">#1769&lt;/a>] optimize: injection of options in ttstream&lt;/p>
+&lt;h3 id="fix">Fix&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1792">#1792&lt;/a>] fix(gRPC): inject current method name to rpcinfo in server-side to fix FROM_METHOD missing&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1787">#1787&lt;/a>] fix(ttstream): metrics missing caused by server-side rpcinfo not set correctly&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1778">#1778&lt;/a>] fix: enabling json mode of map generic not work&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1774">#1774&lt;/a>] fix(server): trans server conn count race issue&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1742">#1742&lt;/a>] fix(generic): align dynamicgo&amp;rsquo;s write base behavior with old generic (only for internal logic)&lt;/p>
+&lt;h3 id="refactor">Refactor&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1770">#1770&lt;/a>] refactor: refactor generic streaming&lt;/p>
+&lt;h3 id="test">Test&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1793">#1793&lt;/a>] test: add go1.18 to scenario-test&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1765">#1765&lt;/a>] refactor: refactor generic streaming&lt;/p>
+&lt;h3 id="docs">Docs&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1794">#1794&lt;/a>] docs: update CONTRIBUTING.md to change PR base branch to main&lt;/p>
+&lt;h3 id="chore">Chore&lt;/h3>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1795">#1795&lt;/a>] chore: update dependency&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1776">#1776&lt;/a>] chore: remove testify dependency&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1757">#1757&lt;/a>] chore: update prutal to v0.1.1&lt;/p>
+&lt;p>[&lt;a href="https://github.com/cloudwego/kitex/pull/1753">#1753&lt;/a>] ci: disable codecov annotations&lt;/p></description></item><item><title>Blog: Kitex Release v0.13.0</title><link>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</link><pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate><guid>https://www.cloudwego.io/blog/2025/04/07/kitex-release-v0.13.0/</guid><description>
 &lt;blockquote>
 &lt;p>We recommend upgrading directly to Kitex version v0.13.1, as we have fixed a potential Goroutine leak issue of the gRPC Client in v0.13.0.&lt;/p>
 &lt;/blockquote>
@@ -117,11 +192,6 @@
 &lt;p>Added support for a graceful shutdown feature to address upstream errors caused by service upgrades or updates.&lt;/p>
 &lt;p>For usage: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/basic-feature/protocol/streaming/grpc/graceful_shutdown/">gRPC Streaming Graceful Shutdown&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li>
-&lt;p>&lt;strong>JSON Generic Call Supports gRPC Streaming&lt;/strong>&lt;/p>
-&lt;p>JSON generic calls now support gRPC Streaming interfaces (client-side only). This is the official release after trial in v0.10.0.&lt;/p>
-&lt;p>For usage: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">User Guide to Generic Call for Streaming&lt;/a>&lt;/p>
-&lt;/li>
 &lt;/ol>
 &lt;h3 id="experience-optimization">Experience Optimization&lt;/h3>
 &lt;ol>
@@ -218,7 +288,6 @@ If you think that it has an impact on performance, you can fork the old version 
 &lt;li>&lt;strong>Frugal ARM Optimization&lt;/strong>: Frugal v0.2.0 now supports a new implement by reflection&lt;/li>
 &lt;li>&lt;strong>Kitex Tool Improvement&lt;/strong>: Kitex Tool provide a new param &lt;code>-rapid&lt;/code> to integrates Thriftgo and there&amp;rsquo;s a slightly improved speed.&lt;/li>
 &lt;li>&lt;strong>Generating Multiple Handlers for Multiple Services&lt;/strong>：Since this version, Kitex tool provide each service with independent handler file and register them into server，for more details: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/multi_service/multi_handler/">Generating Multiple Handlers for Multiple Services&lt;/a>&lt;/li>
-&lt;li>&lt;strong>Generic Streaming for JSON [on trial]&lt;/strong>：JSON generic streaming has now support streaming (client only)，currently we&amp;rsquo;re doing some optimization, you can have a try by following this doc: &lt;a href="https://www.cloudwego.io/docs/kitex/tutorials/advanced-feature/generic-call/generic_streaming/">Generic Streaming&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h3 id="others">Others&lt;/h3>
 &lt;ol>
