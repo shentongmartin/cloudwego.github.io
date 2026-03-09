@@ -1,13 +1,13 @@
 ---
 Description: ""
-date: "2026-03-02"
+date: "2026-03-09"
 lastmod: ""
 tags: []
-title: 'Middleware: ToolReduction'
+title: Reduction
 weight: 6
 ---
 
-# ToolReduction 中间件
+# Reduction 中间件
 
 adk/middlewares/reduction
 

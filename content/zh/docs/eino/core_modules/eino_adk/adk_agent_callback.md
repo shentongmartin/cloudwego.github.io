@@ -1,13 +1,18 @@
 ---
 Description: ""
-date: "2026-03-02"
+date: "2026-03-09"
 lastmod: ""
 tags: []
-title: 'Eino ADK: Agent Callback'
+title: Agent Callback
 weight: 9
 ---
 
 此功能为 ADK Agent 添加了回调（Callback）支持，类似于 compose 包中的回调机制。通过回调，用户可以观测 Agent 的执行生命周期，实现日志记录、追踪、监控等功能。
+
+> 💡
+> **提示**：cozeloop 的 adk trace 版本见 [https://github.com/cloudwego/eino-ext/releases/tag/callbacks%2Fcozeloop%2Fv0.2.0-alpha.1](https://github.com/cloudwego/eino-ext/releases/tag/callbacks%2Fcozeloop%2Fv0.2.0-alpha.1)
+>
+> 务必同时使用支持 v0.8 的 trace callback handler 实现，才能正常使用 Agent trace 功能
 
 ## 概述
 
@@ -132,8 +137,17 @@ handler := callbacks.NewHandlerBuilder().
     }).
     Build()
 
-iter := agent.Run(ctx, input, adk.WithCallbacks(handler))
+// 创建 Runner - 必须通过 Runner 执行 Agent，callback 才会生效
+runner := adk.NewRunner(ctx, adk.RunnerConfig{
+    Agent:           agent,
+    EnableStreaming: input.EnableStreaming,
+})
+
+iter := runner.Run(ctx, input.Messages, adk.WithCallbacks(handler))
 ```
+
+> 💡
+> **重要提示**：上面的示例展示了正确的使用方式。必须通过 Runner 执行 Agent，AgentCallback 才会生效。直接使用 `agent.Run()` 时，callback 不会被触发。
 
 ### 方式二：使用 HandlerHelper（推荐）
 
@@ -172,13 +186,25 @@ helper := template.NewHandlerHelper().
     }).
     Handler()
 
-iter := agent.Run(ctx, input, adk.WithCallbacks(helper))
+// 创建 Runner - 必须通过 Runner 执行 Agent，callback 才会生效
+runner := adk.NewRunner(ctx, adk.RunnerConfig{
+    Agent:           agent,
+    EnableStreaming: input.EnableStreaming,
+})
+
+iter := runner.Run(ctx, input.Messages, adk.WithCallbacks(helper))
 ```
+
+> 💡
+> **重要提示**：必须通过 Runner 执行 Agent，AgentCallback 才会生效。直接使用 `agent.Run()` 时，callback 不会被触发。
 
 > 💡
 > `HandlerHelper` 会自动进行类型转换，代码更简洁。同时支持组合多种组件的回调处理器。
 
 ## Tracing 场景应用
+
+> 💡
+> **重要提示**：AgentCallback 必须通过 Runner 来执行才会生效。直接使用 Agent.Run() 时，callback 不会被触发，因为 callback 机制是在 flowAgent 层面实现的。请使用 adk.NewRunner() 创建 Runner 后，通过 Runner.Run() 或 Runner.Query() 来执行 Agent。
 
 Agent Callback 最常见的应用场景是实现分布式追踪（Tracing）。以下是使用 OpenTelemetry 实现 tracing 的示例：
 
@@ -188,7 +214,23 @@ import (
     "go.opentelemetry.io/otel/attribute"
     "go.opentelemetry.io/otel/codes"
     "go.opentelemetry.io/otel/trace"
+    
+    "github.com/cloudwego/eino/adk"
+    "github.com/cloudwego/eino/callbacks"
 )
+
+// 创建 Agent（以 ChatModelAgent 为例）
+agent, _ := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
+    Name:        "my_agent",
+    Description: "A helpful assistant",
+    Model:       chatModel,
+})
+
+// 创建 Runner - 必须通过 Runner 执行 Agent，callback 才会生效
+runner := adk.NewRunner(ctx, adk.RunnerConfig{
+    Agent:           agent,
+    EnableStreaming: true,
+})
 
 tracer := otel.Tracer("my-agent-tracer")
 
@@ -226,52 +268,26 @@ handler := callbacks.NewHandlerBuilder().
         return ctx
     }).
     Build()
+
+// 使用 Runner 执行 Agent，并传入 callback handler
+iter := runner.Query(ctx, "Hello, agent!", adk.WithCallbacks(handler))
+
+// 处理事件流
+for {
+    event, ok := iter.Next()
+    if !ok {
+        break
+    }
+    if event.Err != nil {
+        log.Error(event.Err)
+        break
+    }
+    // 处理事件...
+}
 ```
 
-### 与 compose 回调组合
-
-由于 ADK Agent 回调与 compose 回调共享相同的基础设施，你可以使用同一个 handler 同时处理 Agent 和其他组件（如 ChatModel、Tool）的回调：
-
-```go
-helper := template.NewHandlerHelper().
-    // Agent 回调
-    Agent(&template.AgentCallbackHandler{
-        OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *adk.AgentCallbackInput) context.Context {
-            ctx, _ = tracer.Start(ctx, "agent:"+info.Name)
-            return ctx
-        },
-        OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *adk.AgentCallbackOutput) context.Context {
-            trace.SpanFromContext(ctx).End()
-            return ctx
-        },
-    }).
-    // ChatModel 回调
-    ChatModel(&template.ModelCallbackHandler{
-        OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *model.CallbackInput) context.Context {
-            ctx, _ = tracer.Start(ctx, "model:"+info.Name)
-            return ctx
-        },
-        OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *model.CallbackOutput) context.Context {
-            trace.SpanFromContext(ctx).End()
-            return ctx
-        },
-    }).
-    // Tool 回调
-    Tool(&template.ToolCallbackHandler{
-        OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *tool.CallbackInput) context.Context {
-            ctx, _ = tracer.Start(ctx, "tool:"+input.Name)
-            return ctx
-        },
-        OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *tool.CallbackOutput) context.Context {
-            trace.SpanFromContext(ctx).End()
-            return ctx
-        },
-    }).
-    Handler()
-
-// 使用组合的 handler
-iter := agent.Run(ctx, input, adk.WithCallbacks(helper))
-```
+> 💡
+> **再次提醒**：必须通过 Runner 执行 Agent，callback 才会生效。直接使用 `agent.Run()` 时，即使传入了 `adk.WithCallbacks(handler)`，Agent 级别的 callback 也不会被触发。
 
 > 💡
 > **提示**：cozeloop 的 adk trace 版本见 [https://github.com/cloudwego/eino-ext/releases/tag/callbacks%2Fcozeloop%2Fv0.2.0-alpha.1](https://github.com/cloudwego/eino-ext/releases/tag/callbacks%2Fcozeloop%2Fv0.2.0-alpha.1)

@@ -1,9 +1,9 @@
 ---
 Description: ""
-date: "2026-03-02"
+date: "2026-03-09"
 lastmod: ""
 tags: []
-title: 'Middleware: Skill'
+title: Skill
 weight: 2
 ---
 
@@ -300,10 +300,10 @@ workdir/
 - 创建本地 filesystem backend，基于 backend 创建 Skill middleware：
 
 ```go
-import （
+import (
     "github.com/cloudwego/eino/adk/middlewares/skill"
     "github.com/cloudwego/eino-ext/adk/backend/local"
-）
+)
 
 
 be, err := local.NewBackend(ctx, &local.Config{})
@@ -326,7 +326,7 @@ import (
     "github.com/cloudwego/eino/adk/middlewares/filesystem"
 )
 
-fsm, err := filesystem.NewMiddleware(ctx, &filesystem.Config{
+fsm, err := filesystem.New(ctx, &filesystem.MiddlewareConfig{
     Backend:                          be,
     WithoutLargeToolResultOffloading: true,
 })
@@ -340,7 +340,7 @@ agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
     Description: "An agent that can analyze logs",
     Instruction: "You are a helpful assistant.",
     Model:       cm,
-    Middlewares: []adk.ChatModelAgentMiddleware{fsm, skillMiddleware},
+    Handlers:    []adk.ChatModelAgentMiddleware{fsm, skillMiddleware},
 })
 ```
 
