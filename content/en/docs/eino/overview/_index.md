@@ -348,13 +348,9 @@ The Eino framework consists of several parts:
 > For components used internally at ByteDance, there are corresponding internal code repositories:
 >
 > EinoBytedExt: [https://code.byted.org/flow/eino-byted-ext](https://code.byted.org/flow/eino-byted-ext)
->
-> Contains component implementations currently positioned for internal use, such as llmgateway, bytedgpt, fornax tracing, bytees, etc.
 
 - [Eino Devops](https://github.com/cloudwego/eino-ext/tree/main/devops): Visual development, visual debugging, etc.
 - [EinoExamples](https://github.com/cloudwego/eino-examples): A code repository containing example applications and best practices.
-
-See: [Eino Framework Structure Description](/docs/eino/overview/Eino Framework Structure Description)
 
 ## Detailed Documentation
 
