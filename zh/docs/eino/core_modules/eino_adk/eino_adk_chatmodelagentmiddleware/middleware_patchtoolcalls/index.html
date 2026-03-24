@@ -13,7 +13,7 @@
 概述 在多轮对话场景中，可能会出现 Assistant 消息包含工具调用（ToolCalls），但对话历史中缺少对应的 Tool 消息响应的情况。这种「悬空的工具调用」会导致某些模型 API 报错或产生异常行为。
 常见场景：
 用户在工具执行完成前发送了新消息，导致工具调用被中断 会话恢复时，部分工具调用结果丢失 Human-in-the-loop 场景下，用户取消了工具执行 PatchToolCalls 中间件会在每次模型调用前扫描消息历史，为缺少响应的工具调用自动插入占位符消息。
-快速开始 import ( "context" "github.com/cloudwego/eino/adk" "github.com/cloudwego/eino/adk/middlewares/patchtoolcalls" ) // 使用默认配置创建中间件 mw, err := patchtoolcalls.New(ctx, nil) if err != nil { // 处理错误 } // 与 ChatModelAgent 一起使用 agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ Model: yourChatModel, Middlewares: []adk.ChatModelAgentMiddleware{mw}, }) 配置项 type Config struct { // PatchedContentGenerator 自定义生成占位符消息内容的函数 // 可选，不设置时使用默认消息 PatchedContentGenerator func(ctx context.Context, toolName, toolCallID string) (string, error) } 字段类型必填说明 PatchedContentGeneratorfunc(ctx, toolName, toolCallID string) (string, error)否自定义生成占位符消息内容的函数。参数包含工具名和调用 ID，返回要填充的内容 默认占位符消息 如果不设置 PatchedContentGenerator，中间件会使用默认的占位符消息：'><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.d82085885aff5076523f2bb4904f9e11bd16c28b46ecb5319ec0d01cb087e9de.css as=style><link href=/scss/main.min.d82085885aff5076523f2bb4904f9e11bd16c28b46ecb5319ec0d01cb087e9de.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/prism.css><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
+快速开始 import ( "context" "github.com/cloudwego/eino/adk" "github.com/cloudwego/eino/adk/middlewares/patchtoolcalls" ) // 使用默认配置创建中间件 mw, err := patchtoolcalls.New(ctx, nil) if err != nil { // 处理错误 } // 与 ChatModelAgent 一起使用 agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ Model: yourChatModel, Middlewares: []adk.ChatModelAgentMiddleware{mw}, }) 配置项 type Config struct { // PatchedContentGenerator 自定义生成占位符消息内容的函数 // 可选，不设置时使用默认消息 PatchedContentGenerator func(ctx context.Context, toolName, toolCallID string) (string, error) } 字段类型必填说明 PatchedContentGeneratorfunc(ctx, toolName, toolCallID string) (string, error)否自定义生成占位符消息内容的函数。参数包含工具名和调用 ID，返回要填充的内容 默认占位符消息 如果不设置 PatchedContentGenerator，中间件会使用默认的占位符消息：'><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.54f74e0608b496d0d984273a268fe969114637bb312534ffe25bf74a1e234e8d.css as=style><link href=/scss/main.min.54f74e0608b496d0d984273a268fe969114637bb312534ffe25bf74a1e234e8d.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/prism.css><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
 </a><button class=navbar-toggler type=button data-toggle=collapse data-target=#main_navbar aria-controls=main_navbar aria-expanded=false aria-label="Toggle navigation">
 <span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0 ml-auto"><li class="dropdown sub-menu active"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false><span>文档</span></a><div class=dropdown-menu aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh/docs/kitex/>Kitex</a>
 <a class=dropdown-item href=/zh/docs/hertz/>Hertz</a>
@@ -31,9 +31,17 @@
 <label for=m-zhdocseinoovervieweino_adk0_1-check><a href=/zh/docs/eino/overview/eino_adk0_1/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk0_1><span>Eino ADK：一文搞定 AI Agent 核心设计模式，从 0 到 1 搭建智能体系统</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_excel_agent-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_excel_agent-check>
 <label for=m-zhdocseinoovervieweino_adk_excel_agent-check><a href=/zh/docs/eino/overview/eino_adk_excel_agent/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_excel_agent><span>用 Eino ADK 构建你的第一个 AI 智能体：从 Excel Agent 实战开始</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinooverviewgraph_or_agent-li><input type=checkbox id=m-zhdocseinooverviewgraph_or_agent-check>
 <label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
-<label for=m-zhdocseinoquick_start-check><a href=/zh/docs/eino/quick_start/ class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinoquick_start><span>快速开始</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startsimple_llm_application-li><input type=checkbox id=m-zhdocseinoquick_startsimple_llm_application-check>
-<label for=m-zhdocseinoquick_startsimple_llm_application-check><a href=/zh/docs/eino/quick_start/simple_llm_application/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startsimple_llm_application><span>实现一个最简 LLM 应用</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startagent_llm_with_tools-li><input type=checkbox id=m-zhdocseinoquick_startagent_llm_with_tools-check>
-<label for=m-zhdocseinoquick_startagent_llm_with_tools-check><a href=/zh/docs/eino/quick_start/agent_llm_with_tools/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startagent_llm_with_tools><span>Agent-让大模型拥有双手</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
+<label for=m-zhdocseinoquick_start-check><a href=/zh/docs/eino/quick_start/ class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinoquick_start><span>快速开始</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-li><input type=checkbox id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check>
+<label for=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check><a href=/zh/docs/eino/quick_start/chapter_01_chatmodel_and_message/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message><span>第一章：ChatModel 与 Message（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-li><input type=checkbox id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check>
+<label for=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check><a href=/zh/docs/eino/quick_start/chapter_02_chatmodelagent_runner_agentevent/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent><span>第二章：ChatModelAgent、Runner、AgentEvent（Console 多轮）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_03_memory_and_session-li><input type=checkbox id=m-zhdocseinoquick_startchapter_03_memory_and_session-check>
+<label for=m-zhdocseinoquick_startchapter_03_memory_and_session-check><a href=/zh/docs/eino/quick_start/chapter_03_memory_and_session/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_03_memory_and_session><span>第三章：Memory 与 Session（持久化对话）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_04_tool_and_filesystem-li><input type=checkbox id=m-zhdocseinoquick_startchapter_04_tool_and_filesystem-check>
+<label for=m-zhdocseinoquick_startchapter_04_tool_and_filesystem-check><a href=/zh/docs/eino/quick_start/chapter_04_tool_and_filesystem/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_04_tool_and_filesystem><span>第四章：Tool 与文件系统访问</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_05_middleware-li><input type=checkbox id=m-zhdocseinoquick_startchapter_05_middleware-check>
+<label for=m-zhdocseinoquick_startchapter_05_middleware-check><a href=/zh/docs/eino/quick_start/chapter_05_middleware/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_05_middleware><span>第五章：Middleware（中间件模式）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_06_callback_and_trace-li><input type=checkbox id=m-zhdocseinoquick_startchapter_06_callback_and_trace-check>
+<label for=m-zhdocseinoquick_startchapter_06_callback_and_trace-check><a href=/zh/docs/eino/quick_start/chapter_06_callback_and_trace/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_06_callback_and_trace><span>第六章：Callback 与 Trace（可观测性）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_07_interrupt_resume-li><input type=checkbox id=m-zhdocseinoquick_startchapter_07_interrupt_resume-check>
+<label for=m-zhdocseinoquick_startchapter_07_interrupt_resume-check><a href=/zh/docs/eino/quick_start/chapter_07_interrupt_resume/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_07_interrupt_resume><span>第七章：Interrupt/Resume（中断与恢复）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_08_graph_tool-li><input type=checkbox id=m-zhdocseinoquick_startchapter_08_graph_tool-check>
+<label for=m-zhdocseinoquick_startchapter_08_graph_tool-check><a href=/zh/docs/eino/quick_start/chapter_08_graph_tool/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_08_graph_tool><span>第八章：Graph Tool（复杂工作流）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_skill_console-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_skill_console-check>
+<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check>
+<label for=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_09_a2ui_protocol/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol><span>第九章：A2UI 协议（流式 UI 组件）</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
 <label for=m-zhdocseinocookbook-check><a href=/zh/docs/eino/cookbook/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocookbook><span>Cookbook</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_modules-li><input type=checkbox id=m-zhdocseinocore_modules-check checked>
 <label for=m-zhdocseinocore_modules-check><a href=/zh/docs/eino/core_modules/ class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modules><span>核心模块</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponents-li><input type=checkbox id=m-zhdocseinocore_modulescomponents-check>
 <label for=m-zhdocseinocore_modulescomponents-check><a href=/zh/docs/eino/core_modules/components/ class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulescomponents><span>Components 组件</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-li><input type=checkbox id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-check>
@@ -114,7 +122,167 @@
 <label for=m-zhdocseinofaq-check><a href=/zh/docs/eino/faq/ class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinofaq><span>FAQ</span></a></label></li></ul></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ml-2 pb-1 pt-2 mb-0"><a href=https://github.com/cloudwego/cloudwego.github.io/edit/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware/Middleware_PatchToolCalls.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/new/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/issues/new?title=PatchToolCalls" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-brands fa-github fa-fw"></i> 提交文档问题</a>
-<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#快速开始>快速开始</a></li><li><a href=#配置项>配置项</a><ul><li><a href=#默认占位符消息>默认占位符消息</a></li></ul></li><li><a href=#使用示例>使用示例</a><ul><li><a href=#自定义占位符消息>自定义占位符消息</a></li><li><a href=#结合其他中间件使用>结合其他中间件使用</a></li></ul></li><li><a href=#工作原理>工作原理</a></li><li><a href=#示例场景>示例场景</a><ul><li><a href=#修复前的消息历史>修复前的消息历史</a></li><li><a href=#修复后的消息历史>修复后的消息历史</a></li></ul></li><li><a href=#多语言支持>多语言支持</a></li><li><a href=#注意事项>注意事项</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_patchtoolcalls/>PatchToolCalls</a></li></ol></nav><div class=td-content><h1>PatchToolCalls</h1><header class=article-meta></header><p>adk/middlewares/patchtoolcalls</p><blockquote><p>💡
+<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#快速开始>快速开始</a></li><li><a href=#配置项>配置项</a><ul><li><a href=#默认占位符消息>默认占位符消息</a></li></ul></li><li><a href=#使用示例>使用示例</a><ul><li><a href=#自定义占位符消息>自定义占位符消息</a></li><li><a href=#结合其他中间件使用>结合其他中间件使用</a></li></ul></li><li><a href=#工作原理>工作原理</a></li><li><a href=#示例场景>示例场景</a><ul><li><a href=#修复前的消息历史>修复前的消息历史</a></li><li><a href=#修复后的消息历史>修复后的消息历史</a></li></ul></li><li><a href=#多语言支持>多语言支持</a></li><li><a href=#注意事项>注意事项</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_patchtoolcalls/>PatchToolCalls</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=PatchToolCalls data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_patchtoolcalls/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
+<i class="fa-regular fa-copy"></i>
+<span>复制全文</span>
+</button>
+<button type=button class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle=dropdown aria-haspopup=true aria-expanded=false>
+<span class=sr-only>Toggle Dropdown</span></button><div class="dropdown-menu dropdown-menu-right"><button class=dropdown-item data-copy-type=markdown>
+复制 Markdown
+</button>
+<button class=dropdown-item data-copy-type=text>
+复制文本</button></div><div class=copy-fulltext__toast id=copy-fulltext-toast></div></div><script id=copy-fulltext-markdown type=text/plain>
+adk/middlewares/patchtoolcalls
+
+> 💡
+> PatchToolCalls 中间件用于修复消息历史中「悬空的工具调用」（dangling tool calls）问题。本中间件在 v0.8.0 版本引入。
+
+## 概述
+
+在多轮对话场景中，可能会出现 Assistant 消息包含工具调用（ToolCalls），但对话历史中缺少对应的 Tool 消息响应的情况。这种「悬空的工具调用」会导致某些模型 API 报错或产生异常行为。
+
+**常见场景：**
+
+- 用户在工具执行完成前发送了新消息，导致工具调用被中断
+- 会话恢复时，部分工具调用结果丢失
+- Human-in-the-loop 场景下，用户取消了工具执行
+
+PatchToolCalls 中间件会在每次模型调用前扫描消息历史，为缺少响应的工具调用自动插入占位符消息。
+
+## 快速开始
+
+```go
+import (
+    "context"
+    "github.com/cloudwego/eino/adk"
+    "github.com/cloudwego/eino/adk/middlewares/patchtoolcalls"
+)
+
+// 使用默认配置创建中间件
+mw, err := patchtoolcalls.New(ctx, nil)
+if err != nil {
+    // 处理错误
+}
+
+// 与 ChatModelAgent 一起使用
+agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
+    Model:       yourChatModel,
+    Middlewares: []adk.ChatModelAgentMiddleware{mw},
+})
+```
+
+## 配置项
+
+```go
+type Config struct {
+    // PatchedContentGenerator 自定义生成占位符消息内容的函数
+    // 可选，不设置时使用默认消息
+    PatchedContentGenerator func(ctx context.Context, toolName, toolCallID string) (string, error)
+}
+```
+
+<table>
+<tr><td>字段</td><td>类型</td><td>必填</td><td>说明</td></tr>
+<tr><td>PatchedContentGenerator</td><td><pre>func(ctx, toolName, toolCallID string) (string, error)</pre></td><td>否</td><td>自定义生成占位符消息内容的函数。参数包含工具名和调用 ID，返回要填充的内容</td></tr>
+</table>
+
+### 默认占位符消息
+
+如果不设置 `PatchedContentGenerator`，中间件会使用默认的占位符消息：
+
+**英文（默认）：**
+
+```
+Tool call {toolName} with id {toolCallID} was cancelled - another message came in before it could be completed.
+```
+
+**中文：**
+
+```
+工具调用 {toolName}（ID 为 {toolCallID}）已被取消——在其完成之前收到了另一条消息。
+```
+
+可通过 `adk.SetLanguage()` 切换语言。
+
+## 使用示例
+
+### 自定义占位符消息
+
+```go
+mw, err := patchtoolcalls.New(ctx, &patchtoolcalls.Config{
+    PatchedContentGenerator: func(ctx context.Context, toolName, toolCallID string) (string, error) {
+        return fmt.Sprintf("[系统提示] 工具 %s 的执行被跳过（调用ID: %s）", toolName, toolCallID), nil
+    },
+})
+```
+
+### 结合其他中间件使用
+
+```go
+// PatchToolCalls 通常应该放在中间件链的前面
+// 确保在其他中间件处理消息之前修复悬空的工具调用
+agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
+    Model: yourChatModel,
+    Middlewares: []adk.ChatModelAgentMiddleware{
+        patchToolCallsMiddleware,  // 先修复消息
+        summarizationMiddleware,   // 再进行摘要
+        reductionMiddleware,       // 最后进行裁剪
+    },
+})
+```
+
+## 工作原理
+
+<a href="/img/eino/N9ZzwvvuWhya0vbIzLEcMx6DnMP.png" target="_blank"><img src="/img/eino/N9ZzwvvuWhya0vbIzLEcMx6DnMP.png" width="100%" /></a>
+
+**处理逻辑：**
+
+1. 在 `BeforeModelRewriteState` 钩子中执行
+2. 遍历所有消息，查找包含 `ToolCalls` 的 Assistant 消息
+3. 对于每个 ToolCall，检查后续消息中是否存在对应的 Tool 消息（通过 `ToolCallID` 匹配）
+4. 如果找不到对应的 Tool 消息，则插入一个占位符消息
+5. 返回修复后的消息列表
+
+## 示例场景
+
+### 修复前的消息历史
+
+```
+[User]     "帮我查询天气"
+[Assistant] ToolCalls: [{id: "call_1", name: "get_weather"}, {id: "call_2", name: "get_location"}]
+[Tool]     "call_1: 晴天，25°C"
+[User]     "不用查位置了，直接告诉我北京的天气"   <- 用户中断
+```
+
+### 修复后的消息历史
+
+```
+[User]     "帮我查询天气"
+[Assistant] ToolCalls: [{id: "call_1", name: "get_weather"}, {id: "call_2", name: "get_location"}]
+[Tool]     "call_1: 晴天，25°C"
+[Tool]     "call_2: 工具调用 get_location（ID 为 call_2）已被取消..."  <- 自动插入
+[User]     "不用查位置了，直接告诉我北京的天气"
+```
+
+## 多语言支持
+
+占位符消息支持中英文，通过 `adk.SetLanguage()` 切换：
+
+```go
+import "github.com/cloudwego/eino/adk"
+
+adk.SetLanguage(adk.LanguageChinese)  // 中文
+adk.SetLanguage(adk.LanguageEnglish)  // 英文（默认）
+```
+
+## 注意事项
+
+> 💡
+> 此中间件仅在 `BeforeModelRewriteState` 钩子中修改本次运行的历史消息，不会影响实际存储的消息历史。修复只是临时的，仅用于本轮 agent 调用。
+
+- 建议将此中间件放在中间件链的**前面**，确保其他中间件处理的是完整的消息历史
+- 如果你的场景需要持久化修复后的消息，请在 `PatchedContentGenerator` 中实现相应逻辑
+</script><h1>PatchToolCalls</h1><header class=article-meta></header><p>adk/middlewares/patchtoolcalls</p><blockquote><p>💡
 PatchToolCalls 中间件用于修复消息历史中「悬空的工具调用」（dangling tool calls）问题。本中间件在 v0.8.0 版本引入。</p></blockquote><h2 id=概述>概述</h2><p>在多轮对话场景中，可能会出现 Assistant 消息包含工具调用（ToolCalls），但对话历史中缺少对应的 Tool 消息响应的情况。这种「悬空的工具调用」会导致某些模型 API 报错或产生异常行为。</p><p><strong>常见场景：</strong></p><ul><li>用户在工具执行完成前发送了新消息，导致工具调用被中断</li><li>会话恢复时，部分工具调用结果丢失</li><li>Human-in-the-loop 场景下，用户取消了工具执行</li></ul><p>PatchToolCalls 中间件会在每次模型调用前扫描消息历史，为缺少响应的工具调用自动插入占位符消息。</p><h2 id=快速开始>快速开始</h2><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#204a87;font-weight:700>import</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#000;font-weight:700>(</span><span style=color:#f8f8f8;text-decoration:underline>
 </span></span></span><span style=display:flex><span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#4e9a06>&#34;context&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
 </span></span></span><span style=display:flex><span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#4e9a06>&#34;github.com/cloudwego/eino/adk&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
@@ -171,4 +339,4 @@ PatchToolCalls 中间件用于修复消息历史中「悬空的工具调用」�
 此中间件仅在 <code>BeforeModelRewriteState</code> 钩子中修改本次运行的历史消息，不会影响实际存储的消息历史。修复只是临时的，仅用于本轮 agent 调用。</p></blockquote><ul><li>建议将此中间件放在中间件链的<strong>前面</strong>，确保其他中间件处理的是完整的消息历史</li><li>如果你的场景需要持久化修复后的消息，请在 <code>PatchedContentGenerator</code> 中实现相应逻辑</li></ul><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
 <button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 March 10, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/c2aa4096ad71b3ef0ce9941d864394f623fd7b74>docs(eino): sync docs from feishu 2026-03-09 (#1518) (c2aa4096a)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class="container-fluid mx-sm-5"><div class=row><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
 |
-<a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=/js/popper.min.js></script><script src=/js/bootstrap.min.js></script><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.84ba9af565392cd38463af5d663ae483367bd953c1d38a4273aa09e0bfd62d65.js integrity="sha256-hLqa9WU5LNOEY69dZjrkgzZ72VPB04pCc6oJ4L/WLWU=" crossorigin=anonymous></script><script src=/js/prism.js></script><script src=/js/prism-custom.js></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>
+<a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=/js/popper.min.js></script><script src=/js/bootstrap.min.js></script><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.0ce781ace8f7863644f5b82bdd4916a178ef964a3bcd6b41309b67903b89417e.js integrity="sha256-DOeBrOj3hjZE9bgr3UkWoXjvlko7zWtBMJtnkDuJQX4=" crossorigin=anonymous></script><script src=/js/prism.js></script><script src=/js/prism-custom.js></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>
