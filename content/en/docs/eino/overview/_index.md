@@ -344,10 +344,13 @@ The Eino framework consists of several parts:
 - [Eino](https://github.com/cloudwego/eino): Contains type definitions, stream data processing mechanisms, component abstraction definitions, orchestration functionality, callback mechanisms, etc.
 - [EinoExt](https://github.com/cloudwego/eino-ext): Component implementations, callback handler implementations, component usage examples, and various tools such as evaluators, prompt optimizers, etc.
 
+> 💡
+> For components used internally at ByteDance, there are corresponding internal code repositories:
+
 - [Eino Devops](https://github.com/cloudwego/eino-ext/tree/main/devops): Visual development, visual debugging, etc.
 - [EinoExamples](https://github.com/cloudwego/eino-examples): A code repository containing example applications and best practices.
 
-See: [Eino Framework Structure Description](/docs/eino/overview/Eino Framework Structure Description)
+See: [Eino Framework Structure Description](/docs/eino/overview/eino_architecture)
 
 ## Detailed Documentation
 

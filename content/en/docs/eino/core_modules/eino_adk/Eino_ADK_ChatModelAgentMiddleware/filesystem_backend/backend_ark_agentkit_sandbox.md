@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-24"
+date: "2026-05-17"
 lastmod: ""
 tags: []
 title: Ark Agentkit Sandbox
@@ -147,7 +147,7 @@ files, _ := backend.LsInfo(ctx, &filesystem.LsInfoRequest{
 })
 
 // Read file (paginated)
-content, _ := backend.Read(ctx, &filesystem.ReadRequest{
+fcontent, _ := backend.Read(ctx, &filesystem.ReadRequest{
     FilePath: "/home/gem/file.txt",
     Offset:   0,
     Limit:    100,

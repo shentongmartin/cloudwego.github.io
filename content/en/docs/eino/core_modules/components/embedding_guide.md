@@ -1,9 +1,9 @@
 ---
 Description: ""
-date: "2025-07-21"
+date: "2026-05-17"
 lastmod: ""
 tags: []
-title: 'Eino: Embedding User Guide'
+title: Embedding User Guide
 weight: 2
 ---
 

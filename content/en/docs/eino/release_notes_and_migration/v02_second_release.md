@@ -3,7 +3,7 @@ Description: ""
 date: "2026-03-02"
 lastmod: ""
 tags: []
-title: 'Eino: v0.2.*-second release'
+title: v0.2.*-second release
 weight: 2
 ---
 

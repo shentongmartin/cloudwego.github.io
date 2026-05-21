@@ -3,8 +3,8 @@ Description: ""
 date: "2026-03-02"
 lastmod: ""
 tags: []
-title: 'Eino: Release Notes & Migration Guide'
-weight: 8
+title: Release Notes & Migration Guide
+weight: 7
 ---
 
 # Version Management Guidelines

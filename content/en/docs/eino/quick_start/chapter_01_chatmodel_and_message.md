@@ -1,117 +1,133 @@
 ---
 Description: ""
-date: "2026-03-12"
+date: "2026-05-19"
 lastmod: ""
 tags: []
-title: "Chapter 1: ChatModel and Message (Console)"
+title: 'Chapter 1: ChatModel and Message (Console)'
 weight: 1
 ---
 
-## Introduction to the Eino framework
+## Introduction to the Eino Framework
 
 **What is Eino?**
 
-Eino is an AI application development framework in Go (Agent Development Kit) designed to help developers quickly build scalable and maintainable AI applications.
+Eino is an AI application development framework (Agent Development Kit) implemented in Go, designed to help developers quickly build extensible, maintainable AI applications.
 
 **What problems does Eino solve?**
 
-1. **Model abstraction**: unify interfaces across different LLM providers (OpenAI, Ark, Claude, etc.), so switching models does not require changing business code
-2. **Capability composition**: provide replaceable, composable capability units through the Component interfaces (chat, tools, retrieval, etc.)
-3. **Orchestration framework**: offer orchestration abstractions such as Agent, Graph, and Chain to support complex multi-step AI workflows
-4. **Runtime support**: built-in streaming output, interrupt/resume, state management, and Callback-based observability
+1. **Model abstraction**: Unifies interfaces across different LLM providers (OpenAI, Ark, Claude, etc.), allowing model switching without modifying business code
+2. **Capability composition**: Implements replaceable, composable capability units (conversation, tools, retrieval, etc.) through Component interfaces
+3. **Orchestration framework**: Provides orchestration abstractions like Agent, Graph, and Chain, supporting complex multi-step AI workflows
+4. **Runtime support**: Built-in streaming output, interrupt and resume, state management, Callback observability, and more
 
-**Main repositories of Eino:**
+**Eino's main repositories:**
 
-- **eino** (this repo): the core library, defining interfaces, orchestration abstractions, and ADK
-- **eino-ext**: the extension library, providing concrete implementations of Components (OpenAI, Ark, Milvus, etc.)
-- **eino-examples**: the examples repo, including this Quickstart series
+- **eino** (this repository): Core library, defines interfaces, orchestration abstractions, and ADK
+- **eino-ext**: Extension library, provides concrete implementations of various Components (OpenAI, Ark, Milvus, etc.)
+- **eino-examples**: Example code repository, containing this quickstart series
 
 ---
 
-## ChatWithEino: an assistant that talks with Eino docs
+## ChatWithEino: An Intelligent Assistant for Conversing with Eino Documentation
 
 **What is ChatWithEino?**
 
-ChatWithEino is an intelligent assistant built with Eino. It helps developers learn Eino and write Eino code by accessing the Eino repository’s source code, comments, and examples, so it can provide accurate and up-to-date technical help.
+ChatWithEino is an intelligent assistant built on the Eino framework that helps developers learn the Eino framework and write Eino code. It provides the most accurate and timely technical support by accessing source code, comments, and examples from the Eino repository.
 
 **Core capabilities:**
 
-- **Conversational interaction**: understand questions about Eino and respond clearly
-- **Code access**: read Eino source code/comments/examples and answer based on real implementations
-- **Persistent sessions**: support multi-turn conversations, remember context, and restore sessions across processes
-- **Tool calling**: perform operations such as file reading and code search
+- **Conversational interaction**: Understands user questions about Eino and provides clear answers
+- **Code access**: Directly reads Eino source code, comments, and examples, answering questions based on real implementations
+- **Persistent sessions**: Supports multi-turn conversations, remembers context, and can resume sessions across processes
+- **Tool calling**: Can perform file reading, code searching, and other operations
 
-**Architecture overview:**
+**Technical architecture:**
 
-- **ChatModel**: communicate with LLM providers (OpenAI, Ark, Claude, etc.)
-- **Tool**: extend capabilities such as file system access and code search
-- **Memory**: persist conversation history
-- **Agent**: a unified execution framework that coordinates components
+- **ChatModel**: Communicates with large language models (OpenAI, Ark, Claude, etc.)
+- **Tool**: Capability extensions like file system access and code search
+- **Memory**: Persistent storage of conversation history
+- **Agent**: Unified execution framework coordinating components to work together
 
-## Quickstart series: build ChatWithEino from scratch
+## Quickstart Documentation Series: Building ChatWithEino from Scratch
 
-This series walks you step by step: starting from the most basic ChatModel call, and progressively building a fully functional ChatWithEino Agent.
+This documentation series takes you through a progressive approach, starting from the most basic ChatModel call and gradually building a fully-featured ChatWithEino Agent.
 
 **Learning path:**
 
 <table>
-<tr><td>Chapter</td><td>Topic</td><td>Core content</td><td>Capability gain</td></tr>
-<tr><td><strong>Chapter 1</strong></td><td>ChatModel and Message</td><td>Understand the Component abstraction and implement a single-turn chat</td><td>Basic conversation</td></tr>
-<tr><td><strong>Chapter 2</strong></td><td>Agent and Runner</td><td>Introduce execution abstractions and implement multi-turn chat</td><td>Session management</td></tr>
-<tr><td><strong>Chapter 3</strong></td><td>Memory and Session</td><td>Persist chat history and support session recovery</td><td>Persistence</td></tr>
-<tr><td><strong>Chapter 4</strong></td><td>Tools and file system</td><td>Add file access to read source code</td><td>Tool calling</td></tr>
-<tr><td><strong>Chapter 5</strong></td><td>Middleware</td><td>Middleware mechanism and unified cross-cutting concerns</td><td>Extensibility</td></tr>
-<tr><td><strong>Chapter 6</strong></td><td>Callback</td><td>Callbacks to observe the Agent execution process</td><td>Observability</td></tr>
-<tr><td><strong>Chapter 7</strong></td><td>Interrupt and Resume</td><td>Interrupt and resume to support long-running tasks</td><td>Reliability</td></tr>
-<tr><td><strong>Chapter 8</strong></td><td>Graph and Tool</td><td>Use Graph to orchestrate complex workflows</td><td>Complex orchestration</td></tr>
-<tr><td><strong>Chapter 9</strong></td><td>A2UI</td><td>Integration from Agent to UI</td><td>Production-grade delivery</td></tr>
+<tr><td>Chapter</td><td>Topic</td><td>Core Content</td><td>Capability Gained</td></tr>
+<tr><td>Chapter 1</td><td>ChatModel and AgenticMessage</td><td>Understand Component abstraction, implement single-turn conversation</td><td>Basic conversation</td></tr>
+<tr><td>Chapter 2</td><td>Agent and Runner</td><td>Introduce execution abstraction, implement multi-turn conversation</td><td>Session management</td></tr>
+<tr><td>Chapter 3</td><td>Memory and Session</td><td>Persist conversation history, support session recovery</td><td>Persistence</td></tr>
+<tr><td>Chapter 4</td><td>Tool and File System</td><td>Add file access capability, read source code</td><td>Tool calling</td></tr>
+<tr><td>Chapter 5</td><td>Middleware</td><td>Middleware mechanism, unified handling of cross-cutting concerns</td><td>Extensibility</td></tr>
+<tr><td>Chapter 6</td><td>Callback</td><td>Callback mechanism, monitor Agent execution</td><td>Observability</td></tr>
+<tr><td>Chapter 7</td><td>Interrupt and Resume</td><td>Interrupt and resume, support long-running tasks</td><td>Reliability</td></tr>
+<tr><td>Chapter 8</td><td>Graph and Tool</td><td>Use Graph to orchestrate complex workflows</td><td>Complex orchestration</td></tr>
+<tr><td>Chapter 9</td><td>Skill</td><td>Use Skill middleware to load and reuse skill documents</td><td>Knowledge reuse</td></tr>
+<tr><td>Final</td><td>A2UI</td><td>Agent-to-UI integration solution</td><td>Production-grade application</td></tr>
 </table>
 
-**Why design it this way?**
+**Why this design?**
 
-Each chapter adds one core capability on top of the previous chapter, so you can:
+Each chapter adds one core capability on top of the previous one, allowing you to:
 
-1. **Understand the role of each component**: features are introduced progressively instead of all at once
-2. **See the architecture evolve**: from simple to complex, and why each abstraction exists
-3. **Build practical skills**: every chapter comes with runnable code you can try hands-on
+1. **Understand the role of each component**: Rather than showing all features at once, they are introduced progressively
+2. **See the architecture evolution**: From simple to complex, understanding why each abstraction is needed
+3. **Master practical development skills**: Each chapter has runnable code for hands-on practice
 
 ---
 
-Goal of this chapter: understand Eino’s Component abstraction, call a ChatModel once with minimal code (with streaming output), and learn the basics of `schema.Message`.
+This chapter's goal: Understand Eino's Component abstraction, call a ChatModel with minimal code (with streaming output support), and learn how to organize model input and streaming output using `schema.AgenticMessage`.
 
-## Code location
+## Code Location
 
 - Entry code: [cmd/ch01/main.go](https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/cmd/ch01/main.go)
 
-## Why we need the Component interfaces
+## Why Component Interfaces Are Needed
 
-Eino defines a set of Component interfaces (`ChatModel`, `Tool`, `Retriever`, `Loader`, etc.). Each interface describes one replaceable capability category:
+Eino defines a set of Component interfaces (`ChatModel`, `Tool`, `Retriever`, `Loader`, etc.), each describing a category of replaceable capabilities:
 
 ```go
-type BaseChatModel interface {
-    Generate(ctx context.Context, input []*schema.Message, opts ...Option) (*schema.Message, error)
-    Stream(ctx context.Context, input []*schema.Message, opts ...Option) (
-        *schema.StreamReader[*schema.Message], error)
+type BaseModel[M any] interface {
+    Generate(ctx context.Context, input []M, opts ...Option) (M, error)
+    Stream(ctx context.Context, input []M, opts ...Option) (*schema.StreamReader[M], error)
 }
+
+type AgenticModel = BaseModel[*schema.AgenticMessage]
 ```
 
 **Benefits of interfaces:**
 
-1. **Replaceable implementations**: `eino-ext` provides implementations for OpenAI, Ark, Claude, Ollama, and more. Business code depends only on the interface, so switching models only changes construction logic.
-2. **Composable orchestration**: orchestration layers such as Agent, Graph, and Chain depend only on Component interfaces, not concrete implementations. You can swap OpenAI for Ark without changing orchestration code.
-3. **Mockable in tests**: interfaces make mocking natural; unit tests do not need real model calls.
+1. **Replaceable implementations**: `eino-ext` provides multiple implementations including OpenAI, Ark, Claude, Ollama, etc. Business code only depends on the interface; switching models only requires changing the construction logic.
+2. **Composable orchestration**: Orchestration layers like Agent, Graph, and Chain only depend on Component interfaces, not caring about specific implementations. You can swap OpenAI for Ark without changing orchestration code.
+3. **Mockable for testing**: Interfaces naturally support mocking; unit tests don't need real model calls.
 
-This chapter focuses on `ChatModel`. Later chapters will introduce Components such as `Tool` and `Retriever`.
+This chapter only involves `ChatModel`; subsequent chapters will progressively introduce `Tool`, `Retriever`, and other Components.
 
-## schema.Message: the basic unit of conversation
+The example code defaults to using `model.AgenticModel`, which is `model.BaseModel[*schema.AgenticMessage]`. This allows subsequent chapters to express text, reasoning, tool calls, tool results, and more within the same message structure.
 
-`Message` is the basic structure for conversation data in Eino:
+## schema.AgenticMessage: The Basic Unit of Conversation
+
+`AgenticMessage` is the conversation data structure used in this Quickstart:
+
+In a single model call, the model may return multiple ordered events — for example, first outputting `reasoning`, then calling a server tool, followed by more `reasoning`, then calling a function tool. `AgenticMessage` stores these structured events in order using `ContentBlock`.
 
 ```go
-type Message struct {
-    Role      RoleType    // system / user / assistant / tool
-    Content   string      // text content
-    ToolCalls []ToolCall  // only assistant messages may have this
+type AgenticMessage struct {
+    Role          AgenticRoleType
+    ContentBlocks []*ContentBlock
+    ResponseMeta  *AgenticResponseMeta
+    Extra         map[string]any
+}
+
+type ContentBlock struct {
+    Type               ContentBlockType
+    Reasoning          *Reasoning
+    UserInputText      *UserInputText
+    AssistantGenText   *AssistantGenText
+    FunctionToolCall   *FunctionToolCall
+    FunctionToolResult *FunctionToolResult
     // ...
 }
 ```
@@ -119,22 +135,27 @@ type Message struct {
 Common constructors:
 
 ```go
-schema.SystemMessage("You are a helpful assistant.")
-schema.UserMessage("What is the weather today?")
-schema.AssistantMessage("I don't know.", nil)  // second arg is ToolCalls
-schema.ToolMessage("tool result", "call_id")
+schema.SystemAgenticMessage("You are a helpful assistant.")
+schema.UserAgenticMessage("What is the weather today?")
+
+&schema.AgenticMessage{
+    Role: schema.AgenticRoleTypeAssistant,
+    ContentBlocks: []*schema.ContentBlock{
+        schema.NewContentBlock(&schema.AssistantGenText{Text: "I don't know."}),
+    },
+}
 ```
 
 **Role semantics:**
 
-- `system`: system instructions, typically placed at the beginning of messages
-- `user`: user input
-- `assistant`: model response
-- `tool`: tool call result (covered in later chapters)
+- `system`: System instructions, typically placed at the beginning of the message list
+- `user`: User input
+- `assistant`: Model response
+- Tool calls and tool results are expressed through `function_tool_call` / `function_tool_result` content blocks (covered in later chapters)
 
 ## Prerequisites
 
-### Get the code
+### Get the Code
 
 ```bash
 git clone https://github.com/cloudwego/eino-examples.git
@@ -142,13 +163,13 @@ cd eino-examples/quickstart/chatwitheino
 ```
 
 - Go version: Go 1.21+ (see `go.mod`)
-- A callable ChatModel (OpenAI by default; Ark is also supported)
+- A callable ChatModel (defaults to OpenAI; Ark is also supported)
 
-### Option A: OpenAI (default)
+### Option A: OpenAI (Default)
 
 ```bash
 export OPENAI_API_KEY="..."
-export OPENAI_MODEL="gpt-4.1-mini"  # OpenAI 2025 new model; gpt-4o / gpt-4o-mini also work
+export OPENAI_MODEL="gpt-4.1-mini"  # OpenAI 2025 new model, gpt-4o or gpt-4o-mini also work
 # Optional:
 # OPENAI_BASE_URL (proxy or compatible service)
 # OPENAI_BY_AZURE=true (use Azure OpenAI)
@@ -163,60 +184,65 @@ export ARK_MODEL="..."
 # Optional: ARK_BASE_URL
 ```
 
-## Run
+## Running
 
-In `eino-examples/quickstart/chatwitheino`, run:
+In the `examples/quickstart/chatwitheino` directory:
 
 ```bash
-go run ./cmd/ch01 -- "Explain in one sentence what problem Eino’s Component design solves."
+go run ./cmd/ch01 -- "Explain in one sentence what problem Eino's Component design solves."
 ```
 
-Example output (printed incrementally as the stream arrives):
+Example output (streamed progressively):
 
 ```
-[assistant] Eino’s Component design defines unified interfaces...
+[assistant] Eino's Component design solves the problem of...
 ```
 
-## What the entry code does
+## What the Entry Code Does
 
 In execution order:
 
-1. **Create a ChatModel**: choose OpenAI or Ark based on the `MODEL_TYPE` environment variable
-2. **Build input messages**: `SystemMessage(instruction)` + `UserMessage(query)`
-3. **Call Stream**: all ChatModel implementations must support `Stream()`, returning a `StreamReader[*Message]`
-4. **Print the result**: iterate `StreamReader` and print the assistant reply chunk by chunk
+1. **Create ChatModel**: Select OpenAI or Ark's agentic model based on the `MODEL_TYPE` environment variable
+2. **Construct input messages**: Create `AgenticMessage` using `msgops.NewSystem[M]` / `msgops.NewUser[M]`
+3. **Call Stream**: Use `model.BaseModel[M].Stream()`, returning a `StreamReader[M]`
+4. **Print results**: Iterate the `StreamReader` to print assistant replies frame by frame
 
-Key code snippet (**note: simplified and not directly runnable; for the full code see** [cmd/ch01/main.go](https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/cmd/ch01/main.go)):
+Key code snippet (**Note: This is a simplified code snippet that cannot run directly. For the complete code, please refer to** [cmd/ch01/main.go](https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/cmd/ch01/main.go)):
 
 ```go
-// Build input
-messages := []*schema.Message{
-    schema.SystemMessage(instruction),
-    schema.UserMessage(query),
-}
-
-// Call Stream (all ChatModels must implement this)
-stream, err := cm.Stream(ctx, messages)
-if err != nil {
-    log.Fatal(err)
-}
-defer stream.Close()
-
-for {
-    chunk, err := stream.Recv()
-    if errors.Is(err, io.EOF) {
-        break
-    }
+func runTyped[M adk.MessageType](ctx context.Context, instruction, query string) {
+    cm, err := chatmodel.NewModel[M](ctx)
     if err != nil {
         log.Fatal(err)
     }
-    fmt.Print(chunk.Content)
+
+    messages := []M{
+        msgops.NewSystem[M](instruction),
+        msgops.NewUser[M](query),
+    }
+
+    stream, err := cm.Stream(ctx, messages)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer stream.Close()
+
+    for {
+        frame, err := stream.Recv()
+        if errors.Is(err, io.EOF) {
+            break
+        }
+        if err != nil {
+            log.Fatal(err)
+        }
+        fmt.Print(msgops.AssistantDeltaText(frame))
+    }
 }
 ```
 
-## Summary
+## Chapter Summary
 
-- **Component interfaces**: define boundaries for replaceable, composable, and testable capabilities
-- **Message**: the basic unit of conversation data, with semantics defined by roles
-- **ChatModel**: the most fundamental Component, providing `Generate` and `Stream`
-- **Implementation choice**: switch between OpenAI/Ark implementations via env/config without changing business code
+- **Component interface**: Defines replaceable, composable, and testable capability boundaries
+- **AgenticMessage**: The basic unit of conversation data, distinguishing semantics through roles and content blocks
+- **ChatModel**: The most fundamental Component, providing two core methods: `Generate` and `Stream`
+- **Implementation selection**: Switch between different implementations like OpenAI/Ark via environment variables or configuration, with no changes needed in business code

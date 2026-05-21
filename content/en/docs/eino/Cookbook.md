@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-16"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: Cookbook
@@ -61,6 +61,27 @@ This document serves as an example index for the eino-examples project, helping 
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/multiagent/integration-project-manager">adk/multiagent/integration-project-manager</a></td><td>Project Manager</td><td>Project management example using Supervisor mode, including Coder, Researcher, Reviewer</td></tr>
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/multiagent/deep">adk/multiagent/deep</a></td><td>Deep Agents (Excel Agent)</td><td>Intelligent Excel assistant, step-by-step understanding and processing Excel files, supporting Python code execution</td></tr>
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/multiagent/integration-excel-agent">adk/multiagent/integration-excel-agent</a></td><td>Excel Agent (ADK Integration)</td><td>ADK integrated Excel Agent, including Planner, Executor, Replanner, Reporter</td></tr>
+</table>
+
+### Agent
+
+<table>
+<tr><td>Directory</td><td>Name</td><td>Description</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/agent/ralph-loop">adk/agent/ralph-loop</a></td><td>Ralph Loop</td><td>Autonomous iteration pattern: external <pre>for</pre> loop with <pre>Runner.Run</pre> for single-round iteration, Agent perceives prior work through filesystem, validation gate checks BUG markers before accepting completion claims</td></tr>
+</table>
+
+### Cancel
+
+<table>
+<tr><td>Directory</td><td>Name</td><td>Description</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/cancel/graceful-exit">adk/cancel/graceful-exit</a></td><td>Graceful Exit</td><td>Demonstrates Agent Cancel + Resume: captures terminal signals then cancels nested Agent with <pre>CancelAfterChatModel</pre> + <pre>WithRecursive</pre> mode, waits for safe point to save Checkpoint, then resumes execution</td></tr>
+</table>
+
+### Middlewares
+
+<table>
+<tr><td>Directory</td><td>Name</td><td>Description</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/middlewares/skill">adk/middlewares/skill</a></td><td>Skill Middleware</td><td>Loads Agent skills from filesystem (e.g., log_analyzer), demonstrating skill middleware usage</td></tr>
 </table>
 
 ### GraphTool

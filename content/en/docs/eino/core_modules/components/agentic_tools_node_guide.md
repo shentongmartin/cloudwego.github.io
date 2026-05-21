@@ -3,7 +3,7 @@ Description: ""
 date: "2026-03-03"
 lastmod: ""
 tags: []
-title: 'Eino: AgenticToolsNode & Tool User Guide [Beta]'
+title: 'AgenticToolsNode & Tool User Guide [Beta]'
 weight: 12
 ---
 
@@ -237,7 +237,7 @@ input := &schema.AgenticMessage{
           FunctionToolCall: &schema.FunctionToolCall{
              CallID:    "1",
              Name:      "get_weather",
-             Arguments: `{"city": "Shenzhen", "date": "tomorrow"}`,
+             Arguments: `{"city": "深圳", "date": "tomorrow"}`,
           },
        },
     },
@@ -371,8 +371,8 @@ In the tool function body and tool callback handler, you can use the `compose.Ge
 
 There are multiple ways to implement tools. You can refer to the following approaches:
 
-- HTTP API-based tool implementation: [How to create a tool/function call using OpenAPI?](/docs/eino/usage_guide/how_to_guide/openapi_tool_creation)
-- gRPC-based tool implementation: [How to create a tool/function call using proto3?](/docs/eino/usage_guide/how_to_guide/proto3_tool_creation)
-- Thrift-based tool implementation: [How to create a tool/function call using thrift IDL?](/docs/eino/usage_guide/how_to_guide/thrift_idl_tool_creation)
+- HTTP API-based tool implementation: [How to create a tool/function call using OpenAPI?](https://bytedance.larkoffice.com/wiki/FjXzwf3exijtKyk2hh7cAmnZn1g)
+- gRPC-based tool implementation: [How to create a tool/function call using proto3?](https://bytedance.larkoffice.com/wiki/EPkawUVbdiGwxCkWCJTcAMQonbh)
+- Thrift-based tool implementation: [How to create a tool/function call using thrift IDL?](https://bytedance.larkoffice.com/wiki/PcHfwo6x0iOrXxkIjJecez8xnNg)
 - Local function-based tool implementation: [How to create a tool?](/docs/eino/core_modules/components/tools_node_guide/how_to_create_a_tool)
 - ……

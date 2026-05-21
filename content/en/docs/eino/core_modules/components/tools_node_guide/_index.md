@@ -1,9 +1,9 @@
 ---
 Description: ""
-date: "2026-03-03"
+date: "2026-05-17"
 lastmod: ""
 tags: []
-title: 'Eino: ToolsNode & Tool Guide'
+title: ToolsNode & Tool Guide
 weight: 9
 ---
 
@@ -281,6 +281,82 @@ type ToolInfo struct {
 ### Common Options
 
 The Tool component uses ToolOption to define optional parameters. ToolsNode has no abstracted common options. Each specific implementation can define its own specific Options, wrapped into the unified ToolOption type using the WrapToolImplSpecificOptFn function.
+
+## Tool Aliases 🏷️ alpha/09
+
+The Tool Alias feature allows configuring **name aliases** and **argument aliases** for tools, so that when an LLM calls a tool using an alias, it is automatically resolved to the real tool and canonical parameters.
+
+### Configuration Structure
+
+```go
+// ToolAliasConfig configures name and argument aliases for a single tool
+type ToolAliasConfig struct {
+    // NameAliases is a list of alternative names for the tool
+    // If the model returns any of these names, it will be resolved to the canonical tool name
+    NameAliases []string
+
+    // ArgumentsAliases maps canonical argument keys to their alias lists
+    // key=canonical name, value=[]aliases
+    // e.g.: {"query": ["q", "search_term"], "limit": ["max_results", "count"]}
+    ArgumentsAliases map[string][]string
+}
+```
+
+Configure via the `ToolAliases` field in `ToolsNodeConfig`:
+
+```go
+config := &compose.ToolsNodeConfig{
+    Tools: []tool.BaseTool{searchTool, weatherTool},
+    ToolAliases: map[string]ToolAliasConfig{
+        "search": {
+            NameAliases: []string{"find", "query", "search_v1"},
+            ArgumentsAliases: map[string][]string{
+                "query": {"q", "search_term"},
+                "limit": {"max_results", "count"},
+            },
+        },
+    },
+}
+toolsNode, err := compose.NewToolNode(ctx, config)
+```
+
+### Dynamic Override
+
+Use the `WithToolAliases()` call option to override global alias configuration at runtime:
+
+```go
+// Override alias configuration (keeping original tool list)
+result, err := toolsNode.Invoke(ctx, input,
+    compose.WithToolAliases(map[string]compose.ToolAliasConfig{
+        "search": {
+            NameAliases: []string{"new_alias"},
+        },
+    }),
+)
+
+// Override both tool list and aliases
+result, err := toolsNode.Invoke(ctx, input,
+    compose.WithToolList(newSearchTool),
+    compose.WithToolAliases(map[string]compose.ToolAliasConfig{...}),
+)
+```
+
+### Execution Flow
+
+Processing order during tool invocation:
+
+1. **Name Resolution**: The tool name returned by the LLM (which may be an alias) is resolved to the canonical tool name via index lookup
+2. **Argument Remapping**: Alias keys in the JSON arguments are automatically replaced with canonical keys
+3. **ToolArgumentsHandler** (if configured): Receives the canonical tool name and already-remapped arguments
+4. **Tool Execution**: Calls the tool using canonical name and arguments
+
+### Notes
+
+- Name aliases **cannot** conflict with other tools' canonical names or already-registered aliases
+- Argument aliases **cannot** conflict with existing property names in the tool's JSON Schema
+- When both an alias key and canonical key are **present simultaneously** in argument JSON, the canonical key takes precedence and the alias key is left as-is
+- Configuring aliases for non-existent tool names will be **silently ignored**
+- The alias feature supports both **standard tools** and **enhanced tools**
 
 ## Usage
 
