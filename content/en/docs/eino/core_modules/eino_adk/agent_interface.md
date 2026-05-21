@@ -130,7 +130,7 @@ Request-level Agent configuration. ADK built-in options:
 
 - `WithSessionValues(map[string]any)`: Inject KV data shared across Agents
 - `WithCallbacks(...callbacks.Handler)`: Add callback handlers
-- `WithCancel()`: Enable Agent Cancel capability (see [Cancel and TurnLoop](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart))
+- `WithCancel()`: Enable Agent Cancel capability (see [Cancel and TurnLoop](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart))
 
 Custom Options:
 

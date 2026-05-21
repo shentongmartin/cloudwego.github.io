@@ -77,4 +77,4 @@ runner := adk.NewRunner(ctx, adk.RunnerConfig{
 iter := runner.Query(ctx, "Your question")
 ```
 
-See: [Agent Runner and Extension](/docs/eino/core_modules/eino_adk/agent_extension) | [Agent Cancel and TurnLoop](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+See: [Agent Runner and Extension](/docs/eino/core_modules/eino_adk/agent_extension) | [Agent Cancel and TurnLoop](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)

@@ -29,7 +29,7 @@ go get github.com/cloudwego/eino@latest
 <tr><td><strong>ChatModelAgent</strong></td><td>ReAct Loop: Reasoning → Action → Feedback, autonomous decision-making</td><td><a href="/docs/eino/overview/eino_adk_quickstart">ChatModelAgent Introduction</a></td></tr>
 <tr><td><strong>Middleware</strong></td><td>Inject behavior at lifecycle points of the ReAct Loop (compression, search, retry, etc.)</td><td><a href="/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware">ChatModelAgentMiddleware</a></td></tr>
 <tr><td><strong>Runner</strong></td><td>Single Agent run entry: Query / Run → event stream</td><td><a href="/docs/eino/core_modules/eino_adk/agent_extension">Agent Runner and Extension</a></td></tr>
-<tr><td><strong>TurnLoop</strong></td><td>Multi-turn runtime: Push / Preempt / Stop + declarative checkpoint/resume</td><td><a href="/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart">Agent Cancel and TurnLoop</a></td></tr>
+<tr><td><strong>TurnLoop</strong></td><td>Multi-turn runtime: Push / Preempt / Stop + declarative checkpoint/resume</td><td><a href="/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart">Agent Cancel and TurnLoop</a></td></tr>
 <tr><td><strong>DeepAgents</strong></td><td>Pre-built Agent: task planning (PlanTask) + subtask delegation (TaskTool)</td><td><a href="/docs/eino/core_modules/eino_adk/agent_implementation/deepagents">DeepAgents</a></td></tr>
 </table>
 

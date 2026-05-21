@@ -294,7 +294,7 @@ agent, _ := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 
 # Cancel
 
-New runtime cancellation capability added in v0.9. See [Agent Cancel and TurnLoop](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart) for details.
+New runtime cancellation capability added in v0.9. See [Agent Cancel and TurnLoop](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart) for details.
 
 ```go
 cancelOpt, cancelFn := adk.WithCancel()

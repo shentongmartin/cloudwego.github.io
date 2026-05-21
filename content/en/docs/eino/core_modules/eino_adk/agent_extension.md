@@ -120,7 +120,7 @@ For scenarios requiring multi-turn interaction (chat applications, continuous co
 - **Stop**: Stop the event loop
 - **Declarative Checkpoint/Resume**: TurnLoop automatically manages input bookkeeping; the application layer only needs to declare the recovery strategy
 
-See: [Agent Cancel and TurnLoop Quickstart](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+See: [Agent Cancel and TurnLoop Quickstart](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)
 
 # Agent Cancel
 
@@ -130,4 +130,4 @@ Runtime cancellation capability added in v0.9, supporting:
 - **CancelHandle.Wait()**: Wait for cancellation to complete
 - **Integration with TurnLoop**: Automatically triggers Cancel on Preempt
 
-See: [Agent Cancel and TurnLoop Quickstart](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+See: [Agent Cancel and TurnLoop Quickstart](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)

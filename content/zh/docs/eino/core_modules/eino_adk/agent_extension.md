@@ -120,7 +120,7 @@ type TypedResumableAgent[M MessageType] interface {
 - **Stop**：停止事件循环
 - **声明式 Checkpoint/Resume**：TurnLoop 自动管理输入 bookkeeping，应用层只需声明恢复策略
 
-详见：[Agent Cancel 与 TurnLoop 快速入门](/zh/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+详见：[Agent Cancel 与 TurnLoop 快速入门](/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)
 
 # Agent Cancel
 
@@ -130,4 +130,4 @@ v0.9 新增的运行时取消能力，支持：
 - **CancelHandle.Wait()**：等待取消完成
 - **与 TurnLoop 集成**：Preempt 时自动触发 Cancel
 
-详见：[Agent Cancel 与 TurnLoop 快速入门](/zh/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+详见：[Agent Cancel 与 TurnLoop 快速入门](/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)

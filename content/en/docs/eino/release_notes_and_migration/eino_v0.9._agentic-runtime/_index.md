@@ -28,7 +28,7 @@ V0.9 systematically enhances `ChatModelAgent`'s execution control, model call re
 - Introduces Agent Cancel capability for externally terminating a running Agent.
 - Supports safe-point cancellation, recursive cancellation, cancel timeout escalation, and checkpoint persistence during cancellation.
 - Interrupts that occur during cancellation are unified under cancel semantics; callers can distinguish active cancellation from normal business failures via `CancelError`.
-- [Eino ADK: Agent Cancel and TurnLoop Quick Start](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+- [Eino ADK: Agent Cancel and TurnLoop Quick Start](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)
 
 ### Model Retry
 
@@ -63,7 +63,7 @@ V0.9 introduces `TurnLoop` to elevate a one-shot Agent run into a continuously r
 - Supports input merging: `GenInput` decides at the turn boundary which inputs to consume in this turn and which to continue waiting for, enabling applications to implement batching, deduplication, merging of consecutive user inputs, and other strategies.
 - Supports preemption: `Push` with a preempt option atomically writes new input and requests cancellation of the current turn, allowing high-priority input to interrupt a running Agent.
 - Supports declarative checkpoint/resume: on recovery, applications don't need to manually restore the input queue; `TurnLoop` distinguishes between interrupted inputs, unprocessed inputs, and newly arrived inputs after recovery—applications only need to declare how these inputs re-enter subsequent turns.
-- [Eino ADK: Agent Cancel and TurnLoop Quick Start](/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)
+- [Eino ADK: Agent Cancel and TurnLoop Quick Start](/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)
 
 ## Upgrade Guide
 
