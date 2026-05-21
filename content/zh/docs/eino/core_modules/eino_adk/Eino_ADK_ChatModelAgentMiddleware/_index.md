@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-05-19"
+date: "2026-05-21"
 lastmod: ""
 tags: []
 title: ChatModelAgentMiddleware
@@ -196,17 +196,19 @@ type EnhancedStreamableToolCallEndpoint func(ctx context.Context, toolArgument *
 10. **ChatModelAgentMiddleware.WrapModel** 后处理（先注册 → 后执行）
 11. `eventSenderModelWrapper` 后处理
 12. `retryModelWrapper` 后处理
-13. **ChatModelAgentMiddleware.AfterModelRewriteState**
-14. ~~AgentMiddleware.AfterChatModel~~（**Deprecated**，将移除）
+13. `failoverModelWrapper` 后处理
+14. **ChatModelAgentMiddleware.AfterModelRewriteState**
+15. ~~AgentMiddleware.AfterChatModel~~（**Deprecated**，将移除）
 
 ### Tool 调用生命周期（由外到内）
 
 1. `eventSenderToolHandler`（内部 — 发送工具结果事件）
 2. `ToolsConfig.ToolCallMiddlewares`
 3. ~~AgentMiddleware.WrapToolCall~~（**Deprecated**，将移除）
-4. **ChatModelAgentMiddleware.WrapXxxToolCall**（先注册 → 最外层）
-5. `cancelMonitoredToolHandler`（内部 — 取消监控）
-6. **Tool.InvokableRun / StreamableRun**
+4. `cancelMonitoredToolHandler`（内部 — 取消监控，仅 Streamable/EnhancedStreamable 工具）
+5. **ChatModelAgentMiddleware.WrapXxxToolCall**（先注册 → 最外层）
+6. `callbackInjectedToolCall`（内部 — 注入 callback）
+7. **Tool.InvokableRun / StreamableRun**
 
 ## 运行时本地存储 API
 

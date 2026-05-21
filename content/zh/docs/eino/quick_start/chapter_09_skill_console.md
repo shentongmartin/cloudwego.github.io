@@ -3,7 +3,7 @@ Description: ""
 date: "2026-05-19"
 lastmod: ""
 tags: []
-title: 第九章：Skill（Console）
+title: 第九章：Skill Middleware
 weight: 9
 ---
 

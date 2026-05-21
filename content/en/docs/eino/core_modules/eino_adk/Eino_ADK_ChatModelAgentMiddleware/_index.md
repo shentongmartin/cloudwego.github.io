@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-05-19"
+date: "2026-05-21"
 lastmod: ""
 tags: []
 title: ChatModelAgentMiddleware
@@ -196,17 +196,19 @@ type EnhancedStreamableToolCallEndpoint func(ctx context.Context, toolArgument *
 10. **ChatModelAgentMiddleware.WrapModel** postprocessing (first registered → last executed)
 11. `eventSenderModelWrapper` postprocessing
 12. `retryModelWrapper` postprocessing
-13. **ChatModelAgentMiddleware.AfterModelRewriteState**
-14. ~~AgentMiddleware.AfterChatModel~~ (**Deprecated**, will be removed)
+13. `failoverModelWrapper` postprocessing
+14. **ChatModelAgentMiddleware.AfterModelRewriteState**
+15. ~~AgentMiddleware.AfterChatModel~~ (**Deprecated**, will be removed)
 
 ### Tool Call Lifecycle (outer to inner)
 
 1. `eventSenderToolHandler` (internal — sends tool result events)
 2. `ToolsConfig.ToolCallMiddlewares`
 3. ~~AgentMiddleware.WrapToolCall~~ (**Deprecated**, will be removed)
-4. **ChatModelAgentMiddleware.WrapXxxToolCall** (first registered → outermost)
-5. `cancelMonitoredToolHandler` (internal — cancel monitoring)
-6. **Tool.InvokableRun / StreamableRun**
+4. `cancelMonitoredToolHandler` (internal — cancel monitoring, only for Streamable/EnhancedStreamable tools)
+5. **ChatModelAgentMiddleware.WrapXxxToolCall** (first registered → outermost)
+6. `callbackInjectedToolCall` (internal — injects callback)
+7. **Tool.InvokableRun / StreamableRun**
 
 ## Run-Local Storage API
 

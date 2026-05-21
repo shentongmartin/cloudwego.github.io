@@ -3,7 +3,7 @@ Description: ""
 date: "2026-05-19"
 lastmod: ""
 tags: []
-title: "Chapter 9: Skill (Console)"
+title: "Chapter 9: Skill Middleware"
 weight: 9
 ---
 
