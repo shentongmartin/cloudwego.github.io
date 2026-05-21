@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-12"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: 第二章：ChatModelAgent、Runner、AgentEvent（Console 多轮）
@@ -113,12 +113,12 @@ agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 **ChatModel vs ChatModelAgent：本质区别**
 
 <table>
-<tr><td>维度</td><td>ChatModel</td><td>ChatModelAgent</td></tr>
+<tr><td><strong>维度</strong></td><td><strong>ChatModel</strong></td><td><strong>ChatModelAgent</strong></td></tr>
 <tr><td><strong>定位</strong></td><td>Component（组件）</td><td>Agent（智能体）</td></tr>
-<tr><td><strong>接口</strong></td><td><pre>Generate() / Stream()</pre></td><td><pre>Run() -> AsyncIterator[*AgentEvent]</pre></td></tr>
-<tr><td><strong>输出</strong></td><td>直接返回消息内容</td><td>返回事件流（包含消息、控制动作等）</td></tr>
-<tr><td><strong>能力</strong></td><td>单纯的模型调用</td><td>可扩展 tools、middleware、interrupt 等</td></tr>
-<tr><td><strong>适用场景</strong></td><td>简单的对话场景</td><td>复杂的智能体应用</td></tr>
+<tr><td><strong>核心接口</strong></td><td><pre>Generate()</pre> / <pre>Stream()</pre></td><td><pre>Run() -> AsyncIterator[*AgentEvent]</pre></td></tr>
+<tr><td><strong>输出形态</strong></td><td>直接返回消息内容</td><td>返回事件流（包含消息、控制动作等）</td></tr>
+<tr><td><strong>核心能力</strong></td><td>单纯的大语言模型调用</td><td>支持扩展 tools、middleware、interrupt 等能力</td></tr>
+<tr><td><strong>适用场景</strong></td><td>简单对话交互场景</td><td>复杂智能体应用开发</td></tr>
 </table>
 
 **为什么需要 ChatModelAgent？**
@@ -163,12 +163,12 @@ type Runner struct {
 1. **生命周期管理**：Runner 管理 Agent 的启动、恢复、中断等状态
 2. **Checkpoint 支持**：配合 `CheckPointStore` 实现中断恢复（后续章节涉及）
 3. **统一入口**：提供 `Run()` 和 `Query()` 等便捷方法
-4. **事件流封装**：将 Agent 的事件流转换为可消费的 `AsyncIterator[*AgentEvent]`
+4. **事件流封装**：将 Agent 的事件流转换为可消费的 `AsyncIterator[*TypedAgentEvent[M]]`
 
 **使用方式：**
 
 ```go
-runner := adk.NewRunner(ctx, adk.RunnerConfig{
+runner := adk.NewTypedRunner[M](adk.TypedRunnerConfig[M]{
     Agent:           agent,
     EnableStreaming: true,
 })
@@ -239,34 +239,45 @@ for {
 
 没有 tools 时，`ChatModelAgent` 在一次 `Run()` 里只会完成一轮模型调用。多轮对话是通过调用侧维护 history 实现的：
 
-1. 用 `history []*schema.Message` 保存累计对话
-2. 每次用户输入：把 `UserMessage` 追加到 history
-3. 调用 `runner.Run(ctx, history)` 得到事件流，消费得到 assistant 文本
-4. 把本轮 assistant 文本追加回 history，进入下一轮
+1. 用 `history []M` 保存累计对话，本示例默认 `M` 为 `*schema.AgenticMessage`
+2. 每次用户输入：通过 `msgops.NewUser[M]` 追加到 history
+3. 调用 `runner.Run(ctx, msgops.NormalizeMessagesForModelInput(history))` 得到事件流，消费得到 assistant 文本
+4. 通过 `msgops.NewAssistant[M]` 把本轮 assistant 文本追加回 history，进入下一轮
 
 **关键代码片段（**注意：这是简化后的代码片段，不能直接运行，完整代码请参考** [cmd/ch02/main.go](https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/cmd/ch02/main.go)）：
 
 ```go
-history := make([]*schema.Message, 0, 16)
-
-for {
-    // 1. 读取用户输入
-    line := readUserInput()
-    if line == "" {
-        break
+func runTyped[M adk.MessageType](ctx context.Context, instruction string) {
+    agent, err := adk.NewTypedChatModelAgent[M](ctx, &adk.TypedChatModelAgentConfig[M]{
+        Name:        "Ch02Agent",
+        Instruction: instruction,
+        Model:       cm,
+    })
+    if err != nil {
+        log.Fatal(err)
     }
-    
-    // 2. 追加用户消息到 history
-    history = append(history, schema.UserMessage(line))
-    
-    // 3. 调用 Runner 执行 Agent
-    events := runner.Run(ctx, history)
-    
-    // 4. 消费事件流，收集 assistant 回复
-    content := collectAssistantFromEvents(events)
-    
-    // 5. 追加 assistant 消息到 history
-    history = append(history, schema.AssistantMessage(content, nil))
+
+    runner := adk.NewTypedRunner[M](adk.TypedRunnerConfig[M]{
+        Agent:           agent,
+        EnableStreaming: true,
+    })
+
+    history := make([]M, 0, 16)
+
+    for {
+        line := readUserInput()
+        if line == "" {
+            break
+        }
+
+        history = append(history, msgops.NewUser[M](line))
+        events := runner.Run(ctx, msgops.NormalizeMessagesForModelInput(history))
+        result, err := helpers.PrintAndCollect[M](events, helpers.PrintOptions{})
+        if err != nil {
+            log.Fatal(err)
+        }
+        history = append(history, msgops.NewAssistant[M](result.AssistantText, nil))
+    }
 }
 ```
 

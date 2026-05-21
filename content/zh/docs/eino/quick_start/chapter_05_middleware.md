@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-16"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: 第五章：Middleware（中间件模式）
@@ -182,6 +182,9 @@ func (m *safeToolMiddleware) WrapInvokableToolCall(
     return func(ctx context.Context, args string, opts ...tool.Option) (string, error) {
         result, err := endpoint(ctx, args, opts...)
         if err != nil {
+            if _, ok := compose.IsInterruptRerunError(err); ok {
+                return "", err
+            }
             // 将错误转换为字符串，而不是返回错误
             return fmt.Sprintf("[tool error] %v", err), nil
         }
@@ -305,7 +308,8 @@ agent, err := deep.New(ctx, &deep.Config{
         MaxRetries: 5,
         IsRetryAble: func(_ context.Context, err error) bool {
             return strings.Contains(err.Error(), "429") ||
-                strings.Contains(err.Error(), "Too Many Requests")
+                strings.Contains(err.Error(), "Too Many Requests") ||
+                strings.Contains(err.Error(), "qpm limit")
         },
     },
 })
@@ -409,9 +413,9 @@ agent, _ := deep.New(ctx, &deep.Config{
 
 <table>
 <tr><td>Middleware</td><td>功能说明</td></tr>
-<tr><td><strong>reduction</strong></td><td>工具输出缩减，当工具返回内容过长时自动截断并卸载到文件系统，防止上下文溢出</td></tr>
-<tr><td><strong>summarization</strong></td><td>对话历史自动摘要，当 token 数量超过阈值时自动生成摘要压缩历史</td></tr>
-<tr><td><strong>skill</strong></td><td>技能加载中间件，让 Agent 能够动态加载和执行预定义的技能</td></tr>
+<tr><td>reduction</td><td>工具输出缩减，当工具返回内容过长时自动截断并卸载到文件系统，防止上下文溢出</td></tr>
+<tr><td>summarization</td><td>对话历史自动摘要，当 token 数量超过阈值时自动生成摘要压缩历史</td></tr>
+<tr><td>skill</td><td>技能加载中间件，让 Agent 能够动态加载和执行预定义的技能</td></tr>
 </table>
 
 **Middleware 链示例：**

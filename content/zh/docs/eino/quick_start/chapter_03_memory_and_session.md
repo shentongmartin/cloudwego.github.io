@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-12"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: 第三章：Memory 与 Session（持久化对话）
@@ -10,11 +10,12 @@ weight: 3
 本章目标：实现对话历史的持久化存储，支持跨进程恢复会话。
 
 > **⚠️ 重要说明：业务层概念 vs 框架概念**
-
-> 本章介绍的 **Memory、Session、Store 是业务层概念**，**不是 Eino 框架的核心组件**。
-
 >
-
+> 本章介绍的 **Memory、Session、Store 是业务层概念**，**不是 Eino 框架的核心组件**。
+>
+> - **Eino 框架层面**：提供 `adk.Runner`、`adk.NewTypedRunner[M]`、`schema.AgenticMessage` 等基础抽象，框架本身不关心对话历史的存储方式
+> - **业务层层面**：Memory/Session/Store 是本示例项目为了实现持久化对话而设计的业务逻辑，通过组装给 `adk.Runner` 的输入来与 Eino 框架交互
+>
 > 换句话说，Eino 框架只负责"如何处理消息"，而"如何存储消息"完全由业务层决定。本章提供的实现只是一个简单的参考示例，你可以根据自己的业务需求选择完全不同的存储方案（数据库、Redis、云存储等）。
 
 ## 代码位置
@@ -87,7 +88,7 @@ type Session struct {
     ID        string
     CreatedAt time.Time
 
-    messages []*schema.Message  // 对话历史
+    messages []M  // 对话历史，示例默认 M 为 *schema.AgenticMessage
     // ...
 }
 ```
@@ -120,12 +121,14 @@ type Store struct {
 每个 Session 存储为一个 `.jsonl` 文件：
 
 ```
-{"type":"session","id":"083d16da-...","created_at":"2026-03-11T10:00:00Z"}
-{"role":"user","content":"你好，我是谁？"}
-{"role":"assistant","content":"你好！我暂时不知道你是谁..."}
-{"role":"user","content":"我叫张三"}
-{"role":"assistant","content":"好的，张三，很高兴认识你！"}
+{"type":"session","id":"083d16da-...","created_at":"2026-03-11T10:00:00Z","message_kind":"agentic"}
+{"role":"user","content_blocks":[{"type":"user_input_text","user_input_text":{"text":"你好，我是谁？"}}]}
+{"role":"assistant","content_blocks":[{"type":"assistant_gen_text","assistant_gen_text":{"text":"你好！我暂时不知道你是谁..."}}]}
+{"role":"user","content_blocks":[{"type":"user_input_text","user_input_text":{"text":"我叫张三"}}]}
+{"role":"assistant","content_blocks":[{"type":"assistant_gen_text","assistant_gen_text":{"text":"好的，张三，很高兴认识你！"}}]}
 ```
+
+会话默认保存在 `./data/sessions_agentic`；如果需要放到其他目录，可以设置 `SESSION_DIR_AGENTIC`。
 
 **为什么用 JSONL？**
 
@@ -141,7 +144,7 @@ type Store struct {
 ### 1. 创建 Store
 
 ```go
-sessionDir := "./data/sessions"
+sessionDir := "./data/sessions_agentic"
 store, err := mem.NewStore(sessionDir)
 if err != nil {
     log.Fatal(err)
@@ -161,7 +164,7 @@ if err != nil {
 ### 3. 追加用户消息
 
 ```go
-userMsg := schema.UserMessage("你好")
+userMsg := msgops.NewUser[M]("你好")
 if err := session.Append(userMsg); err != nil {
     log.Fatal(err)
 }
@@ -171,14 +174,17 @@ if err := session.Append(userMsg); err != nil {
 
 ```go
 history := session.GetMessages()
-events := runner.Run(ctx, history)
-content := collectAssistantFromEvents(events)
+events := runner.Run(ctx, msgops.NormalizeMessagesForModelInput(history))
+result, err := helpers.PrintAndCollect[M](events, helpers.PrintOptions{})
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### 5. 追加助手消息
 
 ```go
-assistantMsg := schema.AssistantMessage(content, nil)
+assistantMsg := msgops.NewAssistant[M](result.AssistantText, nil)
 if err := session.Append(assistantMsg); err != nil {
     log.Fatal(err)
 }
@@ -187,6 +193,11 @@ if err := session.Append(assistantMsg); err != nil {
 **关键代码片段（**注意：这是简化后的代码片段，不能直接运行，完整代码请参考** [cmd/ch03/main.go](https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/cmd/ch03/main.go)）：
 
 ```go
+store, err := mem.NewStore[M](msgops.DefaultSessionDir(msgops.KindOf[M]()))
+if err != nil {
+    log.Fatal(err)
+}
+
 // 创建或恢复 Session
 session, err := store.GetOrCreate(sessionID)
 if err != nil {
@@ -194,18 +205,21 @@ if err != nil {
 }
 
 // 用户输入
-userMsg := schema.UserMessage(line)
+userMsg := msgops.NewUser[M](line)
 if err := session.Append(userMsg); err != nil {
     log.Fatal(err)
 }
 
 // 调用 Agent
 history := session.GetMessages()
-events := runner.Run(ctx, history)
-content := collectAssistantFromEvents(events)
+events := runner.Run(ctx, msgops.NormalizeMessagesForModelInput(history))
+result, err := helpers.PrintAndCollect[M](events, helpers.PrintOptions{})
+if err != nil {
+    log.Fatal(err)
+}
 
 // 保存助手回复
-assistantMsg := schema.AssistantMessage(content, nil)
+assistantMsg := msgops.NewAssistant[M](result.AssistantText, nil)
 if err := session.Append(assistantMsg); err != nil {
     log.Fatal(err)
 }
@@ -217,7 +231,7 @@ if err := session.Append(assistantMsg); err != nil {
 
 - **Session 是业务层概念**：由业务代码实现和管理，负责存储和加载对话历史
 - **Agent（Runner）是框架层概念**：由 Eino 框架提供，负责处理消息并生成回复
-- **两者的交互点**：业务层通过 `session.GetMessages()` 获取消息列表，传递给 `runner.Run(ctx, history)` 进行处理
+- **两者的交互点**：业务层通过 `session.GetMessages()` 获取消息列表，再通过 `msgops.NormalizeMessagesForModelInput(history)` 生成模型输入，最后传递给 `runner.Run(ctx, messages)` 进行处理
 
 **架构分层：**
 
@@ -281,7 +295,7 @@ if err := session.Append(assistantMsg); err != nil {
 
 **框架层 vs 业务层：**
 
-- **Eino 框架层**：提供 `adk.Runner`、`schema.Message` 等基础抽象，不关心消息如何存储
+- **Eino 框架层**：提供 `adk.Runner`、typed runner、`schema.AgenticMessage` 等基础抽象，不关心消息如何存储
 - **业务层（本章实现）**：Memory/Session/Store 是业务层概念，用于管理对话历史的存储
 
 **业务层概念：**
@@ -294,7 +308,7 @@ if err := session.Append(assistantMsg); err != nil {
 **业务层与框架层的交互：**
 
 - 业务层负责存储消息，通过 `session.GetMessages()` 获取消息列表
-- 将消息列表传递给框架层的 `runner.Run(ctx, history)` 进行处理
+- 将消息列表规整为模型输入后，传递给框架层的 `runner.Run(ctx, messages)` 进行处理
 - 收集框架层返回的回复，再由业务层保存到存储中
 
 > **💡 提示**：本章的实现只是众多存储方案中的一种简单示例。在实际项目中，你可以根据业务需求选择数据库、Redis、云存储等方案，甚至可以实现更复杂的功能如会话过期清理、搜索、分享等。

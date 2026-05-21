@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-24"
+date: "2026-05-17"
 lastmod: ""
 tags: []
 title: v0.8.*-adk middlewares
@@ -65,7 +65,7 @@ agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 > 💡
 > **功能**: 自动对话历史摘要，防止超出模型上下文窗口限制
 
-📚 **详细文档**: [Middleware: FileSystem](/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem)
+📚 **详细文档**: [Middleware: Summarization](/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization)
 
 当对话历史的 Token 数量超过阈值时，自动调用 LLM 生成摘要，压缩上下文。
 
@@ -247,7 +247,7 @@ agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 > 💡
 > 升级到 v0.8 前，请查阅 Breaking Changes 文档了解所有不兼容变更
 
-📚 **完整文档**: [Eino v0.8 不兼容更新](/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_不兼容更新)
+📚 **完整文档**: [Eino v0.8 不兼容更新](/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_breaking_changes)
 
 **变更概览**:
 
@@ -263,7 +263,7 @@ agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 
 ## 升级指南
 
-详细的迁移步骤和代码示例请参考：[Eino v0.8 不兼容更新](/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_不兼容更新)
+详细的迁移步骤和代码示例请参考：[Eino v0.8 不兼容更新](/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_breaking_changes)
 
 **快速检查清单**:
 

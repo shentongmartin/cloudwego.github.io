@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-16"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: Cookbook
@@ -61,6 +61,27 @@ weight: 3
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/multiagent/integration-project-manager">adk/multiagent/integration-project-manager</a></td><td>项目管理器</td><td>使用 Supervisor 模式的项目管理示例，包含 Coder、Researcher、Reviewer</td></tr>
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/multiagent/deep">adk/multiagent/deep</a></td><td>Deep Agents (Excel Agent)</td><td>智能 Excel 助手，分步骤理解和处理 Excel 文件，支持 Python 代码执行</td></tr>
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/multiagent/integration-excel-agent">adk/multiagent/integration-excel-agent</a></td><td>Excel Agent (ADK 集成版)</td><td>ADK 集成版 Excel Agent，包含 Planner、Executor、Replanner、Reporter</td></tr>
+</table>
+
+### Agent
+
+<table>
+<tr><td>目录</td><td>名称</td><td>说明</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/agent/ralph-loop">adk/agent/ralph-loop</a></td><td>Ralph Loop</td><td>自主迭代模式：外部 <pre>for</pre> 循环配合 <pre>Runner.Run</pre> 实现单轮迭代，Agent 通过文件系统感知先前工作，验证门控检查 BUG 标记后才接受完成承诺</td></tr>
+</table>
+
+### Cancel (取消)
+
+<table>
+<tr><td>目录</td><td>名称</td><td>说明</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/cancel/graceful-exit">adk/cancel/graceful-exit</a></td><td>Graceful Exit</td><td>演示 Agent Cancel + Resume：捕获终端信号后以 <pre>CancelAfterChatModel</pre> + <pre>WithRecursive</pre> 模式取消嵌套 Agent，等待安全点保存 Checkpoint，然后恢复继续执行</td></tr>
+</table>
+
+### Middlewares (中间件)
+
+<table>
+<tr><td>目录</td><td>名称</td><td>说明</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/adk/middlewares/skill">adk/middlewares/skill</a></td><td>Skill 中间件</td><td>从文件系统加载 Agent 技能（如 log_analyzer），展示技能中间件的使用方式</td></tr>
 </table>
 
 ### GraphTool (图工具)
@@ -209,6 +230,7 @@ weight: 3
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/quickstart/chat">quickstart/chat</a></td><td>Chat 快速开始</td><td>最基础的 LLM 对话示例，包含模板、生成、流式输出</td></tr>
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/quickstart/eino_assistant">quickstart/eino_assistant</a></td><td>Eino 助手</td><td>完整的 RAG 应用示例，包含知识索引、Agent 服务、Web 界面</td></tr>
 <tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/quickstart/todoagent">quickstart/todoagent</a></td><td>Todo Agent</td><td>简单的 Todo 管理 Agent 示例</td></tr>
+<tr><td><a href="https://github.com/cloudwego/eino-examples/tree/main/quickstart/chatwitheino">quickstart/chatwitheino</a></td><td>Chat with Eino (教程)</td><td>9 章渐进式教程，从 ChatModel → Runner → Session → Tool → Middleware → Callback → Interrupt → GraphTool → Skill，逐步构建完整 Agent</td></tr>
 </table>
 
 ---

@@ -371,8 +371,8 @@ result, err := runnable.Invoke(ctx, input, compose.WithCallbacks(helper))
 
 工具的实现方式有多种，可以参考如下方式：
 
-- 基于 HTTP API 的 tool 实现： [如何使用 openapi 创建 tool/function call ?](/zh/docs/eino/usage_guide/how_to_guide/openapi_tool_creation)
-- 基于 gRPC 的 tool 实现： [如何使用 proto3 创建 tool/function call ? ](/zh/docs/eino/usage_guide/how_to_guide/proto3_tool_creation)
-- 基于 thrift 的 tool 实现： [如何使用 thrift idl 创建 tool/function call ? ](/zh/docs/eino/usage_guide/how_to_guide/thrift_idl_tool_creation)
+- 基于 HTTP API 的 tool 实现： [如何使用 openapi 创建 tool/function call ?](https://bytedance.larkoffice.com/wiki/FjXzwf3exijtKyk2hh7cAmnZn1g)
+- 基于 gRPC 的 tool 实现： [如何使用 proto3 创建 tool/function call ? ](https://bytedance.larkoffice.com/wiki/EPkawUVbdiGwxCkWCJTcAMQonbh)
+- 基于 thrift 的 tool 实现： [如何使用 thrift idl 创建 tool/function call ? ](https://bytedance.larkoffice.com/wiki/PcHfwo6x0iOrXxkIjJecez8xnNg)
 - 基于本地函数的工具实现： [如何创建一个 tool ?](/zh/docs/eino/core_modules/components/tools_node_guide/how_to_create_a_tool)
 - ……
