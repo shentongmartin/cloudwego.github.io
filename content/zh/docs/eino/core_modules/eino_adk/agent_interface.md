@@ -130,7 +130,7 @@ type AgentAction struct {
 
 - `WithSessionValues(map[string]any)`：注入跨 Agent 共享的 KV 数据
 - `WithCallbacks(...callbacks.Handler)`：添加回调处理器
-- `WithCancel()`：启用 Agent Cancel 能力（详见 [Cancel 与 TurnLoop](/zh/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart)）
+- `WithCancel()`：启用 Agent Cancel 能力（详见 [Cancel 与 TurnLoop](/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart)）
 
 自定义 Option：
 

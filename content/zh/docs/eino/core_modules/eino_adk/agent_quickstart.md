@@ -29,7 +29,7 @@ go get github.com/cloudwego/eino@latest
 <tr><td><strong>ChatModelAgent</strong></td><td>ReAct Loop：推理 → 行动 → 反馈，自主决策</td><td><a href="/zh/docs/eino/overview/eino_adk_quickstart">ChatModelAgent 介绍</a></td></tr>
 <tr><td><strong>Middleware</strong></td><td>在 ReAct Loop 的生命周期点位注入行为（压缩、搜索、重试等）</td><td><a href="/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware">ChatModelAgentMiddleware</a></td></tr>
 <tr><td><strong>Runner</strong></td><td>单次 Agent 运行入口：Query / Run → 事件流</td><td><a href="/zh/docs/eino/core_modules/eino_adk/agent_extension">Agent Runner 与扩展</a></td></tr>
-<tr><td><strong>TurnLoop</strong></td><td>多轮运行时：Push / Preempt / Stop + 声明式 checkpoint/resume</td><td><a href="/zh/docs/eino/core_modules/eino_adk/eino_adk_agent_cancel_and_turnloop_quickstart">Agent Cancel 与 TurnLoop</a></td></tr>
+<tr><td><strong>TurnLoop</strong></td><td>多轮运行时：Push / Preempt / Stop + 声明式 checkpoint/resume</td><td><a href="/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart">Agent Cancel 与 TurnLoop</a></td></tr>
 <tr><td><strong>DeepAgents</strong></td><td>预构建 Agent：任务规划（PlanTask）+ 子任务委派（TaskTool）</td><td><a href="/zh/docs/eino/core_modules/eino_adk/agent_implementation/deepagents">DeepAgents</a></td></tr>
 </table>
 
