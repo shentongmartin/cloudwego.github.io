@@ -1,10 +1,16 @@
-<!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>Summarization | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="Summarization"><meta property="og:description" content='概述 Summarization 中间件会在对话的 token 数量超过配置阈值时，自动压缩对话历史。这有助于在长对话中保持上下文连续性，同时控制在模型的 token 限制范围内。
-💡 本中间件在 v0.8.0 版本引入。
-快速开始 import ( "context" "github.com/cloudwego/eino/adk/middlewares/summarization" ) // 使用最小配置创建中间件 mw, err := summarization.New(ctx, &amp;summarization.Config{ Model: yourChatModel, // 必填：用于生成摘要的模型 }) if err != nil { // 处理错误 } // 与 ChatModelAgent 一起使用 agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ Model: yourChatModel, Middlewares: []adk.ChatModelAgentMiddleware{mw}, }) 配置项 字段类型必填默认值说明 Modelmodel.BaseChatModel是用于生成摘要的聊天模型 ModelOptions[]model.Option否传递给模型生成摘要时的选项 TokenCounterTokenCounterFunc否约 4 字符/token自定义 token 计数函数 Trigger*TriggerCondition否190,000 tokens触发摘要的条件 UserInstructionstring否内置 prompt自定义摘要指令 TranscriptFilePathstring否完整对话记录文件路径 GenModelInputGenModelInputFunc否自定义摘要模型输入的预处理函数 FinalizeFinalizeFunc否自定义最终消息的后处理函数 CallbackCallbackFunc否在 Finalize 之后调用，用于观察状态变化（只读） EmitInternalEventsbool否false是否发送内部事件 PreserveUserMessages*PreserveUserMessages否Enabled: true是否在摘要中保留原始用户消息 TriggerCondition 结构 type TriggerCondition struct { // ContextTokens 当总 token 数量超过此阈值时触发摘要 ContextTokens int } PreserveUserMessages 结构 type PreserveUserMessages struct { // Enabled 是否启用保留用户消息功能 Enabled bool // MaxTokens 保留用户消息的最大 token 数 // 只保留最近的用户消息，直到达到此限制 // 默认为 TriggerCondition.ContextTokens 的 1/3 MaxTokens int } 配置示例 自定义 Token 阈值'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-03-09T00:00:00+00:00"><meta property="article:modified_time" content="2026-03-24T20:03:40+08:00"><meta itemprop=name content="Summarization"><meta itemprop=description content='概述 Summarization 中间件会在对话的 token 数量超过配置阈值时，自动压缩对话历史。这有助于在长对话中保持上下文连续性，同时控制在模型的 token 限制范围内。
-💡 本中间件在 v0.8.0 版本引入。
-快速开始 import ( "context" "github.com/cloudwego/eino/adk/middlewares/summarization" ) // 使用最小配置创建中间件 mw, err := summarization.New(ctx, &amp;summarization.Config{ Model: yourChatModel, // 必填：用于生成摘要的模型 }) if err != nil { // 处理错误 } // 与 ChatModelAgent 一起使用 agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ Model: yourChatModel, Middlewares: []adk.ChatModelAgentMiddleware{mw}, }) 配置项 字段类型必填默认值说明 Modelmodel.BaseChatModel是用于生成摘要的聊天模型 ModelOptions[]model.Option否传递给模型生成摘要时的选项 TokenCounterTokenCounterFunc否约 4 字符/token自定义 token 计数函数 Trigger*TriggerCondition否190,000 tokens触发摘要的条件 UserInstructionstring否内置 prompt自定义摘要指令 TranscriptFilePathstring否完整对话记录文件路径 GenModelInputGenModelInputFunc否自定义摘要模型输入的预处理函数 FinalizeFinalizeFunc否自定义最终消息的后处理函数 CallbackCallbackFunc否在 Finalize 之后调用，用于观察状态变化（只读） EmitInternalEventsbool否false是否发送内部事件 PreserveUserMessages*PreserveUserMessages否Enabled: true是否在摘要中保留原始用户消息 TriggerCondition 结构 type TriggerCondition struct { // ContextTokens 当总 token 数量超过此阈值时触发摘要 ContextTokens int } PreserveUserMessages 结构 type PreserveUserMessages struct { // Enabled 是否启用保留用户消息功能 Enabled bool // MaxTokens 保留用户消息的最大 token 数 // 只保留最近的用户消息，直到达到此限制 // 默认为 TriggerCondition.ContextTokens 的 1/3 MaxTokens int } 配置示例 自定义 Token 阈值'><meta itemprop=datePublished content="2026-03-09T00:00:00+00:00"><meta itemprop=dateModified content="2026-03-24T20:03:40+08:00"><meta itemprop=wordCount content="375"><meta name=twitter:card content="summary"><meta name=twitter:title content="Summarization"><meta name=twitter:description content='概述 Summarization 中间件会在对话的 token 数量超过配置阈值时，自动压缩对话历史。这有助于在长对话中保持上下文连续性，同时控制在模型的 token 限制范围内。
-💡 本中间件在 v0.8.0 版本引入。
-快速开始 import ( "context" "github.com/cloudwego/eino/adk/middlewares/summarization" ) // 使用最小配置创建中间件 mw, err := summarization.New(ctx, &amp;summarization.Config{ Model: yourChatModel, // 必填：用于生成摘要的模型 }) if err != nil { // 处理错误 } // 与 ChatModelAgent 一起使用 agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ Model: yourChatModel, Middlewares: []adk.ChatModelAgentMiddleware{mw}, }) 配置项 字段类型必填默认值说明 Modelmodel.BaseChatModel是用于生成摘要的聊天模型 ModelOptions[]model.Option否传递给模型生成摘要时的选项 TokenCounterTokenCounterFunc否约 4 字符/token自定义 token 计数函数 Trigger*TriggerCondition否190,000 tokens触发摘要的条件 UserInstructionstring否内置 prompt自定义摘要指令 TranscriptFilePathstring否完整对话记录文件路径 GenModelInputGenModelInputFunc否自定义摘要模型输入的预处理函数 FinalizeFinalizeFunc否自定义最终消息的后处理函数 CallbackCallbackFunc否在 Finalize 之后调用，用于观察状态变化（只读） EmitInternalEventsbool否false是否发送内部事件 PreserveUserMessages*PreserveUserMessages否Enabled: true是否在摘要中保留原始用户消息 TriggerCondition 结构 type TriggerCondition struct { // ContextTokens 当总 token 数量超过此阈值时触发摘要 ContextTokens int } PreserveUserMessages 结构 type PreserveUserMessages struct { // Enabled 是否启用保留用户消息功能 Enabled bool // MaxTokens 保留用户消息的最大 token 数 // 只保留最近的用户消息，直到达到此限制 // 默认为 TriggerCondition.ContextTokens 的 1/3 MaxTokens int } 配置示例 自定义 Token 阈值'><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
+<!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>Summarization | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="Summarization"><meta property="og:description" content="💡 本中间件在 v0.8.0 版本引入。包路径：github.com/cloudwego/eino/adk/middlewares/summarization
+概述 Summarization 中间件在对话 token 数超过阈值时自动调用摘要模型压缩对话历史，使长对话在模型上下文窗口内保持连贯。中间件挂载在 BeforeModelRewriteState 钩子上，每轮模型调用前检查触发条件，触发后执行：计数 → 摘要生成（含重试/降级）→ 后处理 → 替换 state。
+泛型体系 本包全部核心类型和函数均提供 Typed 泛型版本（M adk.MessageType）与 非泛型别名（固定为 *schema.Message）。
+泛型版本非泛型别名（= Typed\[*schema.Message\]） TypedConfig[M]Config NewTyped[M](ctx, *TypedConfig[M])New(ctx, *Config) TypedTokenCounterFunc[M]TokenCounterFunc TypedGenModelInputFunc[M]GenModelInputFunc TypedGetFailoverModelFunc[M]GetFailoverModelFunc TypedFinalizeFunc[M]FinalizeFunc TypedCallbackFunc[M]CallbackFunc TypedUserMessageFilterFunc[M]UserMessageFilterFunc TypedPreserveUserMessages[M]PreserveUserMessages TypedRetryConfig[M]RetryConfig TypedFailoverConfig[M]FailoverConfig TypedFailoverContext[M]FailoverContext TypedFinalizerBuilder[M]FinalizerBuilder 以下文档中如无特别说明，类型签名使用泛型形式 M。使用非泛型别名时 M = *schema.Message。
+构造函数 // 泛型版本 — 支持 *schema.Message 和 *schema.AgenticMessage func NewTyped[M adk.MessageType](ctx context.Context, cfg *TypedConfig[M]) (adk.TypedChatModelAgentMiddleware[M], error) // 非泛型版本 — 等价于 NewTyped[*schema.Message] func New(ctx context.Context, cfg *Config) (adk.ChatModelAgentMiddleware, error) TypedConfig[M] 配置项 字段类型必填默认值说明 Modelmodel.BaseModel[M]是—用于生成摘要的模型 ModelOptions[]model.Option否—传递给摘要模型的选项 TokenCounterTypedTokenCounterFunc[M]否基于最近 assistant 消息的 total\_tokens 作为基线，增量消息按 ~4 字符/token 估算自定义 token 计数函数 Trigger*TriggerCondition否ContextTokens=160,000触发摘要的条件 UserInstructionstring否内置 prompt自定义用户级摘要指令，覆盖默认指令 TranscriptFilePathstring否—完整对话记录文件路径，附加到摘要中提醒模型原始上下文位置。仅在未设置 Finalize 时生效 GenModelInputTypedGenModelInputFunc[M]否sysInstruction → contextMsgs → userInstruction完全控制摘要模型输入的构建 FinalizeTypedFinalizeFunc[M]否内置后处理自定义摘要后处理。设置后中间件不再执行任何默认后处理 CallbackTypedCallbackFunc[M]否—在 Finalize 后调用，参数为 before, after adk.TypedChatModelAgentState[M]（值类型），只读 EmitInternalEventsbool否false是否在关键节点发送内部事件 PreserveUserMessages*TypedPreserveUserMessages[M]否Enabled: true在摘要中保留原始用户消息。仅在未设置 Finalize 时生效 Retry*TypedRetryConfig[M]否nil（不重试）主模型摘要生成的重试策略 Failover*TypedFailoverConfig[M]否nil主模型失败后的降级策略 💡 Finalize 覆盖语义：一旦设置了自定义 Finalize，中间件将跳过所有默认后处理——PreserveUserMessages 和 TranscriptFilePath 均不再生效。如需在自定义 Finalize 中复用默认后处理逻辑，请使用 DefaultFinalizer 函数。"><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-05-17T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-21T19:31:45+08:00"><meta itemprop=name content="Summarization"><meta itemprop=description content="💡 本中间件在 v0.8.0 版本引入。包路径：github.com/cloudwego/eino/adk/middlewares/summarization
+概述 Summarization 中间件在对话 token 数超过阈值时自动调用摘要模型压缩对话历史，使长对话在模型上下文窗口内保持连贯。中间件挂载在 BeforeModelRewriteState 钩子上，每轮模型调用前检查触发条件，触发后执行：计数 → 摘要生成（含重试/降级）→ 后处理 → 替换 state。
+泛型体系 本包全部核心类型和函数均提供 Typed 泛型版本（M adk.MessageType）与 非泛型别名（固定为 *schema.Message）。
+泛型版本非泛型别名（= Typed\[*schema.Message\]） TypedConfig[M]Config NewTyped[M](ctx, *TypedConfig[M])New(ctx, *Config) TypedTokenCounterFunc[M]TokenCounterFunc TypedGenModelInputFunc[M]GenModelInputFunc TypedGetFailoverModelFunc[M]GetFailoverModelFunc TypedFinalizeFunc[M]FinalizeFunc TypedCallbackFunc[M]CallbackFunc TypedUserMessageFilterFunc[M]UserMessageFilterFunc TypedPreserveUserMessages[M]PreserveUserMessages TypedRetryConfig[M]RetryConfig TypedFailoverConfig[M]FailoverConfig TypedFailoverContext[M]FailoverContext TypedFinalizerBuilder[M]FinalizerBuilder 以下文档中如无特别说明，类型签名使用泛型形式 M。使用非泛型别名时 M = *schema.Message。
+构造函数 // 泛型版本 — 支持 *schema.Message 和 *schema.AgenticMessage func NewTyped[M adk.MessageType](ctx context.Context, cfg *TypedConfig[M]) (adk.TypedChatModelAgentMiddleware[M], error) // 非泛型版本 — 等价于 NewTyped[*schema.Message] func New(ctx context.Context, cfg *Config) (adk.ChatModelAgentMiddleware, error) TypedConfig[M] 配置项 字段类型必填默认值说明 Modelmodel.BaseModel[M]是—用于生成摘要的模型 ModelOptions[]model.Option否—传递给摘要模型的选项 TokenCounterTypedTokenCounterFunc[M]否基于最近 assistant 消息的 total\_tokens 作为基线，增量消息按 ~4 字符/token 估算自定义 token 计数函数 Trigger*TriggerCondition否ContextTokens=160,000触发摘要的条件 UserInstructionstring否内置 prompt自定义用户级摘要指令，覆盖默认指令 TranscriptFilePathstring否—完整对话记录文件路径，附加到摘要中提醒模型原始上下文位置。仅在未设置 Finalize 时生效 GenModelInputTypedGenModelInputFunc[M]否sysInstruction → contextMsgs → userInstruction完全控制摘要模型输入的构建 FinalizeTypedFinalizeFunc[M]否内置后处理自定义摘要后处理。设置后中间件不再执行任何默认后处理 CallbackTypedCallbackFunc[M]否—在 Finalize 后调用，参数为 before, after adk.TypedChatModelAgentState[M]（值类型），只读 EmitInternalEventsbool否false是否在关键节点发送内部事件 PreserveUserMessages*TypedPreserveUserMessages[M]否Enabled: true在摘要中保留原始用户消息。仅在未设置 Finalize 时生效 Retry*TypedRetryConfig[M]否nil（不重试）主模型摘要生成的重试策略 Failover*TypedFailoverConfig[M]否nil主模型失败后的降级策略 💡 Finalize 覆盖语义：一旦设置了自定义 Finalize，中间件将跳过所有默认后处理——PreserveUserMessages 和 TranscriptFilePath 均不再生效。如需在自定义 Finalize 中复用默认后处理逻辑，请使用 DefaultFinalizer 函数。"><meta itemprop=datePublished content="2026-05-17T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-21T19:31:45+08:00"><meta itemprop=wordCount content="790"><meta name=twitter:card content="summary"><meta name=twitter:title content="Summarization"><meta name=twitter:description content="💡 本中间件在 v0.8.0 版本引入。包路径：github.com/cloudwego/eino/adk/middlewares/summarization
+概述 Summarization 中间件在对话 token 数超过阈值时自动调用摘要模型压缩对话历史，使长对话在模型上下文窗口内保持连贯。中间件挂载在 BeforeModelRewriteState 钩子上，每轮模型调用前检查触发条件，触发后执行：计数 → 摘要生成（含重试/降级）→ 后处理 → 替换 state。
+泛型体系 本包全部核心类型和函数均提供 Typed 泛型版本（M adk.MessageType）与 非泛型别名（固定为 *schema.Message）。
+泛型版本非泛型别名（= Typed\[*schema.Message\]） TypedConfig[M]Config NewTyped[M](ctx, *TypedConfig[M])New(ctx, *Config) TypedTokenCounterFunc[M]TokenCounterFunc TypedGenModelInputFunc[M]GenModelInputFunc TypedGetFailoverModelFunc[M]GetFailoverModelFunc TypedFinalizeFunc[M]FinalizeFunc TypedCallbackFunc[M]CallbackFunc TypedUserMessageFilterFunc[M]UserMessageFilterFunc TypedPreserveUserMessages[M]PreserveUserMessages TypedRetryConfig[M]RetryConfig TypedFailoverConfig[M]FailoverConfig TypedFailoverContext[M]FailoverContext TypedFinalizerBuilder[M]FinalizerBuilder 以下文档中如无特别说明，类型签名使用泛型形式 M。使用非泛型别名时 M = *schema.Message。
+构造函数 // 泛型版本 — 支持 *schema.Message 和 *schema.AgenticMessage func NewTyped[M adk.MessageType](ctx context.Context, cfg *TypedConfig[M]) (adk.TypedChatModelAgentMiddleware[M], error) // 非泛型版本 — 等价于 NewTyped[*schema.Message] func New(ctx context.Context, cfg *Config) (adk.ChatModelAgentMiddleware, error) TypedConfig[M] 配置项 字段类型必填默认值说明 Modelmodel.BaseModel[M]是—用于生成摘要的模型 ModelOptions[]model.Option否—传递给摘要模型的选项 TokenCounterTypedTokenCounterFunc[M]否基于最近 assistant 消息的 total\_tokens 作为基线，增量消息按 ~4 字符/token 估算自定义 token 计数函数 Trigger*TriggerCondition否ContextTokens=160,000触发摘要的条件 UserInstructionstring否内置 prompt自定义用户级摘要指令，覆盖默认指令 TranscriptFilePathstring否—完整对话记录文件路径，附加到摘要中提醒模型原始上下文位置。仅在未设置 Finalize 时生效 GenModelInputTypedGenModelInputFunc[M]否sysInstruction → contextMsgs → userInstruction完全控制摘要模型输入的构建 FinalizeTypedFinalizeFunc[M]否内置后处理自定义摘要后处理。设置后中间件不再执行任何默认后处理 CallbackTypedCallbackFunc[M]否—在 Finalize 后调用，参数为 before, after adk.TypedChatModelAgentState[M]（值类型），只读 EmitInternalEventsbool否false是否在关键节点发送内部事件 PreserveUserMessages*TypedPreserveUserMessages[M]否Enabled: true在摘要中保留原始用户消息。仅在未设置 Finalize 时生效 Retry*TypedRetryConfig[M]否nil（不重试）主模型摘要生成的重试策略 Failover*TypedFailoverConfig[M]否nil主模型失败后的降级策略 💡 Finalize 覆盖语义：一旦设置了自定义 Finalize，中间件将跳过所有默认后处理——PreserveUserMessages 和 TranscriptFilePath 均不再生效。如需在自定义 Finalize 中复用默认后处理逻辑，请使用 DefaultFinalizer 函数。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
 </a><button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#main_navbar aria-controls=main_navbar aria-expanded=false aria-label="Toggle navigation">
 <span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0 ms-auto"><li class="dropdown sub-menu active"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>文档</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=/zh/docs/kitex/>Kitex</a>
 <a class=dropdown-item href=/zh/docs/hertz/>Hertz</a>
@@ -28,7 +34,8 @@ Auto
 <label for=m-zhdocseinoovervieweino_open_source-check><a href=/zh/docs/eino/overview/eino_open_source/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_open_source><span>大语言模型应用开发框架 —— Eino 正式开源！</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk0_1-li><input type=checkbox id=m-zhdocseinoovervieweino_adk0_1-check>
 <label for=m-zhdocseinoovervieweino_adk0_1-check><a href=/zh/docs/eino/overview/eino_adk0_1/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk0_1><span>Eino ADK：一文搞定 AI Agent 核心设计模式，从 0 到 1 搭建智能体系统</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_excel_agent-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_excel_agent-check>
 <label for=m-zhdocseinoovervieweino_adk_excel_agent-check><a href=/zh/docs/eino/overview/eino_adk_excel_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_excel_agent><span>用 Eino ADK 构建你的第一个 AI 智能体：从 Excel Agent 实战开始</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinooverviewgraph_or_agent-li><input type=checkbox id=m-zhdocseinooverviewgraph_or_agent-check>
-<label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
+<label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_quickstart-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_quickstart-check>
+<label for=m-zhdocseinoovervieweino_adk_quickstart-check><a href=/zh/docs/eino/overview/eino_adk_quickstart/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_quickstart><span>五分钟上手 Eino ADK</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
 <label for=m-zhdocseinoquick_start-check><a href=/zh/docs/eino/quick_start/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinoquick_start><span>快速开始</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-li><input type=checkbox id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check>
 <label for=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check><a href=/zh/docs/eino/quick_start/chapter_01_chatmodel_and_message/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message><span>第一章：ChatModel 与 Message（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-li><input type=checkbox id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check>
 <label for=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check><a href=/zh/docs/eino/quick_start/chapter_02_chatmodelagent_runner_agentevent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent><span>第二章：ChatModelAgent、Runner、AgentEvent（Console 多轮）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_03_memory_and_session-li><input type=checkbox id=m-zhdocseinoquick_startchapter_03_memory_and_session-check>
@@ -38,8 +45,9 @@ Auto
 <label for=m-zhdocseinoquick_startchapter_06_callback_and_trace-check><a href=/zh/docs/eino/quick_start/chapter_06_callback_and_trace/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_06_callback_and_trace><span>第六章：Callback 与 Trace（可观测性）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_07_interrupt_resume-li><input type=checkbox id=m-zhdocseinoquick_startchapter_07_interrupt_resume-check>
 <label for=m-zhdocseinoquick_startchapter_07_interrupt_resume-check><a href=/zh/docs/eino/quick_start/chapter_07_interrupt_resume/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_07_interrupt_resume><span>第七章：Interrupt/Resume（中断与恢复）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_08_graph_tool-li><input type=checkbox id=m-zhdocseinoquick_startchapter_08_graph_tool-check>
 <label for=m-zhdocseinoquick_startchapter_08_graph_tool-check><a href=/zh/docs/eino/quick_start/chapter_08_graph_tool/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_08_graph_tool><span>第八章：Graph Tool（复杂工作流）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_skill_console-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_skill_console-check>
-<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check>
-<label for=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_09_a2ui_protocol/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol><span>第十章：A2UI 协议（流式 UI 组件）</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
+<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill Middleware</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_10_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_10_a2ui_protocol-check>
+<label for=m-zhdocseinoquick_startchapter_10_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_10_a2ui_protocol/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_10_a2ui_protocol><span>第十章：A2UI 协议（流式 UI 组件）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_11_turnloop-li><input type=checkbox id=m-zhdocseinoquick_startchapter_11_turnloop-check>
+<label for=m-zhdocseinoquick_startchapter_11_turnloop-check><a href=/zh/docs/eino/quick_start/chapter_11_turnloop/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_11_turnloop><span>第十一章：TurnLoop — 抢占、中止与多轮生命周期</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
 <label for=m-zhdocseinocookbook-check><a href=/zh/docs/eino/cookbook/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocookbook><span>Cookbook</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_modules-li><input type=checkbox id=m-zhdocseinocore_modules-check checked>
 <label for=m-zhdocseinocore_modules-check><a href=/zh/docs/eino/core_modules/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modules><span>核心模块</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponents-li><input type=checkbox id=m-zhdocseinocore_modulescomponents-check>
 <label for=m-zhdocseinocore_modulescomponents-check><a href=/zh/docs/eino/core_modules/components/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulescomponents><span>Components 组件</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-li><input type=checkbox id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-check>
@@ -73,18 +81,17 @@ Auto
 <label for=m-zhdocseinocore_moduleseino_adkagent_preview-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_preview/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_preview><span>概述</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_interface-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_interface-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_interface-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_interface/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_interface><span>Agent 抽象</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_collaboration-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_collaboration-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_collaboration-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_collaboration/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_collaboration><span>Agent 协作</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkagent_implementation-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementation-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementation-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementation><span>Agent 实现</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model><span>ChatModelAgent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/workflow/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow><span>Workflow Agents</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/supervisor/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor><span>Supervisor Agent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementation-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementation><span>Agent 实现</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model><span>ChatModelAgent</span></a></label><ul class="ul-6 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/chatmodel_failover_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide><span>ChatModel Failover 功能文档</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/plan_execute/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute><span>Plan-Execute Agent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/deepagents/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents><span>DeepAgents</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_extension-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_extension-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_extension-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_extension/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_extension><span>Agent Runner 与扩展</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_hitl-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_hitl-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_hitl-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_hitl/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_hitl><span>Eino human-in-the-loop框架：技术架构指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-check checked>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware><span>ChatModelAgentMiddleware</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend><span>FileSystem Backend</span></a></label><ul class="ul-6 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check>
-<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_ark_agentkit_sandbox/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox><span>Ark Agentkit Sandbox</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-check>
-<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f><span>本地文件系统</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check>
+<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_ark_agentkit_sandbox/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox><span>Ark Agentkit Sandbox</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-check>
+<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_local_filesystem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem><span>本地文件系统</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem><span>FileSystem</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill><span>Skill</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-check checked>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/ class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization><span class=td-sidebar-nav-active-item>Summarization</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolreduction-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolreduction-check>
@@ -93,7 +100,8 @@ Auto
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolsearch-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_toolsearch/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolsearch><span>ToolSearch</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_patchtoolcalls/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls><span>PatchToolCalls</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_agentsmd/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd><span>AgentsMD</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check>
-<label for=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check><a href=/zh/docs/eino/core_modules/eino_adk/adk_agent_callback/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback><span>Agent Callback</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulesdevops-li><input type=checkbox id=m-zhdocseinocore_modulesdevops-check>
+<label for=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check><a href=/zh/docs/eino/core_modules/eino_adk/adk_agent_callback/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback><span>Agent Callback</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart><span>Agent Cancel 与 TurnLoop 快速入门</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulesdevops-li><input type=checkbox id=m-zhdocseinocore_modulesdevops-check>
 <label for=m-zhdocseinocore_modulesdevops-check><a href=/zh/docs/eino/core_modules/devops/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulesdevops><span>应用开发工具链</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopside_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopside_plugin_guide-check>
 <label for=m-zhdocseinocore_modulesdevopside_plugin_guide-check><a href=/zh/docs/eino/core_modules/devops/ide_plugin_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_modulesdevopside_plugin_guide><span>Eino Dev 插件安装指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-check>
 <label for=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-check><a href=/zh/docs/eino/core_modules/devops/visual_orchestration_plugin_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide><span>Eino Dev 可视化编排插件功能指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopsvisual_debug_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopsvisual_debug_plugin_guide-check>
@@ -117,12 +125,14 @@ Auto
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v05_-adk_implementation-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.5._-adk_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v05_-adk_implementation><span>v0.5.*-ADK implementation</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-check>
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.6._-jsonschema_optimization/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization><span>v0.6.*-jsonschema optimization</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-check>
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.7._-interrupt_resume_refactor/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor><span>v0.7.*-interrupt resume refactor</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check>
-<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares><span>v0.8.*-adk middlewares</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-check>
-<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_%E4%B8%8D%E5%85%BC%E5%AE%B9%E6%9B%B4%E6%96%B0/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0><span>Eino v0.8 不兼容更新</span></a></label></li></ul></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinofaq-li><input type=checkbox id=m-zhdocseinofaq-check checked>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares><span>v0.8.*-adk middlewares</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_breaking_changes/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes><span>Eino v0.8 不兼容更新</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.9._agentic-runtime/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime><span>v0.9.* agentic-runtime</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.9._agentic-runtime/eino_v0.9_migration_notes/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes><span>Eino V0.9 更新注意事项</span></a></label></li></ul></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinofaq-li><input type=checkbox id=m-zhdocseinofaq-check checked>
 <label for=m-zhdocseinofaq-check><a href=/zh/docs/eino/faq/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinofaq><span>FAQ</span></a></label></li></ul></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ms-2 pb-1 pt-2 mb-0"><a href=https://github.com/cloudwego/cloudwego.github.io/edit/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware/Middleware_Summarization.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/new/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/issues/new?title=Summarization" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-brands fa-github fa-fw"></i> 提交文档问题</a>
-<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#快速开始>快速开始</a></li><li><a href=#配置项>配置项</a><ul><li><a href=#triggercondition-结构>TriggerCondition 结构</a></li><li><a href=#preserveusermessages-结构>PreserveUserMessages 结构</a></li><li><a href=#配置示例>配置示例</a></li></ul></li><li><a href=#工作原理>工作原理</a></li><li><a href=#内部事件>内部事件</a></li><li><a href=#最佳实践>最佳实践</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/>Summarization</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=Summarization data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
+<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#泛型体系>泛型体系</a><ul><li><a href=#构造函数>构造函数</a></li></ul></li><li><a href=#typedconfigm-配置项>TypedConfig[M] 配置项</a></li><li><a href=#子配置结构体>子配置结构体</a><ul><li><a href=#triggercondition>TriggerCondition</a></li><li><a href=#typedpreserveusermessagesm>TypedPreserveUserMessages[M]</a></li><li><a href=#typedretryconfigm>TypedRetryConfig[M]</a></li><li><a href=#typedfailoverconfigm>TypedFailoverConfig[M]</a></li><li><a href=#typedfailovercontextm>TypedFailoverContext[M]</a></li><li><a href=#typedtokencounterinputm>TypedTokenCounterInput[M]</a></li></ul></li><li><a href=#函数类型签名速查>函数类型签名速查</a></li><li><a href=#defaultfinalizer>DefaultFinalizer</a><ul><li><a href=#defaultfinalizerconfigm>DefaultFinalizerConfig[M]</a></li></ul></li><li><a href=#finalizerbuilder>FinalizerBuilder</a><ul><li><a href=#preserveskills>PreserveSkills</a></li></ul></li><li><a href=#summarize-方法>Summarize 方法</a></li><li><a href=#工作原理>工作原理</a></li><li><a href=#内部事件>内部事件</a></li><li><a href=#使用示例>使用示例</a><ul><li><a href=#最小配置>最小配置</a></li><li><a href=#自定义触发条件--重试--降级>自定义触发条件 + 重试 + 降级</a></li><li><a href=#finalizerbuilder--preserveskills--defaultfinalizer>FinalizerBuilder + PreserveSkills + DefaultFinalizer</a></li></ul></li><li><a href=#注意事项>注意事项</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/>Summarization</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=Summarization data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
 <i class="fa-regular fa-copy"></i>
 <span>复制全文</span>
 </button>
@@ -132,314 +142,481 @@ Auto
 </button>
 <button class=dropdown-item data-copy-type=text>
 复制文本</button></div><div class=copy-fulltext__toast id=copy-fulltext-toast></div></div><script id=copy-fulltext-markdown type=text/plain>
+> 💡
+> 本中间件在 v0.8.0 版本引入。包路径：`github.com/cloudwego/eino/adk/middlewares/summarization`
+
 ## 概述
 
-Summarization 中间件会在对话的 token 数量超过配置阈值时，自动压缩对话历史。这有助于在长对话中保持上下文连续性，同时控制在模型的 token 限制范围内。
+Summarization 中间件在对话 token 数超过阈值时自动调用摘要模型压缩对话历史，使长对话在模型上下文窗口内保持连贯。中间件挂载在 `BeforeModelRewriteState` 钩子上，每轮模型调用前检查触发条件，触发后执行：计数 → 摘要生成（含重试/降级）→ 后处理 → 替换 state。
 
-> 💡
-> 本中间件在 v0.8.0 版本引入。
+## 泛型体系
 
-## 快速开始
+本包全部核心类型和函数均提供 **Typed 泛型版本**（`M adk.MessageType`）与 **非泛型别名**（固定为 `*schema.Message`）。
+
+<table>
+<tr><td>泛型版本</td><td>非泛型别名（= Typed\[*schema.Message\]）</td></tr>
+<tr><td><pre>TypedConfig[M]</pre></td><td><pre>Config</pre></td></tr>
+<tr><td><pre>NewTyped[M](ctx, *TypedConfig[M])</pre></td><td><pre>New(ctx, *Config)</pre></td></tr>
+<tr><td><pre>TypedTokenCounterFunc[M]</pre></td><td><pre>TokenCounterFunc</pre></td></tr>
+<tr><td><pre>TypedGenModelInputFunc[M]</pre></td><td><pre>GenModelInputFunc</pre></td></tr>
+<tr><td><pre>TypedGetFailoverModelFunc[M]</pre></td><td><pre>GetFailoverModelFunc</pre></td></tr>
+<tr><td><pre>TypedFinalizeFunc[M]</pre></td><td><pre>FinalizeFunc</pre></td></tr>
+<tr><td><pre>TypedCallbackFunc[M]</pre></td><td><pre>CallbackFunc</pre></td></tr>
+<tr><td><pre>TypedUserMessageFilterFunc[M]</pre></td><td><pre>UserMessageFilterFunc</pre></td></tr>
+<tr><td><pre>TypedPreserveUserMessages[M]</pre></td><td><pre>PreserveUserMessages</pre></td></tr>
+<tr><td><pre>TypedRetryConfig[M]</pre></td><td><pre>RetryConfig</pre></td></tr>
+<tr><td><pre>TypedFailoverConfig[M]</pre></td><td><pre>FailoverConfig</pre></td></tr>
+<tr><td><pre>TypedFailoverContext[M]</pre></td><td><pre>FailoverContext</pre></td></tr>
+<tr><td><pre>TypedFinalizerBuilder[M]</pre></td><td><pre>FinalizerBuilder</pre></td></tr>
+</table>
+
+以下文档中如无特别说明，类型签名使用泛型形式 `M`。使用非泛型别名时 `M` = `*schema.Message`。
+
+### 构造函数
 
 ```go
-import (
-    "context"
-    "github.com/cloudwego/eino/adk/middlewares/summarization"
-)
+// 泛型版本 — 支持 *schema.Message 和 *schema.AgenticMessage
+func NewTyped[M adk.MessageType](ctx context.Context, cfg *TypedConfig[M]) (adk.TypedChatModelAgentMiddleware[M], error)
 
-// 使用最小配置创建中间件
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model: yourChatModel,  // 必填：用于生成摘要的模型
+// 非泛型版本 — 等价于 NewTyped[*schema.Message]
+func New(ctx context.Context, cfg *Config) (adk.ChatModelAgentMiddleware, error)
+```
+
+## TypedConfig[M] 配置项
+
+<table>
+<tr><td>字段</td><td>类型</td><td>必填</td><td>默认值</td><td>说明</td></tr>
+<tr><td>Model</td><td><pre>model.BaseModel[M]</pre></td><td>是</td><td>—</td><td>用于生成摘要的模型</td></tr>
+<tr><td>ModelOptions</td><td><pre>[]model.Option</pre></td><td>否</td><td>—</td><td>传递给摘要模型的选项</td></tr>
+<tr><td>TokenCounter</td><td><pre>TypedTokenCounterFunc[M]</pre></td><td>否</td><td>基于最近 assistant 消息的 total\_tokens 作为基线，增量消息按 ~4 字符/token 估算</td><td>自定义 token 计数函数</td></tr>
+<tr><td>Trigger</td><td><pre>*TriggerCondition</pre></td><td>否</td><td>ContextTokens=160,000</td><td>触发摘要的条件</td></tr>
+<tr><td>UserInstruction</td><td><pre>string</pre></td><td>否</td><td>内置 prompt</td><td>自定义用户级摘要指令，覆盖默认指令</td></tr>
+<tr><td>TranscriptFilePath</td><td><pre>string</pre></td><td>否</td><td>—</td><td>完整对话记录文件路径，附加到摘要中提醒模型原始上下文位置。<strong>仅在未设置 Finalize 时生效</strong></td></tr>
+<tr><td>GenModelInput</td><td><pre>TypedGenModelInputFunc[M]</pre></td><td>否</td><td>sysInstruction → contextMsgs → userInstruction</td><td>完全控制摘要模型输入的构建</td></tr>
+<tr><td>Finalize</td><td><pre>TypedFinalizeFunc[M]</pre></td><td>否</td><td>内置后处理</td><td>自定义摘要后处理。设置后中间件不再执行任何默认后处理</td></tr>
+<tr><td>Callback</td><td><pre>TypedCallbackFunc[M]</pre></td><td>否</td><td>—</td><td>在 Finalize 后调用，参数为 <pre>before, after adk.TypedChatModelAgentState[M]</pre>（值类型），只读</td></tr>
+<tr><td>EmitInternalEvents</td><td><pre>bool</pre></td><td>否</td><td>false</td><td>是否在关键节点发送内部事件</td></tr>
+<tr><td>PreserveUserMessages</td><td><pre>*TypedPreserveUserMessages[M]</pre></td><td>否</td><td>Enabled: true</td><td>在摘要中保留原始用户消息。<strong>仅在未设置 Finalize 时生效</strong></td></tr>
+<tr><td>Retry</td><td><pre>*TypedRetryConfig[M]</pre></td><td>否</td><td>nil（不重试）</td><td>主模型摘要生成的重试策略</td></tr>
+<tr><td>Failover</td><td><pre>*TypedFailoverConfig[M]</pre></td><td>否</td><td>nil</td><td>主模型失败后的降级策略</td></tr>
+</table>
+
+> 💡
+> **Finalize 覆盖语义**：一旦设置了自定义 `Finalize`，中间件将**跳过所有默认后处理**——`PreserveUserMessages` 和 `TranscriptFilePath` 均不再生效。如需在自定义 Finalize 中复用默认后处理逻辑，请使用 `DefaultFinalizer` 函数。
+
+## 子配置结构体
+
+### TriggerCondition
+
+满足**任一**条件即触发摘要。
+
+```go
+type TriggerCondition struct {
+    ContextTokens   int // token 数超过此阈值时触发
+    ContextMessages int // 消息数超过此阈值时触发
+}
+```
+
+### TypedPreserveUserMessages\[M\]
+
+启用后，将摘要中 `<all_user_messages>...</all_user_messages>` 区段替换为最近的原始用户消息。
+
+```go
+type TypedPreserveUserMessages[M adk.MessageType] struct {
+    Enabled   bool
+    MaxTokens int                        // 保留用户消息的最大 token 数；默认为 TriggerCondition.ContextTokens / 3
+    Filter    TypedUserMessageFilterFunc[M] // 过滤函数，返回 false 则不保留该消息
+}
+```
+
+### TypedRetryConfig[M]
+
+```go
+type TypedRetryConfig[M adk.MessageType] struct {
+    MaxRetries  *int                                                            // 默认 3
+    ShouldRetry func(ctx context.Context, resp M, err error) bool              // 默认 err != nil 时重试
+    BackoffFunc func(ctx context.Context, attempt int, resp M, err error) time.Duration // 默认指数退避 + 抖动
+}
+```
+
+### TypedFailoverConfig[M]
+
+```go
+type TypedFailoverConfig[M adk.MessageType] struct {
+    MaxRetries     *int                                                            // 默认 3
+    ShouldFailover func(ctx context.Context, resp M, err error) bool              // 默认 err != nil 时降级
+    BackoffFunc    func(ctx context.Context, attempt int, resp M, err error) time.Duration
+    GetFailoverModel TypedGetFailoverModelFunc[M] // 返回 (failoverModel model.BaseModel[M], failoverModelInputMsgs []M, failoverErr error)
+}
+```
+
+### TypedFailoverContext[M]
+
+传递给 `GetFailoverModel` 回调的上下文。
+
+```go
+type TypedFailoverContext[M adk.MessageType] struct {
+    Attempt           int  // 当前降级尝试次数，从 1 开始
+    SystemInstruction M    // 系统指令（中间件内部设置，不可配置）
+    UserInstruction   M    // 用户指令
+    OriginalMessages  []M  // 原始完整对话
+    LastModelResponse M    // 上次尝试的模型响应
+    LastErr           error
+}
+```
+
+### TypedTokenCounterInput[M]
+
+```go
+type TypedTokenCounterInput[M adk.MessageType] struct {
+    Messages []M
+    Tools    []*schema.ToolInfo
+}
+```
+
+## 函数类型签名速查
+
+```go
+type TypedTokenCounterFunc[M]      func(ctx context.Context, input *TypedTokenCounterInput[M]) (int, error)
+type TypedGenModelInputFunc[M]     func(ctx context.Context, sysInstruction, userInstruction M, originalMsgs []M) ([]M, error)
+type TypedGetFailoverModelFunc[M]  func(ctx context.Context, failoverCtx *TypedFailoverContext[M]) (model.BaseModel[M], []M, error)
+type TypedFinalizeFunc[M]          func(ctx context.Context, originalMessages []M, summary M) ([]M, error)
+type TypedCallbackFunc[M]          func(ctx context.Context, before, after adk.TypedChatModelAgentState[M]) error
+type TypedUserMessageFilterFunc[M] func(ctx context.Context, msg M) (bool, error)
+```
+
+## DefaultFinalizer
+
+`DefaultFinalizer` 是一个独立的工厂函数，返回与中间件默认后处理逻辑一致的 `TypedFinalizeFunc[M]`。当你需要在自定义 `Finalize` 中复用默认逻辑（保留用户消息、附加 transcript 路径等）时使用。
+
+```go
+func DefaultFinalizer[M adk.MessageType](cfg *DefaultFinalizerConfig[M]) (TypedFinalizeFunc[M], error)
+```
+
+### DefaultFinalizerConfig[M]
+
+```go
+type DefaultFinalizerConfig[M adk.MessageType] struct {
+    PreserveUserMessages *TypedPreserveUserMessages[M] // 默认 Enabled=true，MaxTokens=30000
+    TranscriptFilePath   string
+}
+```
+
+**示例**：在自定义 Finalize 中先执行默认后处理，再添加系统消息：
+
+```go
+defaultFinalize, err := summarization.DefaultFinalizer[*schema.Message](&summarization.DefaultFinalizerConfig[*schema.Message]{
+    TranscriptFilePath: "/path/to/transcript.txt",
 })
 if err != nil {
-    // 处理错误
+    // handle error
 }
 
-// 与 ChatModelAgent 一起使用
+cfg := &summarization.Config{
+    Model: yourModel,
+    Finalize: func(ctx context.Context, originalMessages []*schema.Message, summary *schema.Message) ([]*schema.Message, error) {
+        msgs, err := defaultFinalize(ctx, originalMessages, summary)
+        if err != nil {
+            return nil, err
+        }
+        // 在摘要前添加系统消息
+        return append([]*schema.Message{schema.SystemMessage("your system prompt")}, msgs...), nil
+    },
+}
+```
+
+## FinalizerBuilder
+
+`TypedFinalizerBuilder[M]` 提供链式 API 构建 `TypedFinalizeFunc[M]`，支持链接多个处理器（Handler）和一个可选的自定义终结器（Custom）。
+
+```go
+func NewTypedFinalizer[M adk.MessageType]() *TypedFinalizerBuilder[M]
+func NewFinalizer() *FinalizerBuilder // = NewTypedFinalizer[*schema.Message]
+
+func (b *TypedFinalizerBuilder[M]) PreserveSkills(config *PreserveSkillsConfig) *TypedFinalizerBuilder[M]
+func (b *TypedFinalizerBuilder[M]) Custom(fn TypedFinalizeFunc[M]) *TypedFinalizerBuilder[M]
+func (b *TypedFinalizerBuilder[M]) Build() (TypedFinalizeFunc[M], error)
+```
+
+执行顺序：Handler 按注册顺序依次对 summary 进行变换 → Custom 确定最终输出消息列表。若未设置 Custom，则返回 `[]M{summary}`。
+
+### PreserveSkills
+
+在摘要压缩后保留 Skill 中间件加载过的技能内容，确保 agent 在上下文窗口压缩后仍保留技能知识。
+
+```go
+type PreserveSkillsConfig struct {
+    SkillToolName     string // 技能工具名，需与 Skill 中间件一致。默认 "skill"
+    MaxSkills         *int   // 最多保留技能数。默认 5；0 表示禁用
+    MaxTokensPerSkill *int   // 单个技能最大 token 数，超出截断。默认 5000
+    SkillsTokenBudget *int   // 所有技能总 token 预算。默认 25000
+}
+```
+
+**示例**：
+
+```go
+finalizer, err := summarization.NewFinalizer().
+    PreserveSkills(&summarization.PreserveSkillsConfig{}).
+    Custom(func(ctx context.Context, origMsgs []*schema.Message, summary *schema.Message) ([]*schema.Message, error) {
+        return []*schema.Message{schema.SystemMessage("system prompt"), summary}, nil
+    }).
+    Build()
+
+cfg := &summarization.Config{
+    Model:    yourModel,
+    Finalize: finalizer,
+}
+```
+
+## Summarize 方法
+
+`TypedMiddleware[M]` 暴露 `Summarize` 方法，可在中间件自动触发之外手动执行一次摘要：
+
+```go
+func (m *TypedMiddleware[M]) Summarize(ctx context.Context, state *adk.TypedChatModelAgentState[M]) ([]M, error)
+```
+
+该方法执行完整的摘要流程（生成 → 后处理 → Callback → 事件），但**不检查触发条件**。返回替换后的消息列表。
+
+## 工作原理
+
+<a href="/img/eino/DwTrwyD1eh2DqNbsGE8cfdTNnYb.png" target="_blank"><img src="/img/eino/DwTrwyD1eh2DqNbsGE8cfdTNnYb.png" width="100%" /></a>
+
+**触发条件检查**：先检查 `ContextMessages`（消息数），再通过 `TokenCounter` 计算 token 数与 `ContextTokens` 对比。满足任一即触发。
+
+**默认后处理**（未设置 Finalize 时）：
+
+1. 将摘要中 `<all_user_messages>...</all_user_messages>` 替换为最近的原始用户消息（受 `PreserveUserMessages` 控制）
+2. 附加 `TranscriptFilePath` 提示
+3. 添加摘要前言和继续指令
+
+## 内部事件
+
+当 `EmitInternalEvents = true` 时，中间件通过 `adk.TypedSendEvent` 发送事件：
+
+<table>
+<tr><td>事件类型</td><td>触发时机</td><td>携带数据</td></tr>
+<tr><td><pre>ActionTypeBeforeSummarize</pre></td><td>触发条件满足后，调用模型前</td><td><pre>TypedBeforeSummarizeAction[M]{Messages}</pre>：原始消息列表</td></tr>
+<tr><td><pre>ActionTypeGenerateSummary</pre></td><td>每次模型生成尝试后（含重试/降级）</td><td><pre>TypedGenerateSummaryAction[M]{Attempt, Phase, ModelResponse, GetError()}</pre></td></tr>
+<tr><td><pre>ActionTypeAfterSummarize</pre></td><td>摘要完成、Finalize 之后</td><td><pre>TypedAfterSummarizeAction[M]{Messages}</pre>：最终消息列表</td></tr>
+</table>
+
+事件通过 `TypedCustomizedAction[M]` 包装，放在 `adk.AgentAction.CustomizedAction` 字段中。`GenerateSummaryPhase` 有两个值：`GenerateSummaryPhasePrimary`（主模型/重试）和 `GenerateSummaryPhaseFailover`（降级）。
+
+## 使用示例
+
+### 最小配置
+
+```go
+mw, err := summarization.New(ctx, &summarization.Config{
+    Model: yourChatModel,
+})
+
 agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
     Model:       yourChatModel,
     Middlewares: []adk.ChatModelAgentMiddleware{mw},
 })
 ```
 
-## 配置项
-
-<table>
-<tr><td>字段</td><td>类型</td><td>必填</td><td>默认值</td><td>说明</td></tr>
-<tr><td>Model</td><td>model.BaseChatModel</td><td>是</td><td><li></li></td><td>用于生成摘要的聊天模型</td></tr>
-<tr><td>ModelOptions</td><td>[]model.Option</td><td>否</td><td><li></li></td><td>传递给模型生成摘要时的选项</td></tr>
-<tr><td>TokenCounter</td><td>TokenCounterFunc</td><td>否</td><td>约 4 字符/token</td><td>自定义 token 计数函数</td></tr>
-<tr><td>Trigger</td><td>*TriggerCondition</td><td>否</td><td>190,000 tokens</td><td>触发摘要的条件</td></tr>
-<tr><td>UserInstruction</td><td>string</td><td>否</td><td>内置 prompt</td><td>自定义摘要指令</td></tr>
-<tr><td>TranscriptFilePath</td><td>string</td><td>否</td><td><li></li></td><td>完整对话记录文件路径</td></tr>
-<tr><td>GenModelInput</td><td>GenModelInputFunc</td><td>否</td><td><li></li></td><td>自定义摘要模型输入的预处理函数</td></tr>
-<tr><td>Finalize</td><td>FinalizeFunc</td><td>否</td><td><li></li></td><td>自定义最终消息的后处理函数</td></tr>
-<tr><td>Callback</td><td>CallbackFunc</td><td>否</td><td><li></li></td><td>在 Finalize 之后调用，用于观察状态变化（只读）</td></tr>
-<tr><td>EmitInternalEvents</td><td>bool</td><td>否</td><td>false</td><td>是否发送内部事件</td></tr>
-<tr><td>PreserveUserMessages</td><td>*PreserveUserMessages</td><td>否</td><td>Enabled: true</td><td>是否在摘要中保留原始用户消息</td></tr>
-</table>
-
-### TriggerCondition 结构
-
-```go
-type TriggerCondition struct {
-    // ContextTokens 当总 token 数量超过此阈值时触发摘要
-    ContextTokens int
-}
-```
-
-### PreserveUserMessages 结构
-
-```go
-type PreserveUserMessages struct {
-    // Enabled 是否启用保留用户消息功能
-    Enabled bool
-    
-    // MaxTokens 保留用户消息的最大 token 数
-    // 只保留最近的用户消息，直到达到此限制
-    // 默认为 TriggerCondition.ContextTokens 的 1/3
-    MaxTokens int
-}
-```
-
-### 配置示例
-
-**自定义 Token 阈值**
+### 自定义触发条件 + 重试 + 降级
 
 ```go
 mw, err := summarization.New(ctx, &summarization.Config{
     Model: yourChatModel,
     Trigger: &summarization.TriggerCondition{
-        ContextTokens: 100000,  // 在 100k tokens 时触发
+        ContextTokens:   100000,
+        ContextMessages: 80,
     },
-})
-```
-
-**自定义 Token 计数器**
-
-```go
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model: yourChatModel,
-    TokenCounter: func(ctx context.Context, input *summarization.TokenCounterInput) (int, error) {
-        // 使用你的 tokenizer
-        return yourTokenizer.Count(input.Messages)
-    },
-})
-```
-
-**设置对话记录文件路径**
-
-```go
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model:              yourChatModel,
     TranscriptFilePath: "/path/to/transcript.txt",
-})
-```
-
-**自定义 Finalize 函数**
-
-```go
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model: yourChatModel,
-    Finalize: func(ctx context.Context, originalMessages []adk.Message, summary adk.Message) ([]adk.Message, error) {
-        // 自定义逻辑构建最终消息
-        return []adk.Message{
-            schema.SystemMessage("你的系统提示词"),
-            summary,
-        }, nil
+    Retry: &summarization.RetryConfig{
+        MaxRetries: ptrOf(2),
+    },
+    Failover: &summarization.FailoverConfig{
+        MaxRetries: ptrOf(3),
+        GetFailoverModel: func(ctx context.Context, fctx *summarization.FailoverContext) (model.BaseModel[*schema.Message], []*schema.Message, error) {
+            return backupModel, nil, nil // 返回 nil input 将复用默认输入
+        },
     },
 })
 ```
 
-**使用 Callback 观察状态变化****/存储**
+### FinalizerBuilder + PreserveSkills + DefaultFinalizer
 
 ```go
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model: yourChatModel,
-    Callback: func(ctx context.Context, before, after adk.ChatModelAgentState) error {
-        log.Printf("Summarization completed: %d messages -> %d messages", 
-            len(before.Messages), len(after.Messages))
-        return nil
+defaultFinalize, _ := summarization.DefaultFinalizer[*schema.Message](
+    &summarization.DefaultFinalizerConfig[*schema.Message]{
+        TranscriptFilePath: "/path/to/transcript.txt",
     },
-})
+)
+
+finalizer, err := summarization.NewFinalizer().
+    PreserveSkills(&summarization.PreserveSkillsConfig{
+        MaxSkills: ptrOf(3),
+    }).
+    Custom(func(ctx context.Context, origMsgs []*schema.Message, summary *schema.Message) ([]*schema.Message, error) {
+        msgs, err := defaultFinalize(ctx, origMsgs, summary)
+        if err != nil {
+            return nil, err
+        }
+        return append([]*schema.Message{schema.SystemMessage("system prompt")}, msgs...), nil
+    }).
+    Build()
+
+cfg := &summarization.Config{
+    Model:    yourModel,
+    Finalize: finalizer,
+}
 ```
 
-**控制用户消息保留**
+## 注意事项
 
-```go
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model: yourChatModel,
-    PreserveUserMessages: &summarization.PreserveUserMessages{
-        Enabled:   true,
-        MaxTokens: 50000, // 保留最多 50k tokens 的用户消息
-    },
-})
-```
-
-## 工作原理
-
-```mermaid
-flowchart TD
-    A[BeforeModelRewriteState] --> B{Token 数量超过阈值?}
-    B -->|否| C[返回原始状态]
-    B -->|是| D[发送 BeforeSummarize 事件]
-    D --> E{有自定义 GenModelInput?}
-    E -->|是| F[调用 GenModelInput]
-    E -->|否| G[调用模型生成摘要]
-    F --> G
-    G --> H{有自定义 Finalize?}
-    H -->|是| I[调用 Finalize]
-    H -->|否| L{有自定义 Callback?}
-    I --> L
-    L -->|是| M[调用 Callback]
-    L -->|否| J[发送 AfterSummarize 事件]
-    M --> J
-    J --> K[返回新状态]
-
-    style A fill:#e3f2fd
-    style G fill:#fff3e0
-    style D fill:#e8f5e9
-    style J fill:#e8f5e9
-    style K fill:#c8e6c9
-    style C fill:#f5f5f5
-    style M fill:#fce4ec
-    style F fill:#fff3e0
-    style I fill:#fff3e0
-```
-
-## 内部事件
-
-当 EmitInternalEvents 设置为 true 时，中间件会在关键节点发送事件：
-
-<table>
-<tr><td>事件类型</td><td>触发时机</td><td>携带数据</td></tr>
-<tr><td>ActionTypeBeforeSummarize</td><td>生成摘要之前</td><td>原始消息列表</td></tr>
-<tr><td>ActionTypeAfterSummarize</td><td>完成总结之后</td><td>最终消息列表</td></tr>
-</table>
-
-**使用示例**
-
-```go
-mw, err := summarization.New(ctx, &summarization.Config{
-    Model:              yourChatModel,
-    EmitInternalEvents: true,
-})
-
-// 在你的事件处理器中监听事件
-```
-
-## 最佳实践
-
-1. **设置 TranscriptFilePath**：建议始终提供对话记录文件路径，以便模型在需要时可以参考原始对话。
-2. **调整 Token 阈值**：根据模型的上下文窗口大小调整 `Trigger.MaxTokens`。一般建议设置为模型限制的 80-90%。
-3. **自定义 Token 计数器**：在生产环境中，建议实现与模型 tokenizer 匹配的自定义 `TokenCounter`，以获得准确的计数。
-</script><h1>Summarization</h1><header class=article-meta></header><h2 id=概述>概述</h2><p>Summarization 中间件会在对话的 token 数量超过配置阈值时，自动压缩对话历史。这有助于在长对话中保持上下文连续性，同时控制在模型的 token 限制范围内。</p><blockquote><p>💡
-本中间件在 v0.8.0 版本引入。</p></blockquote><h2 id=快速开始>快速开始</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=p>(</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;context&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/adk/middlewares/summarization&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
+1. **设置 TranscriptFilePath**：强烈建议提供对话记录文件路径，摘要后模型可从原始记录中回溯细节。
+2. **调整触发阈值**：`Trigger.ContextTokens` 建议设为模型上下文窗口的 80-90%。默认值 160,000 适用于 200k 窗口的模型。
+3. **自定义 TokenCounter**：生产环境建议实现与模型 tokenizer 精确匹配的计数器。默认估算器以最近 assistant 消息的 `ResponseMeta.Usage.TotalTokens` 为基线，增量消息按 ~4 字符/token 估算。
+4. **Finalize 覆盖**：设置 `Finalize` 后，`PreserveUserMessages` 和 `TranscriptFilePath` 不再自动生效。如需复用，使用 `DefaultFinalizer` 或 `FinalizerBuilder`。
+5. **GetFailoverModel 约束**：回调必须返回非 nil 的 model 和非空的 input 消息列表。
+</script><h1>Summarization</h1><header class=article-meta></header><blockquote><p>💡
+本中间件在 v0.8.0 版本引入。包路径：<code>github.com/cloudwego/eino/adk/middlewares/summarization</code></p></blockquote><h2 id=概述>概述</h2><p>Summarization 中间件在对话 token 数超过阈值时自动调用摘要模型压缩对话历史，使长对话在模型上下文窗口内保持连贯。中间件挂载在 <code>BeforeModelRewriteState</code> 钩子上，每轮模型调用前检查触发条件，触发后执行：计数 → 摘要生成（含重试/降级）→ 后处理 → 替换 state。</p><h2 id=泛型体系>泛型体系</h2><p>本包全部核心类型和函数均提供 <strong>Typed 泛型版本</strong>（<code>M adk.MessageType</code>）与 <strong>非泛型别名</strong>（固定为 <code>*schema.Message</code>）。</p><table><tr><td>泛型版本</td><td>非泛型别名（= Typed\[*schema.Message\]）</td></tr><tr><td><pre>TypedConfig[M]</pre></td><td><pre>Config</pre></td></tr><tr><td><pre>NewTyped[M](ctx, *TypedConfig[M])</pre></td><td><pre>New(ctx, *Config)</pre></td></tr><tr><td><pre>TypedTokenCounterFunc[M]</pre></td><td><pre>TokenCounterFunc</pre></td></tr><tr><td><pre>TypedGenModelInputFunc[M]</pre></td><td><pre>GenModelInputFunc</pre></td></tr><tr><td><pre>TypedGetFailoverModelFunc[M]</pre></td><td><pre>GetFailoverModelFunc</pre></td></tr><tr><td><pre>TypedFinalizeFunc[M]</pre></td><td><pre>FinalizeFunc</pre></td></tr><tr><td><pre>TypedCallbackFunc[M]</pre></td><td><pre>CallbackFunc</pre></td></tr><tr><td><pre>TypedUserMessageFilterFunc[M]</pre></td><td><pre>UserMessageFilterFunc</pre></td></tr><tr><td><pre>TypedPreserveUserMessages[M]</pre></td><td><pre>PreserveUserMessages</pre></td></tr><tr><td><pre>TypedRetryConfig[M]</pre></td><td><pre>RetryConfig</pre></td></tr><tr><td><pre>TypedFailoverConfig[M]</pre></td><td><pre>FailoverConfig</pre></td></tr><tr><td><pre>TypedFailoverContext[M]</pre></td><td><pre>FailoverContext</pre></td></tr><tr><td><pre>TypedFinalizerBuilder[M]</pre></td><td><pre>FinalizerBuilder</pre></td></tr></table><p>以下文档中如无特别说明，类型签名使用泛型形式 <code>M</code>。使用非泛型别名时 <code>M</code> = <code>*schema.Message</code>。</p><h3 id=构造函数>构造函数</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// 泛型版本 — 支持 *schema.Message 和 *schema.AgenticMessage</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nx>NewTyped</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>](</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>cfg</span><span class=w> </span><span class=o>*</span><span class=nx>TypedConfig</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TypedChatModelAgentMiddleware</span><span class=p>[</span><span class=nx>M</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 使用最小配置创建中间件</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>  </span><span class=c1>// 必填：用于生成摘要的模型</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 非泛型版本 — 等价于 NewTyped[*schema.Message]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>cfg</span><span class=w> </span><span class=o>*</span><span class=nx>Config</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><h2 id=typedconfigm-配置项>TypedConfig[M] 配置项</h2><table><tr><td>字段</td><td>类型</td><td>必填</td><td>默认值</td><td>说明</td></tr><tr><td>Model</td><td><pre>model.BaseModel[M]</pre></td><td>是</td><td>—</td><td>用于生成摘要的模型</td></tr><tr><td>ModelOptions</td><td><pre>[]model.Option</pre></td><td>否</td><td>—</td><td>传递给摘要模型的选项</td></tr><tr><td>TokenCounter</td><td><pre>TypedTokenCounterFunc[M]</pre></td><td>否</td><td>基于最近 assistant 消息的 total\_tokens 作为基线，增量消息按 ~4 字符/token 估算</td><td>自定义 token 计数函数</td></tr><tr><td>Trigger</td><td><pre>*TriggerCondition</pre></td><td>否</td><td>ContextTokens=160,000</td><td>触发摘要的条件</td></tr><tr><td>UserInstruction</td><td><pre>string</pre></td><td>否</td><td>内置 prompt</td><td>自定义用户级摘要指令，覆盖默认指令</td></tr><tr><td>TranscriptFilePath</td><td><pre>string</pre></td><td>否</td><td>—</td><td>完整对话记录文件路径，附加到摘要中提醒模型原始上下文位置。<strong>仅在未设置 Finalize 时生效</strong></td></tr><tr><td>GenModelInput</td><td><pre>TypedGenModelInputFunc[M]</pre></td><td>否</td><td>sysInstruction → contextMsgs → userInstruction</td><td>完全控制摘要模型输入的构建</td></tr><tr><td>Finalize</td><td><pre>TypedFinalizeFunc[M]</pre></td><td>否</td><td>内置后处理</td><td>自定义摘要后处理。设置后中间件不再执行任何默认后处理</td></tr><tr><td>Callback</td><td><pre>TypedCallbackFunc[M]</pre></td><td>否</td><td>—</td><td>在 Finalize 后调用，参数为<pre>before, after adk.TypedChatModelAgentState[M]</pre>（值类型），只读</td></tr><tr><td>EmitInternalEvents</td><td><pre>bool</pre></td><td>否</td><td>false</td><td>是否在关键节点发送内部事件</td></tr><tr><td>PreserveUserMessages</td><td><pre>*TypedPreserveUserMessages[M]</pre></td><td>否</td><td>Enabled: true</td><td>在摘要中保留原始用户消息。<strong>仅在未设置 Finalize 时生效</strong></td></tr><tr><td>Retry</td><td><pre>*TypedRetryConfig[M]</pre></td><td>否</td><td>nil（不重试）</td><td>主模型摘要生成的重试策略</td></tr><tr><td>Failover</td><td><pre>*TypedFailoverConfig[M]</pre></td><td>否</td><td>nil</td><td>主模型失败后的降级策略</td></tr></table><blockquote><p>💡
+<strong>Finalize 覆盖语义</strong>：一旦设置了自定义 <code>Finalize</code>，中间件将<strong>跳过所有默认后处理</strong>——<code>PreserveUserMessages</code> 和 <code>TranscriptFilePath</code> 均不再生效。如需在自定义 Finalize 中复用默认后处理逻辑，请使用 <code>DefaultFinalizer</code> 函数。</p></blockquote><h2 id=子配置结构体>子配置结构体</h2><h3 id=triggercondition>TriggerCondition</h3><p>满足<strong>任一</strong>条件即触发摘要。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TriggerCondition</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ContextTokens</span><span class=w>   </span><span class=kt>int</span><span class=w> </span><span class=c1>// token 数超过此阈值时触发</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ContextMessages</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=c1>// 消息数超过此阈值时触发</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h3 id=typedpreserveusermessagesm>TypedPreserveUserMessages[M]</h3><p>启用后，将摘要中 <code>&lt;all_user_messages>...&lt;/all_user_messages></code> 区段替换为最近的原始用户消息。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TypedPreserveUserMessages</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Enabled</span><span class=w>   </span><span class=kt>bool</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MaxTokens</span><span class=w> </span><span class=kt>int</span><span class=w>                        </span><span class=c1>// 保留用户消息的最大 token 数；默认为 TriggerCondition.ContextTokens / 3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Filter</span><span class=w>    </span><span class=nx>TypedUserMessageFilterFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w> </span><span class=c1>// 过滤函数，返回 false 则不保留该消息</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h3 id=typedretryconfigm>TypedRetryConfig[M]</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TypedRetryConfig</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MaxRetries</span><span class=w>  </span><span class=o>*</span><span class=kt>int</span><span class=w>                                                            </span><span class=c1>// 默认 3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ShouldRetry</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>resp</span><span class=w> </span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=kt>bool</span><span class=w>              </span><span class=c1>// 默认 err != nil 时重试</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BackoffFunc</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>attempt</span><span class=w> </span><span class=kt>int</span><span class=p>,</span><span class=w> </span><span class=nx>resp</span><span class=w> </span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=nx>time</span><span class=p>.</span><span class=nx>Duration</span><span class=w> </span><span class=c1>// 默认指数退避 + 抖动</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h3 id=typedfailoverconfigm>TypedFailoverConfig[M]</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TypedFailoverConfig</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MaxRetries</span><span class=w>     </span><span class=o>*</span><span class=kt>int</span><span class=w>                                                            </span><span class=c1>// 默认 3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ShouldFailover</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>resp</span><span class=w> </span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=kt>bool</span><span class=w>              </span><span class=c1>// 默认 err != nil 时降级</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BackoffFunc</span><span class=w>    </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>attempt</span><span class=w> </span><span class=kt>int</span><span class=p>,</span><span class=w> </span><span class=nx>resp</span><span class=w> </span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=nx>time</span><span class=p>.</span><span class=nx>Duration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>GetFailoverModel</span><span class=w> </span><span class=nx>TypedGetFailoverModelFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w> </span><span class=c1>// 返回 (failoverModel model.BaseModel[M], failoverModelInputMsgs []M, failoverErr error)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h3 id=typedfailovercontextm>TypedFailoverContext[M]</h3><p>传递给 <code>GetFailoverModel</code> 回调的上下文。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TypedFailoverContext</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Attempt</span><span class=w>           </span><span class=kt>int</span><span class=w>  </span><span class=c1>// 当前降级尝试次数，从 1 开始</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>SystemInstruction</span><span class=w> </span><span class=nx>M</span><span class=w>    </span><span class=c1>// 系统指令（中间件内部设置，不可配置）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>UserInstruction</span><span class=w>   </span><span class=nx>M</span><span class=w>    </span><span class=c1>// 用户指令</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>OriginalMessages</span><span class=w>  </span><span class=p>[]</span><span class=nx>M</span><span class=w>  </span><span class=c1>// 原始完整对话</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>LastModelResponse</span><span class=w> </span><span class=nx>M</span><span class=w>    </span><span class=c1>// 上次尝试的模型响应</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>LastErr</span><span class=w>           </span><span class=kt>error</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h3 id=typedtokencounterinputm>TypedTokenCounterInput[M]</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TypedTokenCounterInput</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Messages</span><span class=w> </span><span class=p>[]</span><span class=nx>M</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Tools</span><span class=w>    </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>ToolInfo</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h2 id=函数类型签名速查>函数类型签名速查</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TypedTokenCounterFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>      </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=w> </span><span class=o>*</span><span class=nx>TypedTokenCounterInput</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedGenModelInputFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>     </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>sysInstruction</span><span class=p>,</span><span class=w> </span><span class=nx>userInstruction</span><span class=w> </span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=nx>originalMsgs</span><span class=w> </span><span class=p>[]</span><span class=nx>M</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedGetFailoverModelFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>  </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>failoverCtx</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFailoverContext</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>(</span><span class=nx>model</span><span class=p>.</span><span class=nx>BaseModel</span><span class=p>[</span><span class=nx>M</span><span class=p>],</span><span class=w> </span><span class=p>[]</span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedFinalizeFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>          </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>originalMessages</span><span class=w> </span><span class=p>[]</span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=w> </span><span class=nx>M</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedCallbackFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>          </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>before</span><span class=p>,</span><span class=w> </span><span class=nx>after</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>TypedChatModelAgentState</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=kt>error</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedUserMessageFilterFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>msg</span><span class=w> </span><span class=nx>M</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=kt>bool</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><h2 id=defaultfinalizer>DefaultFinalizer</h2><p><code>DefaultFinalizer</code> 是一个独立的工厂函数，返回与中间件默认后处理逻辑一致的 <code>TypedFinalizeFunc[M]</code>。当你需要在自定义 <code>Finalize</code> 中复用默认逻辑（保留用户消息、附加 transcript 路径等）时使用。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=nx>DefaultFinalizer</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>](</span><span class=nx>cfg</span><span class=w> </span><span class=o>*</span><span class=nx>DefaultFinalizerConfig</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>(</span><span class=nx>TypedFinalizeFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><h3 id=defaultfinalizerconfigm>DefaultFinalizerConfig[M]</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>DefaultFinalizerConfig</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>PreserveUserMessages</span><span class=w> </span><span class=o>*</span><span class=nx>TypedPreserveUserMessages</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w> </span><span class=c1>// 默认 Enabled=true，MaxTokens=30000</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>TranscriptFilePath</span><span class=w>   </span><span class=kt>string</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><p><strong>示例</strong>：在自定义 Finalize 中先执行默认后处理，再添加系统消息：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>defaultFinalize</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nx>DefaultFinalizer</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>](</span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>DefaultFinalizerConfig</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>TranscriptFilePath</span><span class=p>:</span><span class=w> </span><span class=s>&#34;/path/to/transcript.txt&#34;</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 处理错误</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// handle error</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 与 ChatModelAgent 一起使用</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>cfg</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourModel</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Finalize</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>originalMessages</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>msgs</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nf>defaultFinalize</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=nx>originalMessages</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 在摘要前添加系统消息</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=nb>append</span><span class=p>([]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>{</span><span class=nx>schema</span><span class=p>.</span><span class=nf>SystemMessage</span><span class=p>(</span><span class=s>&#34;your system prompt&#34;</span><span class=p>)},</span><span class=w> </span><span class=nx>msgs</span><span class=o>...</span><span class=p>),</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h2 id=finalizerbuilder>FinalizerBuilder</h2><p><code>TypedFinalizerBuilder[M]</code> 提供链式 API 构建 <code>TypedFinalizeFunc[M]</code>，支持链接多个处理器（Handler）和一个可选的自定义终结器（Custom）。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=nx>NewTypedFinalizer</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]()</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFinalizerBuilder</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>NewFinalizer</span><span class=p>()</span><span class=w> </span><span class=o>*</span><span class=nx>FinalizerBuilder</span><span class=w> </span><span class=c1>// = NewTypedFinalizer[*schema.Message]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>b</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFinalizerBuilder</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=nf>PreserveSkills</span><span class=p>(</span><span class=nx>config</span><span class=w> </span><span class=o>*</span><span class=nx>PreserveSkillsConfig</span><span class=p>)</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFinalizerBuilder</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>b</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFinalizerBuilder</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=nf>Custom</span><span class=p>(</span><span class=nx>fn</span><span class=w> </span><span class=nx>TypedFinalizeFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFinalizerBuilder</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>b</span><span class=w> </span><span class=o>*</span><span class=nx>TypedFinalizerBuilder</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=nf>Build</span><span class=p>()</span><span class=w> </span><span class=p>(</span><span class=nx>TypedFinalizeFunc</span><span class=p>[</span><span class=nx>M</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><p>执行顺序：Handler 按注册顺序依次对 summary 进行变换 → Custom 确定最终输出消息列表。若未设置 Custom，则返回 <code>[]M{summary}</code>。</p><h3 id=preserveskills>PreserveSkills</h3><p>在摘要压缩后保留 Skill 中间件加载过的技能内容，确保 agent 在上下文窗口压缩后仍保留技能知识。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>PreserveSkillsConfig</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>SkillToolName</span><span class=w>     </span><span class=kt>string</span><span class=w> </span><span class=c1>// 技能工具名，需与 Skill 中间件一致。默认 &#34;skill&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MaxSkills</span><span class=w>         </span><span class=o>*</span><span class=kt>int</span><span class=w>   </span><span class=c1>// 最多保留技能数。默认 5；0 表示禁用</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MaxTokensPerSkill</span><span class=w> </span><span class=o>*</span><span class=kt>int</span><span class=w>   </span><span class=c1>// 单个技能最大 token 数，超出截断。默认 5000</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>SkillsTokenBudget</span><span class=w> </span><span class=o>*</span><span class=kt>int</span><span class=w>   </span><span class=c1>// 所有技能总 token 预算。默认 25000</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><p><strong>示例</strong>：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>finalizer</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>NewFinalizer</span><span class=p>().</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>PreserveSkills</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>PreserveSkillsConfig</span><span class=p>{}).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Custom</span><span class=p>(</span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>origMsgs</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>{</span><span class=nx>schema</span><span class=p>.</span><span class=nf>SystemMessage</span><span class=p>(</span><span class=s>&#34;system prompt&#34;</span><span class=p>),</span><span class=w> </span><span class=nx>summary</span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Build</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>cfg</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w>    </span><span class=nx>yourModel</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Finalize</span><span class=p>:</span><span class=w> </span><span class=nx>finalizer</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h2 id=summarize-方法>Summarize 方法</h2><p><code>TypedMiddleware[M]</code> 暴露 <code>Summarize</code> 方法，可在中间件自动触发之外手动执行一次摘要：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>m</span><span class=w> </span><span class=o>*</span><span class=nx>TypedMiddleware</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=nf>Summarize</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>state</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TypedChatModelAgentState</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>([]</span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><p>该方法执行完整的摘要流程（生成 → 后处理 → Callback → 事件），但<strong>不检查触发条件</strong>。返回替换后的消息列表。</p><h2 id=工作原理>工作原理</h2><p><a href=/img/eino/DwTrwyD1eh2DqNbsGE8cfdTNnYb.png target=_blank><img src=/img/eino/DwTrwyD1eh2DqNbsGE8cfdTNnYb.png width=100%></a></p><p><strong>触发条件检查</strong>：先检查 <code>ContextMessages</code>（消息数），再通过 <code>TokenCounter</code> 计算 token 数与 <code>ContextTokens</code> 对比。满足任一即触发。</p><p><strong>默认后处理</strong>（未设置 Finalize 时）：</p><ol><li>将摘要中 <code>&lt;all_user_messages>...&lt;/all_user_messages></code> 替换为最近的原始用户消息（受 <code>PreserveUserMessages</code> 控制）</li><li>附加 <code>TranscriptFilePath</code> 提示</li><li>添加摘要前言和继续指令</li></ol><h2 id=内部事件>内部事件</h2><p>当 <code>EmitInternalEvents = true</code> 时，中间件通过 <code>adk.TypedSendEvent</code> 发送事件：</p><table><tr><td>事件类型</td><td>触发时机</td><td>携带数据</td></tr><tr><td><pre>ActionTypeBeforeSummarize</pre></td><td>触发条件满足后，调用模型前</td><td><pre>TypedBeforeSummarizeAction[M]{Messages}</pre>：原始消息列表</td></tr><tr><td><pre>ActionTypeGenerateSummary</pre></td><td>每次模型生成尝试后（含重试/降级）</td><td><pre>TypedGenerateSummaryAction[M]{Attempt, Phase, ModelResponse, GetError()}</pre></td></tr><tr><td><pre>ActionTypeAfterSummarize</pre></td><td>摘要完成、Finalize 之后</td><td><pre>TypedAfterSummarizeAction[M]{Messages}</pre>：最终消息列表</td></tr></table><p>事件通过 <code>TypedCustomizedAction[M]</code> 包装，放在 <code>adk.AgentAction.CustomizedAction</code> 字段中。<code>GenerateSummaryPhase</code> 有两个值：<code>GenerateSummaryPhasePrimary</code>（主模型/重试）和 <code>GenerateSummaryPhaseFailover</code>（降级）。</p><h2 id=使用示例>使用示例</h2><h3 id=最小配置>最小配置</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>agent</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewChatModelAgent</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentConfig</span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w>       </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Middlewares</span><span class=p>:</span><span class=w> </span><span class=p>[]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>{</span><span class=nx>mw</span><span class=p>},</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><h2 id=配置项>配置项</h2><table><tr><td>字段</td><td>类型</td><td>必填</td><td>默认值</td><td>说明</td></tr><tr><td>Model</td><td>model.BaseChatModel</td><td>是</td><td><li></li></td><td>用于生成摘要的聊天模型</td></tr><tr><td>ModelOptions</td><td>[]model.Option</td><td>否</td><td><li></li></td><td>传递给模型生成摘要时的选项</td></tr><tr><td>TokenCounter</td><td>TokenCounterFunc</td><td>否</td><td>约 4 字符/token</td><td>自定义 token 计数函数</td></tr><tr><td>Trigger</td><td>*TriggerCondition</td><td>否</td><td>190,000 tokens</td><td>触发摘要的条件</td></tr><tr><td>UserInstruction</td><td>string</td><td>否</td><td>内置 prompt</td><td>自定义摘要指令</td></tr><tr><td>TranscriptFilePath</td><td>string</td><td>否</td><td><li></li></td><td>完整对话记录文件路径</td></tr><tr><td>GenModelInput</td><td>GenModelInputFunc</td><td>否</td><td><li></li></td><td>自定义摘要模型输入的预处理函数</td></tr><tr><td>Finalize</td><td>FinalizeFunc</td><td>否</td><td><li></li></td><td>自定义最终消息的后处理函数</td></tr><tr><td>Callback</td><td>CallbackFunc</td><td>否</td><td><li></li></td><td>在 Finalize 之后调用，用于观察状态变化（只读）</td></tr><tr><td>EmitInternalEvents</td><td>bool</td><td>否</td><td>false</td><td>是否发送内部事件</td></tr><tr><td>PreserveUserMessages</td><td>*PreserveUserMessages</td><td>否</td><td>Enabled: true</td><td>是否在摘要中保留原始用户消息</td></tr></table><h3 id=triggercondition-结构>TriggerCondition 结构</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>TriggerCondition</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// ContextTokens 当总 token 数量超过此阈值时触发摘要</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ContextTokens</span><span class=w> </span><span class=kt>int</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><h3 id=preserveusermessages-结构>PreserveUserMessages 结构</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>PreserveUserMessages</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Enabled 是否启用保留用户消息功能</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Enabled</span><span class=w> </span><span class=kt>bool</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// MaxTokens 保留用户消息的最大 token 数</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 只保留最近的用户消息，直到达到此限制</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 默认为 TriggerCondition.ContextTokens 的 1/3</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MaxTokens</span><span class=w> </span><span class=kt>int</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><h3 id=配置示例>配置示例</h3><p><strong>自定义 Token 阈值</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
+</span></span></span></code></pre></div><h3 id=自定义触发条件--重试--降级>自定义触发条件 + 重试 + 降级</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Trigger</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>TriggerCondition</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>ContextTokens</span><span class=p>:</span><span class=w> </span><span class=mi>100000</span><span class=p>,</span><span class=w>  </span><span class=c1>// 在 100k tokens 时触发</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>ContextTokens</span><span class=p>:</span><span class=w>   </span><span class=mi>100000</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>ContextMessages</span><span class=p>:</span><span class=w> </span><span class=mi>80</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><p><strong>自定义 Token 计数器</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>TokenCounter</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=w> </span><span class=o>*</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>TokenCounterInput</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 使用你的 tokenizer</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=nx>yourTokenizer</span><span class=p>.</span><span class=nf>Count</span><span class=p>(</span><span class=nx>input</span><span class=p>.</span><span class=nx>Messages</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><p><strong>设置对话记录文件路径</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w>              </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>TranscriptFilePath</span><span class=p>:</span><span class=w> </span><span class=s>&#34;/path/to/transcript.txt&#34;</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><p><strong>自定义 Finalize 函数</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Finalize</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>originalMessages</span><span class=w> </span><span class=p>[]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>Message</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// 自定义逻辑构建最终消息</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=p>[]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>Message</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>schema</span><span class=p>.</span><span class=nf>SystemMessage</span><span class=p>(</span><span class=s>&#34;你的系统提示词&#34;</span><span class=p>),</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>summary</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Retry</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>RetryConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>MaxRetries</span><span class=p>:</span><span class=w> </span><span class=nf>ptrOf</span><span class=p>(</span><span class=mi>2</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Failover</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>FailoverConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>MaxRetries</span><span class=p>:</span><span class=w> </span><span class=nf>ptrOf</span><span class=p>(</span><span class=mi>3</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>GetFailoverModel</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>fctx</span><span class=w> </span><span class=o>*</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>FailoverContext</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>model</span><span class=p>.</span><span class=nx>BaseModel</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=nx>backupModel</span><span class=p>,</span><span class=w> </span><span class=kc>nil</span><span class=p>,</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=c1>// 返回 nil input 将复用默认输入</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>},</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><p><strong>使用 Callback 观察状态变化</strong>**/存储**</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Callback</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>before</span><span class=p>,</span><span class=w> </span><span class=nx>after</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentState</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;Summarization completed: %d messages -&gt; %d messages&#34;</span><span class=p>,</span><span class=w> 
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nb>len</span><span class=p>(</span><span class=nx>before</span><span class=p>.</span><span class=nx>Messages</span><span class=p>),</span><span class=w> </span><span class=nb>len</span><span class=p>(</span><span class=nx>after</span><span class=p>.</span><span class=nx>Messages</span><span class=p>))</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span></code></pre></div><h3 id=finalizerbuilder--preserveskills--defaultfinalizer>FinalizerBuilder + PreserveSkills + DefaultFinalizer</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>defaultFinalize</span><span class=p>,</span><span class=w> </span><span class=nx>_</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nx>DefaultFinalizer</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>](</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>DefaultFinalizerConfig</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>TranscriptFilePath</span><span class=p>:</span><span class=w> </span><span class=s>&#34;/path/to/transcript.txt&#34;</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><p><strong>控制用户消息保留</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w> </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>PreserveUserMessages</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>PreserveUserMessages</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>Enabled</span><span class=p>:</span><span class=w>   </span><span class=kc>true</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>MaxTokens</span><span class=p>:</span><span class=w> </span><span class=mi>50000</span><span class=p>,</span><span class=w> </span><span class=c1>// 保留最多 50k tokens 的用户消息</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><h2 id=工作原理>工作原理</h2><pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
-    A[BeforeModelRewriteState] --&gt; B{Token 数量超过阈值?}
-    B --&gt;|否| C[返回原始状态]
-    B --&gt;|是| D[发送 BeforeSummarize 事件]
-    D --&gt; E{有自定义 GenModelInput?}
-    E --&gt;|是| F[调用 GenModelInput]
-    E --&gt;|否| G[调用模型生成摘要]
-    F --&gt; G
-    G --&gt; H{有自定义 Finalize?}
-    H --&gt;|是| I[调用 Finalize]
-    H --&gt;|否| L{有自定义 Callback?}
-    I --&gt; L
-    L --&gt;|是| M[调用 Callback]
-    L --&gt;|否| J[发送 AfterSummarize 事件]
-    M --&gt; J
-    J --&gt; K[返回新状态]
-
-    style A fill:#e3f2fd
-    style G fill:#fff3e0
-    style D fill:#e8f5e9
-    style J fill:#e8f5e9
-    style K fill:#c8e6c9
-    style C fill:#f5f5f5
-    style M fill:#fce4ec
-    style F fill:#fff3e0
-    style I fill:#fff3e0
-</code></pre><h2 id=内部事件>内部事件</h2><p>当 EmitInternalEvents 设置为 true 时，中间件会在关键节点发送事件：</p><table><tr><td>事件类型</td><td>触发时机</td><td>携带数据</td></tr><tr><td>ActionTypeBeforeSummarize</td><td>生成摘要之前</td><td>原始消息列表</td></tr><tr><td>ActionTypeAfterSummarize</td><td>完成总结之后</td><td>最终消息列表</td></tr></table><p><strong>使用示例</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>mw</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w>              </span><span class=nx>yourChatModel</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>EmitInternalEvents</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 在你的事件处理器中监听事件</span><span class=w>
-</span></span></span></code></pre></div><h2 id=最佳实践>最佳实践</h2><ol><li><strong>设置 TranscriptFilePath</strong>：建议始终提供对话记录文件路径，以便模型在需要时可以参考原始对话。</li><li><strong>调整 Token 阈值</strong>：根据模型的上下文窗口大小调整 <code>Trigger.MaxTokens</code>。一般建议设置为模型限制的 80-90%。</li><li><strong>自定义 Token 计数器</strong>：在生产环境中，建议实现与模型 tokenizer 匹配的自定义 <code>TokenCounter</code>，以获得准确的计数。</li></ol><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
-<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 March 24, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/df16769c7a363b99d877c61e88d3057721ae70af>docs(eino): sync docs from feishu (2026-03-24) (#1527) (df16769c7)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>finalizer</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>summarization</span><span class=p>.</span><span class=nf>NewFinalizer</span><span class=p>().</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>PreserveSkills</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>PreserveSkillsConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>MaxSkills</span><span class=p>:</span><span class=w> </span><span class=nf>ptrOf</span><span class=p>(</span><span class=mi>3</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Custom</span><span class=p>(</span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>origMsgs</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>msgs</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nf>defaultFinalize</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=nx>origMsgs</span><span class=p>,</span><span class=w> </span><span class=nx>summary</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=nb>append</span><span class=p>([]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>{</span><span class=nx>schema</span><span class=p>.</span><span class=nf>SystemMessage</span><span class=p>(</span><span class=s>&#34;system prompt&#34;</span><span class=p>)},</span><span class=w> </span><span class=nx>msgs</span><span class=o>...</span><span class=p>),</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Build</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>cfg</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=o>&amp;</span><span class=nx>summarization</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w>    </span><span class=nx>yourModel</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Finalize</span><span class=p>:</span><span class=w> </span><span class=nx>finalizer</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h2 id=注意事项>注意事项</h2><ol><li><strong>设置 TranscriptFilePath</strong>：强烈建议提供对话记录文件路径，摘要后模型可从原始记录中回溯细节。</li><li><strong>调整触发阈值</strong>：<code>Trigger.ContextTokens</code> 建议设为模型上下文窗口的 80-90%。默认值 160,000 适用于 200k 窗口的模型。</li><li><strong>自定义 TokenCounter</strong>：生产环境建议实现与模型 tokenizer 精确匹配的计数器。默认估算器以最近 assistant 消息的 <code>ResponseMeta.Usage.TotalTokens</code> 为基线，增量消息按 ~4 字符/token 估算。</li><li><strong>Finalize 覆盖</strong>：设置 <code>Finalize</code> 后，<code>PreserveUserMessages</code> 和 <code>TranscriptFilePath</code> 不再自动生效。如需复用，使用 <code>DefaultFinalizer</code> 或 <code>FinalizerBuilder</code>。</li><li><strong>GetFailoverModel 约束</strong>：回调必须返回非 nil 的 model 和非空的 input 消息列表。</li></ol><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 May 21, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/14c457e4b31e5215ffb722a7f0d1c47dae30835d>docs(eino): sync docs from feishu (2026-05-21) (#1545) (14c457e4b)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
 |
 <a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.7f61069e37ab04943083fa2376368a557ccd2a7d7da9f302c9b6030b765fc76f.js integrity="sha256-f2EGnjerBJQwg/ojdjaKVXzNKn19qfMCybYDC3Zfx28=" crossorigin=anonymous></script><script defer src=/js/click-to-copy.min.383b566d46ea827745a12d56f9f3bafd4eea8f8788fe225e4d72ff25e2752b35.js integrity="sha256-ODtWbUbqgndFoS1W+fO6/U7qj4eI/iJeTXL/JeJ1KzU=" crossorigin=anonymous></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>

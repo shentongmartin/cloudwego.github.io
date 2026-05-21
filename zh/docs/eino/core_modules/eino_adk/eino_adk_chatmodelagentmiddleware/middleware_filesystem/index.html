@@ -1,16 +1,7 @@
-<!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>FileSystem | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="FileSystem"><meta property="og:description" content='💡 Package: github.com/cloudwego/eino/adk/middlewares/filesystem
-概述 FileSystem Middleware 为 Agent 提供文件系统访问能力。它通过 FileSystem Backend 接口操作文件系统，自动向 Agent 注入一组文件操作工具及对应的 system prompt，使 Agent 能够直接进行文件读写、搜索、编辑等操作。
-核心功能：
-文件系统工具注入 — 自动注册 ls、read_file、write_file、edit_file、glob、grep 等工具 Shell 命令执行 — 可选注入 execute 工具，支持同步和流式命令执行 工具级别配置 — 每个工具均可独立配置名称、描述、自定义实现或禁用 多语言提示词 — 工具描述和 system prompt 支持中英文切换 创建中间件 推荐使用 New 函数创建中间件（返回 ChatModelAgentMiddleware）：
-import "github.com/cloudwego/eino/adk/middlewares/filesystem" middleware, err := filesystem.New(ctx, &amp;filesystem.MiddlewareConfig{ Backend: myBackend, // 如果需要 shell 命令执行能力，设置 Shell 或 StreamingShell Shell: myShell, }) if err != nil { // handle error } agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ // ... Middlewares: []adk.ChatModelAgentMiddleware{middleware}, }) 💡 New 返回 ChatModelAgentMiddleware，提供更好的上下文传播能力（通过 BeforeAgent hook 在运行时修改 Agent 的 instruction 和 tools）。'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-03-24T00:00:00+00:00"><meta property="article:modified_time" content="2026-03-24T20:03:40+08:00"><meta itemprop=name content="FileSystem"><meta itemprop=description content='💡 Package: github.com/cloudwego/eino/adk/middlewares/filesystem
-概述 FileSystem Middleware 为 Agent 提供文件系统访问能力。它通过 FileSystem Backend 接口操作文件系统，自动向 Agent 注入一组文件操作工具及对应的 system prompt，使 Agent 能够直接进行文件读写、搜索、编辑等操作。
-核心功能：
-文件系统工具注入 — 自动注册 ls、read_file、write_file、edit_file、glob、grep 等工具 Shell 命令执行 — 可选注入 execute 工具，支持同步和流式命令执行 工具级别配置 — 每个工具均可独立配置名称、描述、自定义实现或禁用 多语言提示词 — 工具描述和 system prompt 支持中英文切换 创建中间件 推荐使用 New 函数创建中间件（返回 ChatModelAgentMiddleware）：
-import "github.com/cloudwego/eino/adk/middlewares/filesystem" middleware, err := filesystem.New(ctx, &amp;filesystem.MiddlewareConfig{ Backend: myBackend, // 如果需要 shell 命令执行能力，设置 Shell 或 StreamingShell Shell: myShell, }) if err != nil { // handle error } agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ // ... Middlewares: []adk.ChatModelAgentMiddleware{middleware}, }) 💡 New 返回 ChatModelAgentMiddleware，提供更好的上下文传播能力（通过 BeforeAgent hook 在运行时修改 Agent 的 instruction 和 tools）。'><meta itemprop=datePublished content="2026-03-24T00:00:00+00:00"><meta itemprop=dateModified content="2026-03-24T20:03:40+08:00"><meta itemprop=wordCount content="401"><meta name=twitter:card content="summary"><meta name=twitter:title content="FileSystem"><meta name=twitter:description content='💡 Package: github.com/cloudwego/eino/adk/middlewares/filesystem
-概述 FileSystem Middleware 为 Agent 提供文件系统访问能力。它通过 FileSystem Backend 接口操作文件系统，自动向 Agent 注入一组文件操作工具及对应的 system prompt，使 Agent 能够直接进行文件读写、搜索、编辑等操作。
-核心功能：
-文件系统工具注入 — 自动注册 ls、read_file、write_file、edit_file、glob、grep 等工具 Shell 命令执行 — 可选注入 execute 工具，支持同步和流式命令执行 工具级别配置 — 每个工具均可独立配置名称、描述、自定义实现或禁用 多语言提示词 — 工具描述和 system prompt 支持中英文切换 创建中间件 推荐使用 New 函数创建中间件（返回 ChatModelAgentMiddleware）：
-import "github.com/cloudwego/eino/adk/middlewares/filesystem" middleware, err := filesystem.New(ctx, &amp;filesystem.MiddlewareConfig{ Backend: myBackend, // 如果需要 shell 命令执行能力，设置 Shell 或 StreamingShell Shell: myShell, }) if err != nil { // handle error } agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ // ... Middlewares: []adk.ChatModelAgentMiddleware{middleware}, }) 💡 New 返回 ChatModelAgentMiddleware，提供更好的上下文传播能力（通过 BeforeAgent hook 在运行时修改 Agent 的 instruction 和 tools）。'><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
+<!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>FileSystem | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="FileSystem"><meta property="og:description" content='FileSystem 中间件为 Agent 注入一组文件系统操作工具（ls、read_file、write_file、edit_file、glob、grep）以及可选的命令执行工具（execute），使 Agent 具备与本地或远程文件系统交互的能力。
+import "github.com/cloudwego/eino/adk/middlewares/filesystem" 快速开始 import ( "context" "github.com/cloudwego/eino/adk" "github.com/cloudwego/eino/adk/middlewares/filesystem" ) // 1. 创建 middleware middleware, err := filesystem.New(ctx, &amp;filesystem.MiddlewareConfig{ Backend: myBackend, // 实现 filesystem.Backend 接口 }) // 2. 注入 Agent agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ // ... Middlewares: []adk.ChatModelAgentMiddleware{middleware}, }) 构造函数 函数签名说明 New(ctx, *MiddlewareConfig) (ChatModelAgentMiddleware, error)推荐。返回 ChatModelAgentMiddleware，支持通过 BeforeAgent 钩子动态修改 Instruction 和 Tools。 NewTyped[M MessageType](ctx, *MiddlewareConfig) (TypedChatModelAgentMiddleware[M], error)泛型版本，类型参数 M 支持 *schema.Message 和 *schema.AgenticMessage。New 等价于 NewTyped[*schema.Message]。 💡 Deprecated: NewMiddleware(ctx, *Config) (AgentMiddleware, error) 为旧版构造函数，新代码请使用 New。NewMiddleware 返回结构体 AgentMiddleware，缺少 BeforeAgent 钩子的灵活性；此外它默认启用「大结果卸载」功能（见下文），在 New 路径中该功能已被移除。'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-05-17T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-21T19:31:45+08:00"><meta itemprop=name content="FileSystem"><meta itemprop=description content='FileSystem 中间件为 Agent 注入一组文件系统操作工具（ls、read_file、write_file、edit_file、glob、grep）以及可选的命令执行工具（execute），使 Agent 具备与本地或远程文件系统交互的能力。
+import "github.com/cloudwego/eino/adk/middlewares/filesystem" 快速开始 import ( "context" "github.com/cloudwego/eino/adk" "github.com/cloudwego/eino/adk/middlewares/filesystem" ) // 1. 创建 middleware middleware, err := filesystem.New(ctx, &amp;filesystem.MiddlewareConfig{ Backend: myBackend, // 实现 filesystem.Backend 接口 }) // 2. 注入 Agent agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ // ... Middlewares: []adk.ChatModelAgentMiddleware{middleware}, }) 构造函数 函数签名说明 New(ctx, *MiddlewareConfig) (ChatModelAgentMiddleware, error)推荐。返回 ChatModelAgentMiddleware，支持通过 BeforeAgent 钩子动态修改 Instruction 和 Tools。 NewTyped[M MessageType](ctx, *MiddlewareConfig) (TypedChatModelAgentMiddleware[M], error)泛型版本，类型参数 M 支持 *schema.Message 和 *schema.AgenticMessage。New 等价于 NewTyped[*schema.Message]。 💡 Deprecated: NewMiddleware(ctx, *Config) (AgentMiddleware, error) 为旧版构造函数，新代码请使用 New。NewMiddleware 返回结构体 AgentMiddleware，缺少 BeforeAgent 钩子的灵活性；此外它默认启用「大结果卸载」功能（见下文），在 New 路径中该功能已被移除。'><meta itemprop=datePublished content="2026-05-17T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-21T19:31:45+08:00"><meta itemprop=wordCount content="474"><meta name=twitter:card content="summary"><meta name=twitter:title content="FileSystem"><meta name=twitter:description content='FileSystem 中间件为 Agent 注入一组文件系统操作工具（ls、read_file、write_file、edit_file、glob、grep）以及可选的命令执行工具（execute），使 Agent 具备与本地或远程文件系统交互的能力。
+import "github.com/cloudwego/eino/adk/middlewares/filesystem" 快速开始 import ( "context" "github.com/cloudwego/eino/adk" "github.com/cloudwego/eino/adk/middlewares/filesystem" ) // 1. 创建 middleware middleware, err := filesystem.New(ctx, &amp;filesystem.MiddlewareConfig{ Backend: myBackend, // 实现 filesystem.Backend 接口 }) // 2. 注入 Agent agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{ // ... Middlewares: []adk.ChatModelAgentMiddleware{middleware}, }) 构造函数 函数签名说明 New(ctx, *MiddlewareConfig) (ChatModelAgentMiddleware, error)推荐。返回 ChatModelAgentMiddleware，支持通过 BeforeAgent 钩子动态修改 Instruction 和 Tools。 NewTyped[M MessageType](ctx, *MiddlewareConfig) (TypedChatModelAgentMiddleware[M], error)泛型版本，类型参数 M 支持 *schema.Message 和 *schema.AgenticMessage。New 等价于 NewTyped[*schema.Message]。 💡 Deprecated: NewMiddleware(ctx, *Config) (AgentMiddleware, error) 为旧版构造函数，新代码请使用 New。NewMiddleware 返回结构体 AgentMiddleware，缺少 BeforeAgent 钩子的灵活性；此外它默认启用「大结果卸载」功能（见下文），在 New 路径中该功能已被移除。'><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
 </a><button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#main_navbar aria-controls=main_navbar aria-expanded=false aria-label="Toggle navigation">
 <span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0 ms-auto"><li class="dropdown sub-menu active"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>文档</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=/zh/docs/kitex/>Kitex</a>
 <a class=dropdown-item href=/zh/docs/hertz/>Hertz</a>
@@ -34,7 +25,8 @@ Auto
 <label for=m-zhdocseinoovervieweino_open_source-check><a href=/zh/docs/eino/overview/eino_open_source/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_open_source><span>大语言模型应用开发框架 —— Eino 正式开源！</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk0_1-li><input type=checkbox id=m-zhdocseinoovervieweino_adk0_1-check>
 <label for=m-zhdocseinoovervieweino_adk0_1-check><a href=/zh/docs/eino/overview/eino_adk0_1/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk0_1><span>Eino ADK：一文搞定 AI Agent 核心设计模式，从 0 到 1 搭建智能体系统</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_excel_agent-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_excel_agent-check>
 <label for=m-zhdocseinoovervieweino_adk_excel_agent-check><a href=/zh/docs/eino/overview/eino_adk_excel_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_excel_agent><span>用 Eino ADK 构建你的第一个 AI 智能体：从 Excel Agent 实战开始</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinooverviewgraph_or_agent-li><input type=checkbox id=m-zhdocseinooverviewgraph_or_agent-check>
-<label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
+<label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_quickstart-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_quickstart-check>
+<label for=m-zhdocseinoovervieweino_adk_quickstart-check><a href=/zh/docs/eino/overview/eino_adk_quickstart/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_quickstart><span>五分钟上手 Eino ADK</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
 <label for=m-zhdocseinoquick_start-check><a href=/zh/docs/eino/quick_start/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinoquick_start><span>快速开始</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-li><input type=checkbox id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check>
 <label for=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check><a href=/zh/docs/eino/quick_start/chapter_01_chatmodel_and_message/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message><span>第一章：ChatModel 与 Message（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-li><input type=checkbox id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check>
 <label for=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check><a href=/zh/docs/eino/quick_start/chapter_02_chatmodelagent_runner_agentevent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent><span>第二章：ChatModelAgent、Runner、AgentEvent（Console 多轮）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_03_memory_and_session-li><input type=checkbox id=m-zhdocseinoquick_startchapter_03_memory_and_session-check>
@@ -44,8 +36,9 @@ Auto
 <label for=m-zhdocseinoquick_startchapter_06_callback_and_trace-check><a href=/zh/docs/eino/quick_start/chapter_06_callback_and_trace/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_06_callback_and_trace><span>第六章：Callback 与 Trace（可观测性）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_07_interrupt_resume-li><input type=checkbox id=m-zhdocseinoquick_startchapter_07_interrupt_resume-check>
 <label for=m-zhdocseinoquick_startchapter_07_interrupt_resume-check><a href=/zh/docs/eino/quick_start/chapter_07_interrupt_resume/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_07_interrupt_resume><span>第七章：Interrupt/Resume（中断与恢复）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_08_graph_tool-li><input type=checkbox id=m-zhdocseinoquick_startchapter_08_graph_tool-check>
 <label for=m-zhdocseinoquick_startchapter_08_graph_tool-check><a href=/zh/docs/eino/quick_start/chapter_08_graph_tool/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_08_graph_tool><span>第八章：Graph Tool（复杂工作流）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_skill_console-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_skill_console-check>
-<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check>
-<label for=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_09_a2ui_protocol/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol><span>第十章：A2UI 协议（流式 UI 组件）</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
+<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill Middleware</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_10_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_10_a2ui_protocol-check>
+<label for=m-zhdocseinoquick_startchapter_10_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_10_a2ui_protocol/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_10_a2ui_protocol><span>第十章：A2UI 协议（流式 UI 组件）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_11_turnloop-li><input type=checkbox id=m-zhdocseinoquick_startchapter_11_turnloop-check>
+<label for=m-zhdocseinoquick_startchapter_11_turnloop-check><a href=/zh/docs/eino/quick_start/chapter_11_turnloop/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_11_turnloop><span>第十一章：TurnLoop — 抢占、中止与多轮生命周期</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
 <label for=m-zhdocseinocookbook-check><a href=/zh/docs/eino/cookbook/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocookbook><span>Cookbook</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_modules-li><input type=checkbox id=m-zhdocseinocore_modules-check checked>
 <label for=m-zhdocseinocore_modules-check><a href=/zh/docs/eino/core_modules/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modules><span>核心模块</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponents-li><input type=checkbox id=m-zhdocseinocore_modulescomponents-check>
 <label for=m-zhdocseinocore_modulescomponents-check><a href=/zh/docs/eino/core_modules/components/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulescomponents><span>Components 组件</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-li><input type=checkbox id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-check>
@@ -79,18 +72,17 @@ Auto
 <label for=m-zhdocseinocore_moduleseino_adkagent_preview-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_preview/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_preview><span>概述</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_interface-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_interface-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_interface-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_interface/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_interface><span>Agent 抽象</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_collaboration-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_collaboration-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_collaboration-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_collaboration/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_collaboration><span>Agent 协作</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkagent_implementation-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementation-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementation-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementation><span>Agent 实现</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model><span>ChatModelAgent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/workflow/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow><span>Workflow Agents</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/supervisor/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor><span>Supervisor Agent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementation-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementation><span>Agent 实现</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model><span>ChatModelAgent</span></a></label><ul class="ul-6 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/chatmodel_failover_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide><span>ChatModel Failover 功能文档</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/plan_execute/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute><span>Plan-Execute Agent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/deepagents/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents><span>DeepAgents</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_extension-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_extension-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_extension-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_extension/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_extension><span>Agent Runner 与扩展</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_hitl-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_hitl-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_hitl-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_hitl/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_hitl><span>Eino human-in-the-loop框架：技术架构指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-check checked>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware><span>ChatModelAgentMiddleware</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend><span>FileSystem Backend</span></a></label><ul class="ul-6 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check>
-<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_ark_agentkit_sandbox/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox><span>Ark Agentkit Sandbox</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-check>
-<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f><span>本地文件系统</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check checked>
+<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_ark_agentkit_sandbox/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox><span>Ark Agentkit Sandbox</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-check>
+<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_local_filesystem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem><span>本地文件系统</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check checked>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/ class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem><span class=td-sidebar-nav-active-item>FileSystem</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill><span>Skill</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization><span>Summarization</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolreduction-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolreduction-check>
@@ -99,7 +91,8 @@ Auto
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolsearch-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_toolsearch/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolsearch><span>ToolSearch</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_patchtoolcalls/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls><span>PatchToolCalls</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_agentsmd/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd><span>AgentsMD</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check>
-<label for=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check><a href=/zh/docs/eino/core_modules/eino_adk/adk_agent_callback/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback><span>Agent Callback</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulesdevops-li><input type=checkbox id=m-zhdocseinocore_modulesdevops-check>
+<label for=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check><a href=/zh/docs/eino/core_modules/eino_adk/adk_agent_callback/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback><span>Agent Callback</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart><span>Agent Cancel 与 TurnLoop 快速入门</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulesdevops-li><input type=checkbox id=m-zhdocseinocore_modulesdevops-check>
 <label for=m-zhdocseinocore_modulesdevops-check><a href=/zh/docs/eino/core_modules/devops/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulesdevops><span>应用开发工具链</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopside_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopside_plugin_guide-check>
 <label for=m-zhdocseinocore_modulesdevopside_plugin_guide-check><a href=/zh/docs/eino/core_modules/devops/ide_plugin_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_modulesdevopside_plugin_guide><span>Eino Dev 插件安装指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-check>
 <label for=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-check><a href=/zh/docs/eino/core_modules/devops/visual_orchestration_plugin_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide><span>Eino Dev 可视化编排插件功能指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopsvisual_debug_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopsvisual_debug_plugin_guide-check>
@@ -123,12 +116,14 @@ Auto
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v05_-adk_implementation-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.5._-adk_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v05_-adk_implementation><span>v0.5.*-ADK implementation</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-check>
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.6._-jsonschema_optimization/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization><span>v0.6.*-jsonschema optimization</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-check>
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.7._-interrupt_resume_refactor/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor><span>v0.7.*-interrupt resume refactor</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check>
-<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares><span>v0.8.*-adk middlewares</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-check>
-<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_%E4%B8%8D%E5%85%BC%E5%AE%B9%E6%9B%B4%E6%96%B0/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0><span>Eino v0.8 不兼容更新</span></a></label></li></ul></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinofaq-li><input type=checkbox id=m-zhdocseinofaq-check checked>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares><span>v0.8.*-adk middlewares</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_breaking_changes/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes><span>Eino v0.8 不兼容更新</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.9._agentic-runtime/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime><span>v0.9.* agentic-runtime</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.9._agentic-runtime/eino_v0.9_migration_notes/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes><span>Eino V0.9 更新注意事项</span></a></label></li></ul></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinofaq-li><input type=checkbox id=m-zhdocseinofaq-check checked>
 <label for=m-zhdocseinofaq-check><a href=/zh/docs/eino/faq/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinofaq><span>FAQ</span></a></label></li></ul></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ms-2 pb-1 pt-2 mb-0"><a href=https://github.com/cloudwego/cloudwego.github.io/edit/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware/middleware_filesystem.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/new/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/issues/new?title=FileSystem" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-brands fa-github fa-fw"></i> 提交文档问题</a>
-<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#创建中间件>创建中间件</a></li><li><a href=#middlewareconfig-配置项>MiddlewareConfig 配置项</a><ul><li><a href=#toolconfig>ToolConfig</a></li></ul></li><li><a href=#注入的工具>注入的工具</a></li><li><a href=#多语言支持>多语言支持</a></li><li><a href=#deprecated-工具结果卸载>[deprecated] 工具结果卸载</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/>FileSystem</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=FileSystem data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
+<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#快速开始>快速开始</a></li><li><a href=#构造函数>构造函数</a></li><li><a href=#middlewareconfig>MiddlewareConfig</a><ul><li><a href=#核心字段>核心字段</a></li><li><a href=#工具配置字段>工具配置字段</a></li></ul></li><li><a href=#toolconfig>ToolConfig</a></li><li><a href=#工具名称常量>工具名称常量</a></li><li><a href=#注入的工具>注入的工具</a></li><li><a href=#backend-接口>Backend 接口</a><ul><li><a href=#shell-与-streamingshell>Shell 与 StreamingShell</a></li></ul></li><li><a href=#multimodalreader-扩展接口>MultiModalReader 扩展接口</a></li><li><a href=#deprecated-旧版-config-与大结果卸载>Deprecated: 旧版 Config 与大结果卸载</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/>FileSystem</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=FileSystem data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
 <i class="fa-regular fa-copy"></i>
 <span>复制全文</span>
 </button>
@@ -138,278 +133,289 @@ Auto
 </button>
 <button class=dropdown-item data-copy-type=text>
 复制文本</button></div><div class=copy-fulltext__toast id=copy-fulltext-toast></div></div><script id=copy-fulltext-markdown type=text/plain>
-> 💡 Package: [github.com/cloudwego/eino/adk/middlewares/filesystem](https://github.com/cloudwego/eino/tree/main/adk/middlewares/filesystem)
+FileSystem 中间件为 Agent 注入一组文件系统操作工具（ls、read\_file、write\_file、edit\_file、glob、grep）以及可选的命令执行工具（execute），使 Agent 具备与本地或远程文件系统交互的能力。
 
-## 概述
+```
+import "github.com/cloudwego/eino/adk/middlewares/filesystem"
+```
 
-FileSystem Middleware 为 Agent 提供文件系统访问能力。它通过 [FileSystem Backend](/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend) 接口操作文件系统，自动向 Agent 注入一组文件操作工具及对应的 system prompt，使 Agent 能够直接进行文件读写、搜索、编辑等操作。
+---
 
-核心功能：
-
-- **文件系统工具注入** — 自动注册 ls、read_file、write_file、edit_file、glob、grep 等工具
-- **Shell 命令执行** — 可选注入 execute 工具，支持同步和流式命令执行
-- **工具级别配置** — 每个工具均可独立配置名称、描述、自定义实现或禁用
-- **多语言提示词** — 工具描述和 system prompt 支持中英文切换
-
-## 创建中间件
-
-推荐使用 `New` 函数创建中间件（返回 `ChatModelAgentMiddleware`）：
+## 快速开始
 
 ```go
-import "github.com/cloudwego/eino/adk/middlewares/filesystem"
+import (
+    "context"
+    "github.com/cloudwego/eino/adk"
+    "github.com/cloudwego/eino/adk/middlewares/filesystem"
+)
 
+// 1. 创建 middleware
 middleware, err := filesystem.New(ctx, &filesystem.MiddlewareConfig{
-    Backend: myBackend,
-    // 如果需要 shell 命令执行能力，设置 Shell 或 StreamingShell
-    Shell: myShell,
+    Backend: myBackend, // 实现 filesystem.Backend 接口
 })
-if err != nil {
-    // handle error
-}
 
+// 2. 注入 Agent
 agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
     // ...
     Middlewares: []adk.ChatModelAgentMiddleware{middleware},
 })
 ```
 
+---
+
+## 构造函数
+
+<table>
+<tr><td>函数签名</td><td>说明</td></tr>
+<tr><td><pre>New(ctx, *MiddlewareConfig) (ChatModelAgentMiddleware, error)</pre></td><td><strong>推荐</strong>。返回 <pre>ChatModelAgentMiddleware</pre>，支持通过 <pre>BeforeAgent</pre> 钩子动态修改 Instruction 和 Tools。</td></tr>
+<tr><td><pre>NewTyped[M MessageType](ctx, *MiddlewareConfig) (TypedChatModelAgentMiddleware[M], error)</pre></td><td>泛型版本，类型参数 <pre>M</pre> 支持 <pre>*schema.Message</pre> 和 <pre>*schema.AgenticMessage</pre>。<pre>New</pre> 等价于 <pre>NewTyped[*schema.Message]</pre>。</td></tr>
+</table>
+
 > 💡
-> `New` 返回 `ChatModelAgentMiddleware`，提供更好的上下文传播能力（通过 `BeforeAgent` hook 在运行时修改 Agent 的 instruction 和 tools）。
+> **Deprecated**: `NewMiddleware(ctx, *Config) (AgentMiddleware, error)` 为旧版构造函数，新代码请使用 `New`。`NewMiddleware` 返回结构体 `AgentMiddleware`，缺少 `BeforeAgent` 钩子的灵活性；此外它默认启用「大结果卸载」功能（见下文），在 `New` 路径中该功能已被移除。
 
-## MiddlewareConfig 配置项
+---
 
-```go
-type MiddlewareConfig struct {
-    // Backend 提供文件系统操作
-    // 必填
-    Backend filesystem.Backend
+## MiddlewareConfig
 
-    // Shell 提供 shell 命令执行能力
-    // 如果设置，会注册 execute 工具
-    // 可选，与 StreamingShell 互斥
-    Shell filesystem.Shell
+`MiddlewareConfig` 是 `New` / `NewTyped` 使用的配置结构体。
 
-    // StreamingShell 提供流式 shell 命令执行能力
-    // 如果设置，会注册流式 execute 工具（支持实时输出）
-    // 可选，与 Shell 互斥
-    StreamingShell filesystem.StreamingShell
+### 核心字段
 
-    // 以下为各工具的独立配置，均为可选
-    LsToolConfig        *ToolConfig  // ls 工具配置
-    ReadFileToolConfig  *ToolConfig  // read_file 工具配置
-    WriteFileToolConfig *ToolConfig  // write_file 工具配置
-    EditFileToolConfig  *ToolConfig  // edit_file 工具配置
-    GlobToolConfig      *ToolConfig  // glob 工具配置
-    GrepToolConfig      *ToolConfig  // grep 工具配置
+<table>
+<tr><td>字段</td><td>类型</td><td>说明</td></tr>
+<tr><td><pre>Backend</pre></td><td><pre>filesystem.Backend</pre></td><td><strong>必填</strong>。提供文件系统操作能力，驱动 ls、read\_file、write\_file、edit\_file、glob、grep 共 6 个工具。接口定义在 <pre>github.com/cloudwego/eino/adk/filesystem</pre> 包。</td></tr>
+<tr><td><pre>Shell</pre></td><td><pre>filesystem.Shell</pre></td><td>可选。提供命令执行能力，设置后注册 <pre>execute</pre> 工具。与 <pre>StreamingShell</pre> <strong>互斥</strong>。</td></tr>
+<tr><td><pre>StreamingShell</pre></td><td><pre>filesystem.StreamingShell</pre></td><td>可选。提供流式命令执行能力，设置后注册流式 <pre>execute</pre> 工具。与 <pre>Shell</pre> <strong>互斥</strong>。</td></tr>
+<tr><td><pre>UseMultiModalRead</pre></td><td><pre>bool</pre></td><td>可选，默认 <pre>false</pre>。开启后 <pre>read_file</pre> 工具变为 <pre>EnhancedInvokableTool</pre>，支持返回图片/PDF 等多模态内容。<strong>要求 Backend 同时实现 filesystem.MultiModalReader 接口</strong>。</td></tr>
+<tr><td><pre>CustomSystemPrompt</pre></td><td><pre>*string</pre></td><td>可选。覆盖追加到 Agent Instruction 的系统提示词。若为 <pre>nil</pre>，<strong>不追加任何系统提示词</strong>。</td></tr>
+</table>
 
-    // CustomSystemPrompt 覆盖默认的系统提示词
-    // 可选，默认 ToolsSystemPrompt
-    CustomSystemPrompt *string
+### 工具配置字段
 
-    // 以下字段已 Deprecated，请使用对应的 *ToolConfig.Desc 替代
-    // CustomLsToolDesc, CustomReadFileToolDesc, CustomGrepToolDesc,
-    // CustomGlobToolDesc, CustomWriteFileToolDesc, CustomEditToolDesc
-}
-```
+每个工具均有对应的 `*ToolConfig` 字段，用于自定义工具名称、描述、替换实现或禁用：
 
-### ToolConfig
+<table>
+<tr><td>字段</td><td>对应工具</td></tr>
+<tr><td><pre>LsToolConfig</pre></td><td>ls</td></tr>
+<tr><td><pre>ReadFileToolConfig</pre></td><td>read\_file</td></tr>
+<tr><td><pre>WriteFileToolConfig</pre></td><td>write\_file</td></tr>
+<tr><td><pre>EditFileToolConfig</pre></td><td>edit\_file</td></tr>
+<tr><td><pre>GlobToolConfig</pre></td><td>glob</td></tr>
+<tr><td><pre>GrepToolConfig</pre></td><td>grep</td></tr>
+</table>
 
-每个工具均可通过 `ToolConfig` 独立配置：
+> `execute` 工具当前不支持通过 `ToolConfig` 自定义，其注册仅由 `Shell` / `StreamingShell` 是否设置来控制。
+
+---
+
+## ToolConfig
 
 ```go
 type ToolConfig struct {
-    // Name 覆盖工具名称
-    // 可选，不设置则使用默认名称（如 "ls"、"read_file" 等）
-    Name string
-
-    // Desc 覆盖工具描述
-    // 可选，不设置则使用默认描述
-    Desc *string
-
-    // CustomTool 提供自定义工具实现
-    // 如果设置，将使用此自定义实现替代基于 Backend 的默认实现
-    // 可选
-    CustomTool tool.BaseTool
-
-    // Disable 禁用此工具
-    // 如果为 true，该工具将不会被注册
-    // 可选，默认 false
-    Disable bool
+    Name       string         // 覆盖工具名称，空串使用默认值
+    Desc       *string        // 覆盖工具描述，nil 使用默认值
+    CustomTool tool.BaseTool  // 自定义工具实现，设置后替代 Backend 默认实现
+    Disable    bool           // 设为 true 则不注册该工具
 }
 ```
 
-示例 — 自定义工具名称并禁用写入：
+**优先级**：`Disable=true` > `CustomTool` > Backend 默认实现。
+
+---
+
+## 工具名称常量
 
 ```go
-middleware, err := filesystem.New(ctx, &filesystem.MiddlewareConfig{
-    Backend: myBackend,
-    ReadFileToolConfig: &filesystem.ToolConfig{
-        Name: "cat_file",  // 自定义名称
-    },
-    WriteFileToolConfig: &filesystem.ToolConfig{
-        Disable: true,  // 禁用写入工具
-    },
-})
+const (
+    ToolNameLs        = "ls"
+    ToolNameReadFile  = "read_file"
+    ToolNameWriteFile = "write_file"
+    ToolNameEditFile  = "edit_file"
+    ToolNameGlob      = "glob"
+    ToolNameGrep      = "grep"
+    ToolNameExecute   = "execute"
+)
 ```
+
+---
 
 ## 注入的工具
 
 <table>
-<tr><td>工具</td><td>默认名称</td><td>描述</td><td>条件</td></tr>
-<tr><td>列出目录</td><td><pre>ls</pre></td><td>列出指定路径下的文件和目录</td><td>Backend 不为 nil 时注入</td></tr>
-<tr><td>读取文件</td><td><pre>read_file</pre></td><td>读取文件内容，支持按行分页（offset + limit）</td><td>Backend 不为 nil 时注入</td></tr>
-<tr><td>写入文件</td><td><pre>write_file</pre></td><td>创建或覆盖文件</td><td>Backend 不为 nil 时注入</td></tr>
-<tr><td>编辑文件</td><td><pre>edit_file</pre></td><td>替换文件中的字符串</td><td>Backend 不为 nil 时注入</td></tr>
-<tr><td>Glob 查找</td><td><pre>glob</pre></td><td>按 glob pattern 查找文件</td><td>Backend 不为 nil 时注入</td></tr>
-<tr><td>内容搜索</td><td><pre>grep</pre></td><td>按 pattern 搜索文件内容，支持多种输出模式</td><td>Backend 不为 nil 时注入</td></tr>
-<tr><td>命令执行</td><td><pre>execute</pre></td><td>执行 shell 命令</td><td>需配置 Shell 或 StreamingShell</td></tr>
+<tr><td>工具</td><td>默认名称</td><td>注册条件</td><td>功能说明</td></tr>
+<tr><td>ls</td><td><pre>ls</pre></td><td>Backend ≠ nil</td><td>列出目录下的文件和子目录</td></tr>
+<tr><td>read\_file</td><td><pre>read_file</pre></td><td>Backend ≠ nil</td><td>读取文件内容，支持 offset/limit 分页。开启 <pre>UseMultiModalRead</pre> 后可读取图片和 PDF</td></tr>
+<tr><td>write\_file</td><td><pre>write_file</pre></td><td>Backend ≠ nil</td><td>创建或覆盖写入文件</td></tr>
+<tr><td>edit\_file</td><td><pre>edit_file</pre></td><td>Backend ≠ nil</td><td>精确字符串替换编辑，支持 <pre>replace_all</pre></td></tr>
+<tr><td>glob</td><td><pre>glob</pre></td><td>Backend ≠ nil</td><td>按 glob 模式匹配文件路径</td></tr>
+<tr><td>grep</td><td><pre>grep</pre></td><td>Backend ≠ nil</td><td>正则搜索文件内容，支持多种输出模式和分页</td></tr>
+<tr><td>execute</td><td><pre>execute</pre></td><td>Shell ≠ nil 或 StreamingShell ≠ nil</td><td>执行 Shell 命令</td></tr>
 </table>
 
-每个工具均可通过对应的 `*ToolConfig` 禁用（`Disable: true`）或提供自定义实现（`CustomTool`）。
+---
 
-## 多语言支持
+## Backend 接口
 
-工具描述和内置提示词默认为英文。如需切换为中文，可通过 `adk.SetLanguage()` 设置：
-
-```go
-import "github.com/cloudwego/eino/adk"
-
-adk.SetLanguage(adk.LanguageChinese)  // 切换为中文
-adk.SetLanguage(adk.LanguageEnglish)  // 切换为英文（默认）
-```
-
-也可以通过 `ToolConfig.Desc` 或 `CustomSystemPrompt` 自定义各工具的说明文本。
-
-## [deprecated] 工具结果卸载
-
-> 💡
-> 该功能即将在 0.8.0 中 deprecate。请迁移到 Middleware: ToolReduction
-
-> 注意：工具结果卸载仅在旧的 `Config` + `NewMiddleware` 函数中可用。推荐的 `MiddlewareConfig` + `New` 不包含此功能，如需要请配合 ToolReduction middleware 使用。
-
-当工具调用结果过大（例如读取大文件、grep 命中大量内容），如果继续将完整结果放入对话上下文，会导致：
-
-- token 急剧增加
-- Agent 历史上下文污染
-- 推理效率变差
-
-为此，旧版 Middleware（`NewMiddleware`）提供了自动卸载机制：
-
-- 当结果大小超过阈值（默认 20,000 tokens）时，不直接返回全部内容给 LLM
-- 实际结果会保存到文件系统（Backend）
-- 上下文中仅包含摘要和文件路径（Agent 可再次调用 `read_file` 工具按需读取）
-
-该功能默认启用，可通过 `Config`（非 `MiddlewareConfig`）配置：
+`Backend` 定义在 `github.com/cloudwego/eino/adk/filesystem` 包中。middleware 包通过类型别名重导出了请求/响应类型（如 `ReadRequest`、`FileContent` 等），但 **Backend 接口本身需要从 adk/filesystem 包引用**。
 
 ```go
-type Config struct {
-    // ... Backend, Shell, StreamingShell, ToolConfig 等字段同 MiddlewareConfig
-
-    // 关闭自动卸载
-    WithoutLargeToolResultOffloading bool
-
-    // 自定义触发阈值（默认 20000 tokens）
-    LargeToolResultOffloadingTokenLimit int
-
-    // 自定义卸载文件生成路径
-    // 默认路径格式: /large_tool_result/{ToolCallID}
-    LargeToolResultOffloadingPathGen func(ctx context.Context, input *compose.ToolInput) (string, error)
+type Backend interface {
+    LsInfo(ctx context.Context, req *LsInfoRequest) ([]FileInfo, error)
+    Read(ctx context.Context, req *ReadRequest) (*FileContent, error)
+    GrepRaw(ctx context.Context, req *GrepRequest) ([]GrepMatch, error)
+    GlobInfo(ctx context.Context, req *GlobInfoRequest) ([]FileInfo, error)
+    Write(ctx context.Context, req *WriteRequest) error
+    Edit(ctx context.Context, req *EditRequest) error
 }
 ```
-</script><h1>FileSystem</h1><header class=article-meta></header><blockquote><p>💡 Package: <a href=https://github.com/cloudwego/eino/tree/main/adk/middlewares/filesystem>github.com/cloudwego/eino/adk/middlewares/filesystem</a></p></blockquote><h2 id=概述>概述</h2><p>FileSystem Middleware 为 Agent 提供文件系统访问能力。它通过 <a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend>FileSystem Backend</a> 接口操作文件系统，自动向 Agent 注入一组文件操作工具及对应的 system prompt，使 Agent 能够直接进行文件读写、搜索、编辑等操作。</p><p>核心功能：</p><ul><li><strong>文件系统工具注入</strong> — 自动注册 ls、read_file、write_file、edit_file、glob、grep 等工具</li><li><strong>Shell 命令执行</strong> — 可选注入 execute 工具，支持同步和流式命令执行</li><li><strong>工具级别配置</strong> — 每个工具均可独立配置名称、描述、自定义实现或禁用</li><li><strong>多语言提示词</strong> — 工具描述和 system prompt 支持中英文切换</li></ul><h2 id=创建中间件>创建中间件</h2><p>推荐使用 <code>New</code> 函数创建中间件（返回 <code>ChatModelAgentMiddleware</code>）：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=s>&#34;github.com/cloudwego/eino/adk/middlewares/filesystem&#34;</span><span class=w>
+
+### Shell 与 StreamingShell
+
+```go
+type Shell interface {
+    Execute(ctx context.Context, input *ExecuteRequest) (*ExecuteResponse, error)
+}
+
+type StreamingShell interface {
+    ExecuteStreaming(ctx context.Context, input *ExecuteRequest) (*schema.StreamReader[*ExecuteResponse], error)
+}
+```
+
+二者互斥，只能设置其中一个。`StreamingShell` 支持流式输出，适合长时间运行的命令。
+
+---
+
+## MultiModalReader 扩展接口
+
+当 `UseMultiModalRead = true` 时，Backend 需要额外实现 `MultiModalReader` 接口：
+
+```go
+type MultiModalReader interface {
+    MultiModalRead(ctx context.Context, req *MultiModalReadRequest) (*MultiFileContent, error)
+}
+```
+
+**行为说明**：
+
+- `read_file` 工具将从 `InvokableTool` 升级为 `EnhancedInvokableTool`，通过 `schema.ToolResult.Parts` 返回多模态结果
+- 默认实现支持读取图片文件（PNG、JPG 等）和 PDF 文件（支持 `pages` 参数指定页面范围，每次最多 20 页）
+- 工具描述会自动追加多模态能力后缀；若通过 `ReadFileToolConfig.Desc` 自定义了描述，则不会追加
+
+> 💡
+> 使用 `ChatModelAgentMiddleware` 时，需要实现 `WrapEnhancedInvokableToolCall` 方法，多模态 read\_file 工具才能生效。
+
+```go
+// MultiModalReadRequest 扩展了 ReadRequest
+type MultiModalReadRequest struct {
+    ReadRequest
+    Pages string  // PDF 页面范围，如 "1-5"、"3"、"10-20"
+}
+
+// MultiFileContent 返回结果
+type MultiFileContent struct {
+    *FileContent            // 纯文本结果
+    Parts []FileContentPart // 多模态结果（与 FileContent 互斥，Parts 非空时忽略 FileContent）
+}
+
+type FileContentPart struct {
+    Type     FileContentPartType // "image" 或 "pdf"
+    MIMEType string              // 如 "image/png"、"application/pdf"
+    Data     []byte              // 原始二进制数据
+}
+```
+
+---
+
+## Deprecated: 旧版 Config 与大结果卸载
+
+> 💡
+> 以下内容仅适用于 `NewMiddleware` + `Config` 旧版路径。`New` / `NewTyped` 路径**不包含**大结果卸载功能。
+
+旧版 `Config` 在 `MiddlewareConfig` 的基础上额外提供了「大工具结果卸载」(Large Tool Result Offloading) 机制：
+
+<table>
+<tr><td>字段</td><td>说明</td></tr>
+<tr><td><pre>WithoutLargeToolResultOffloading bool</pre></td><td>设为 <pre>true</pre> 禁用卸载，默认 <pre>false</pre>（启用）</td></tr>
+<tr><td><pre>LargeToolResultOffloadingTokenLimit int</pre></td><td>Token 阈值，默认 <pre>20000</pre></td></tr>
+<tr><td><pre>LargeToolResultOffloadingPathGen func(ctx, *compose.ToolInput) (string, error)</pre></td><td>卸载路径生成函数，默认 <pre>/large_tool_result/{ToolCallID}</pre></td></tr>
+</table>
+
+**触发条件**：当工具返回结果的字符数 > `tokenLimit × 4` 时触发卸载。
+
+**卸载行为**：将完整结果通过 `Backend.Write` 写入文件，并用摘要（前 10 行 + 文件路径提示）替换原始返回。Agent 可通过 `read_file` 分页读取完整结果。
+</script><h1>FileSystem</h1><header class=article-meta></header><p>FileSystem 中间件为 Agent 注入一组文件系统操作工具（ls、read_file、write_file、edit_file、glob、grep）以及可选的命令执行工具（execute），使 Agent 具备与本地或远程文件系统交互的能力。</p><pre tabindex=0><code>import &#34;github.com/cloudwego/eino/adk/middlewares/filesystem&#34;
+</code></pre><hr><h2 id=快速开始>快速开始</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;context&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/adk&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/adk/middlewares/filesystem&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 1. 创建 middleware</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>middleware</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>MiddlewareConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w> </span><span class=nx>myBackend</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 如果需要 shell 命令执行能力，设置 Shell 或 StreamingShell</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Shell</span><span class=p>:</span><span class=w> </span><span class=nx>myShell</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w> </span><span class=nx>myBackend</span><span class=p>,</span><span class=w> </span><span class=c1>// 实现 filesystem.Backend 接口</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// handle error</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 2. 注入 Agent</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>agent</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewChatModelAgent</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentConfig</span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// ...</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Middlewares</span><span class=p>:</span><span class=w> </span><span class=p>[]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>{</span><span class=nx>middleware</span><span class=p>},</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><blockquote><p>💡
-<code>New</code> 返回 <code>ChatModelAgentMiddleware</code>，提供更好的上下文传播能力（通过 <code>BeforeAgent</code> hook 在运行时修改 Agent 的 instruction 和 tools）。</p></blockquote><h2 id=middlewareconfig-配置项>MiddlewareConfig 配置项</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>MiddlewareConfig</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Backend 提供文件系统操作</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 必填</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>Backend</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Shell 提供 shell 命令执行能力</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 如果设置，会注册 execute 工具</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选，与 StreamingShell 互斥</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Shell</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>Shell</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// StreamingShell 提供流式 shell 命令执行能力</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 如果设置，会注册流式 execute 工具（支持实时输出）</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选，与 Shell 互斥</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>StreamingShell</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>StreamingShell</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 以下为各工具的独立配置，均为可选</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>LsToolConfig</span><span class=w>        </span><span class=o>*</span><span class=nx>ToolConfig</span><span class=w>  </span><span class=c1>// ls 工具配置</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ReadFileToolConfig</span><span class=w>  </span><span class=o>*</span><span class=nx>ToolConfig</span><span class=w>  </span><span class=c1>// read_file 工具配置</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>WriteFileToolConfig</span><span class=w> </span><span class=o>*</span><span class=nx>ToolConfig</span><span class=w>  </span><span class=c1>// write_file 工具配置</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>EditFileToolConfig</span><span class=w>  </span><span class=o>*</span><span class=nx>ToolConfig</span><span class=w>  </span><span class=c1>// edit_file 工具配置</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>GlobToolConfig</span><span class=w>      </span><span class=o>*</span><span class=nx>ToolConfig</span><span class=w>  </span><span class=c1>// glob 工具配置</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>GrepToolConfig</span><span class=w>      </span><span class=o>*</span><span class=nx>ToolConfig</span><span class=w>  </span><span class=c1>// grep 工具配置</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// CustomSystemPrompt 覆盖默认的系统提示词</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选，默认 ToolsSystemPrompt</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomSystemPrompt</span><span class=w> </span><span class=o>*</span><span class=kt>string</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 以下字段已 Deprecated，请使用对应的 *ToolConfig.Desc 替代</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// CustomLsToolDesc, CustomReadFileToolDesc, CustomGrepToolDesc,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// CustomGlobToolDesc, CustomWriteFileToolDesc, CustomEditToolDesc</span><span class=w>
+</span></span></span></code></pre></div><hr><h2 id=构造函数>构造函数</h2><table><tr><td>函数签名</td><td>说明</td></tr><tr><td><pre>New(ctx, *MiddlewareConfig) (ChatModelAgentMiddleware, error)</pre></td><td><strong>推荐</strong>。返回<pre>ChatModelAgentMiddleware</pre>，支持通过<pre>BeforeAgent</pre>钩子动态修改 Instruction 和 Tools。</td></tr><tr><td><pre>NewTyped[M MessageType](ctx, *MiddlewareConfig) (TypedChatModelAgentMiddleware[M], error)</pre></td><td>泛型版本，类型参数<pre>M</pre>支持<pre>*schema.Message</pre>和<pre>*schema.AgenticMessage</pre>。<pre>New</pre>等价于<pre>NewTyped[*schema.Message]</pre>。</td></tr></table><blockquote><p>💡
+<strong>Deprecated</strong>: <code>NewMiddleware(ctx, *Config) (AgentMiddleware, error)</code> 为旧版构造函数，新代码请使用 <code>New</code>。<code>NewMiddleware</code> 返回结构体 <code>AgentMiddleware</code>，缺少 <code>BeforeAgent</code> 钩子的灵活性；此外它默认启用「大结果卸载」功能（见下文），在 <code>New</code> 路径中该功能已被移除。</p></blockquote><hr><h2 id=middlewareconfig>MiddlewareConfig</h2><p><code>MiddlewareConfig</code> 是 <code>New</code> / <code>NewTyped</code> 使用的配置结构体。</p><h3 id=核心字段>核心字段</h3><table><tr><td>字段</td><td>类型</td><td>说明</td></tr><tr><td><pre>Backend</pre></td><td><pre>filesystem.Backend</pre></td><td><strong>必填</strong>。提供文件系统操作能力，驱动 ls、read\_file、write\_file、edit\_file、glob、grep 共 6 个工具。接口定义在<pre>github.com/cloudwego/eino/adk/filesystem</pre>包。</td></tr><tr><td><pre>Shell</pre></td><td><pre>filesystem.Shell</pre></td><td>可选。提供命令执行能力，设置后注册<pre>execute</pre>工具。与<pre>StreamingShell</pre><strong>互斥</strong>。</td></tr><tr><td><pre>StreamingShell</pre></td><td><pre>filesystem.StreamingShell</pre></td><td>可选。提供流式命令执行能力，设置后注册流式<pre>execute</pre>工具。与<pre>Shell</pre><strong>互斥</strong>。</td></tr><tr><td><pre>UseMultiModalRead</pre></td><td><pre>bool</pre></td><td>可选，默认<pre>false</pre>。开启后<pre>read_file</pre>工具变为<pre>EnhancedInvokableTool</pre>，支持返回图片/PDF 等多模态内容。<strong>要求 Backend 同时实现 filesystem.MultiModalReader 接口</strong>。</td></tr><tr><td><pre>CustomSystemPrompt</pre></td><td><pre>*string</pre></td><td>可选。覆盖追加到 Agent Instruction 的系统提示词。若为<pre>nil</pre>，<strong>不追加任何系统提示词</strong>。</td></tr></table><h3 id=工具配置字段>工具配置字段</h3><p>每个工具均有对应的 <code>*ToolConfig</code> 字段，用于自定义工具名称、描述、替换实现或禁用：</p><table><tr><td>字段</td><td>对应工具</td></tr><tr><td><pre>LsToolConfig</pre></td><td>ls</td></tr><tr><td><pre>ReadFileToolConfig</pre></td><td>read\_file</td></tr><tr><td><pre>WriteFileToolConfig</pre></td><td>write\_file</td></tr><tr><td><pre>EditFileToolConfig</pre></td><td>edit\_file</td></tr><tr><td><pre>GlobToolConfig</pre></td><td>glob</td></tr><tr><td><pre>GrepToolConfig</pre></td><td>grep</td></tr></table><blockquote><p><code>execute</code> 工具当前不支持通过 <code>ToolConfig</code> 自定义，其注册仅由 <code>Shell</code> / <code>StreamingShell</code> 是否设置来控制。</p></blockquote><hr><h2 id=toolconfig>ToolConfig</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>ToolConfig</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Name</span><span class=w>       </span><span class=kt>string</span><span class=w>         </span><span class=c1>// 覆盖工具名称，空串使用默认值</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Desc</span><span class=w>       </span><span class=o>*</span><span class=kt>string</span><span class=w>        </span><span class=c1>// 覆盖工具描述，nil 使用默认值</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomTool</span><span class=w> </span><span class=nx>tool</span><span class=p>.</span><span class=nx>BaseTool</span><span class=w>  </span><span class=c1>// 自定义工具实现，设置后替代 Backend 默认实现</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Disable</span><span class=w>    </span><span class=kt>bool</span><span class=w>           </span><span class=c1>// 设为 true 则不注册该工具</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><h3 id=toolconfig>ToolConfig</h3><p>每个工具均可通过 <code>ToolConfig</code> 独立配置：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>ToolConfig</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Name 覆盖工具名称</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选，不设置则使用默认名称（如 &#34;ls&#34;、&#34;read_file&#34; 等）</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Name</span><span class=w> </span><span class=kt>string</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Desc 覆盖工具描述</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选，不设置则使用默认描述</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Desc</span><span class=w> </span><span class=o>*</span><span class=kt>string</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// CustomTool 提供自定义工具实现</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 如果设置，将使用此自定义实现替代基于 Backend 的默认实现</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomTool</span><span class=w> </span><span class=nx>tool</span><span class=p>.</span><span class=nx>BaseTool</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Disable 禁用此工具</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 如果为 true，该工具将不会被注册</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 可选，默认 false</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Disable</span><span class=w> </span><span class=kt>bool</span><span class=w>
+</span></span></span></code></pre></div><p><strong>优先级</strong>：<code>Disable=true</code> > <code>CustomTool</code> > Backend 默认实现。</p><hr><h2 id=工具名称常量>工具名称常量</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>const</span><span class=w> </span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameLs</span><span class=w>        </span><span class=p>=</span><span class=w> </span><span class=s>&#34;ls&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameReadFile</span><span class=w>  </span><span class=p>=</span><span class=w> </span><span class=s>&#34;read_file&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameWriteFile</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=s>&#34;write_file&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameEditFile</span><span class=w>  </span><span class=p>=</span><span class=w> </span><span class=s>&#34;edit_file&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameGlob</span><span class=w>      </span><span class=p>=</span><span class=w> </span><span class=s>&#34;glob&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameGrep</span><span class=w>      </span><span class=p>=</span><span class=w> </span><span class=s>&#34;grep&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolNameExecute</span><span class=w>   </span><span class=p>=</span><span class=w> </span><span class=s>&#34;execute&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><hr><h2 id=注入的工具>注入的工具</h2><table><tr><td>工具</td><td>默认名称</td><td>注册条件</td><td>功能说明</td></tr><tr><td>ls</td><td><pre>ls</pre></td><td>Backend ≠ nil</td><td>列出目录下的文件和子目录</td></tr><tr><td>read\_file</td><td><pre>read_file</pre></td><td>Backend ≠ nil</td><td>读取文件内容，支持 offset/limit 分页。开启<pre>UseMultiModalRead</pre>后可读取图片和 PDF</td></tr><tr><td>write\_file</td><td><pre>write_file</pre></td><td>Backend ≠ nil</td><td>创建或覆盖写入文件</td></tr><tr><td>edit\_file</td><td><pre>edit_file</pre></td><td>Backend ≠ nil</td><td>精确字符串替换编辑，支持<pre>replace_all</pre></td></tr><tr><td>glob</td><td><pre>glob</pre></td><td>Backend ≠ nil</td><td>按 glob 模式匹配文件路径</td></tr><tr><td>grep</td><td><pre>grep</pre></td><td>Backend ≠ nil</td><td>正则搜索文件内容，支持多种输出模式和分页</td></tr><tr><td>execute</td><td><pre>execute</pre></td><td>Shell ≠ nil 或 StreamingShell ≠ nil</td><td>执行 Shell 命令</td></tr></table><hr><h2 id=backend-接口>Backend 接口</h2><p><code>Backend</code> 定义在 <code>github.com/cloudwego/eino/adk/filesystem</code> 包中。middleware 包通过类型别名重导出了请求/响应类型（如 <code>ReadRequest</code>、<code>FileContent</code> 等），但 <strong>Backend 接口本身需要从 adk/filesystem 包引用</strong>。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Backend</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>LsInfo</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>LsInfoRequest</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>FileInfo</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Read</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>ReadRequest</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>FileContent</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>GrepRaw</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>GrepRequest</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>GrepMatch</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>GlobInfo</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>GlobInfoRequest</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>FileInfo</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Write</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>WriteRequest</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Edit</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>EditRequest</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><p>示例 — 自定义工具名称并禁用写入：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>middleware</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>MiddlewareConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w> </span><span class=nx>myBackend</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ReadFileToolConfig</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>ToolConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>Name</span><span class=p>:</span><span class=w> </span><span class=s>&#34;cat_file&#34;</span><span class=p>,</span><span class=w>  </span><span class=c1>// 自定义名称</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>WriteFileToolConfig</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>ToolConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>Disable</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=p>,</span><span class=w>  </span><span class=c1>// 禁用写入工具</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><h2 id=注入的工具>注入的工具</h2><table><tr><td>工具</td><td>默认名称</td><td>描述</td><td>条件</td></tr><tr><td>列出目录</td><td><pre>ls</pre></td><td>列出指定路径下的文件和目录</td><td>Backend 不为 nil 时注入</td></tr><tr><td>读取文件</td><td><pre>read_file</pre></td><td>读取文件内容，支持按行分页（offset + limit）</td><td>Backend 不为 nil 时注入</td></tr><tr><td>写入文件</td><td><pre>write_file</pre></td><td>创建或覆盖文件</td><td>Backend 不为 nil 时注入</td></tr><tr><td>编辑文件</td><td><pre>edit_file</pre></td><td>替换文件中的字符串</td><td>Backend 不为 nil 时注入</td></tr><tr><td>Glob 查找</td><td><pre>glob</pre></td><td>按 glob pattern 查找文件</td><td>Backend 不为 nil 时注入</td></tr><tr><td>内容搜索</td><td><pre>grep</pre></td><td>按 pattern 搜索文件内容，支持多种输出模式</td><td>Backend 不为 nil 时注入</td></tr><tr><td>命令执行</td><td><pre>execute</pre></td><td>执行 shell 命令</td><td>需配置 Shell 或 StreamingShell</td></tr></table><p>每个工具均可通过对应的 <code>*ToolConfig</code> 禁用（<code>Disable: true</code>）或提供自定义实现（<code>CustomTool</code>）。</p><h2 id=多语言支持>多语言支持</h2><p>工具描述和内置提示词默认为英文。如需切换为中文，可通过 <code>adk.SetLanguage()</code> 设置：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=s>&#34;github.com/cloudwego/eino/adk&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>adk</span><span class=p>.</span><span class=nf>SetLanguage</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>LanguageChinese</span><span class=p>)</span><span class=w>  </span><span class=c1>// 切换为中文</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>adk</span><span class=p>.</span><span class=nf>SetLanguage</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>LanguageEnglish</span><span class=p>)</span><span class=w>  </span><span class=c1>// 切换为英文（默认）</span><span class=w>
-</span></span></span></code></pre></div><p>也可以通过 <code>ToolConfig.Desc</code> 或 <code>CustomSystemPrompt</code> 自定义各工具的说明文本。</p><h2 id=deprecated-工具结果卸载>[deprecated] 工具结果卸载</h2><blockquote><p>💡
-该功能即将在 0.8.0 中 deprecate。请迁移到 Middleware: ToolReduction</p></blockquote><blockquote><p>注意：工具结果卸载仅在旧的 <code>Config</code> + <code>NewMiddleware</code> 函数中可用。推荐的 <code>MiddlewareConfig</code> + <code>New</code> 不包含此功能，如需要请配合 ToolReduction middleware 使用。</p></blockquote><p>当工具调用结果过大（例如读取大文件、grep 命中大量内容），如果继续将完整结果放入对话上下文，会导致：</p><ul><li>token 急剧增加</li><li>Agent 历史上下文污染</li><li>推理效率变差</li></ul><p>为此，旧版 Middleware（<code>NewMiddleware</code>）提供了自动卸载机制：</p><ul><li>当结果大小超过阈值（默认 20,000 tokens）时，不直接返回全部内容给 LLM</li><li>实际结果会保存到文件系统（Backend）</li><li>上下文中仅包含摘要和文件路径（Agent 可再次调用 <code>read_file</code> 工具按需读取）</li></ul><p>该功能默认启用，可通过 <code>Config</code>（非 <code>MiddlewareConfig</code>）配置：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Config</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// ... Backend, Shell, StreamingShell, ToolConfig 等字段同 MiddlewareConfig</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 关闭自动卸载</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>WithoutLargeToolResultOffloading</span><span class=w> </span><span class=kt>bool</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 自定义触发阈值（默认 20000 tokens）</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>LargeToolResultOffloadingTokenLimit</span><span class=w> </span><span class=kt>int</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 自定义卸载文件生成路径</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 默认路径格式: /large_tool_result/{ToolCallID}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>LargeToolResultOffloadingPathGen</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=w> </span><span class=o>*</span><span class=nx>compose</span><span class=p>.</span><span class=nx>ToolInput</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><h3 id=shell-与-streamingshell>Shell 与 StreamingShell</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Shell</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Execute</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=w> </span><span class=o>*</span><span class=nx>ExecuteRequest</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>ExecuteResponse</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
-<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 March 24, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/df16769c7a363b99d877c61e88d3057721ae70af>docs(eino): sync docs from feishu (2026-03-24) (#1527) (df16769c7)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>StreamingShell</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>ExecuteStreaming</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=w> </span><span class=o>*</span><span class=nx>ExecuteRequest</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>StreamReader</span><span class=p>[</span><span class=o>*</span><span class=nx>ExecuteResponse</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><p>二者互斥，只能设置其中一个。<code>StreamingShell</code> 支持流式输出，适合长时间运行的命令。</p><hr><h2 id=multimodalreader-扩展接口>MultiModalReader 扩展接口</h2><p>当 <code>UseMultiModalRead = true</code> 时，Backend 需要额外实现 <code>MultiModalReader</code> 接口：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>MultiModalReader</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>MultiModalRead</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>req</span><span class=w> </span><span class=o>*</span><span class=nx>MultiModalReadRequest</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>MultiFileContent</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><p><strong>行为说明</strong>：</p><ul><li><code>read_file</code> 工具将从 <code>InvokableTool</code> 升级为 <code>EnhancedInvokableTool</code>，通过 <code>schema.ToolResult.Parts</code> 返回多模态结果</li><li>默认实现支持读取图片文件（PNG、JPG 等）和 PDF 文件（支持 <code>pages</code> 参数指定页面范围，每次最多 20 页）</li><li>工具描述会自动追加多模态能力后缀；若通过 <code>ReadFileToolConfig.Desc</code> 自定义了描述，则不会追加</li></ul><blockquote><p>💡
+使用 <code>ChatModelAgentMiddleware</code> 时，需要实现 <code>WrapEnhancedInvokableToolCall</code> 方法，多模态 read_file 工具才能生效。</p></blockquote><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// MultiModalReadRequest 扩展了 ReadRequest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>MultiModalReadRequest</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ReadRequest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Pages</span><span class=w> </span><span class=kt>string</span><span class=w>  </span><span class=c1>// PDF 页面范围，如 &#34;1-5&#34;、&#34;3&#34;、&#34;10-20&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// MultiFileContent 返回结果</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>MultiFileContent</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=o>*</span><span class=nx>FileContent</span><span class=w>            </span><span class=c1>// 纯文本结果</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Parts</span><span class=w> </span><span class=p>[]</span><span class=nx>FileContentPart</span><span class=w> </span><span class=c1>// 多模态结果（与 FileContent 互斥，Parts 非空时忽略 FileContent）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>FileContentPart</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Type</span><span class=w>     </span><span class=nx>FileContentPartType</span><span class=w> </span><span class=c1>// &#34;image&#34; 或 &#34;pdf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>MIMEType</span><span class=w> </span><span class=kt>string</span><span class=w>              </span><span class=c1>// 如 &#34;image/png&#34;、&#34;application/pdf&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Data</span><span class=w>     </span><span class=p>[]</span><span class=kt>byte</span><span class=w>              </span><span class=c1>// 原始二进制数据</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><hr><h2 id=deprecated-旧版-config-与大结果卸载>Deprecated: 旧版 Config 与大结果卸载</h2><blockquote><p>💡
+以下内容仅适用于 <code>NewMiddleware</code> + <code>Config</code> 旧版路径。<code>New</code> / <code>NewTyped</code> 路径<strong>不包含</strong>大结果卸载功能。</p></blockquote><p>旧版 <code>Config</code> 在 <code>MiddlewareConfig</code> 的基础上额外提供了「大工具结果卸载」(Large Tool Result Offloading) 机制：</p><table><tr><td>字段</td><td>说明</td></tr><tr><td><pre>WithoutLargeToolResultOffloading bool</pre></td><td>设为<pre>true</pre>禁用卸载，默认<pre>false</pre>（启用）</td></tr><tr><td><pre>LargeToolResultOffloadingTokenLimit int</pre></td><td>Token 阈值，默认<pre>20000</pre></td></tr><tr><td><pre>LargeToolResultOffloadingPathGen func(ctx, *compose.ToolInput) (string, error)</pre></td><td>卸载路径生成函数，默认<pre>/large_tool_result/{ToolCallID}</pre></td></tr></table><p><strong>触发条件</strong>：当工具返回结果的字符数 > <code>tokenLimit × 4</code> 时触发卸载。</p><p><strong>卸载行为</strong>：将完整结果通过 <code>Backend.Write</code> 写入文件，并用摘要（前 10 行 + 文件路径提示）替换原始返回。Agent 可通过 <code>read_file</code> 分页读取完整结果。</p><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 May 21, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/14c457e4b31e5215ffb722a7f0d1c47dae30835d>docs(eino): sync docs from feishu (2026-05-21) (#1545) (14c457e4b)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
 |
 <a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.7f61069e37ab04943083fa2376368a557ccd2a7d7da9f302c9b6030b765fc76f.js integrity="sha256-f2EGnjerBJQwg/ojdjaKVXzNKn19qfMCybYDC3Zfx28=" crossorigin=anonymous></script><script defer src=/js/click-to-copy.min.383b566d46ea827745a12d56f9f3bafd4eea8f8788fe225e4d72ff25e2752b35.js integrity="sha256-ODtWbUbqgndFoS1W+fO6/U7qj4eI/iJeTXL/JeJ1KzU=" crossorigin=anonymous></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>

@@ -1,16 +1,16 @@
-<!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>Skill | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="Skill"><meta property="og:description" content="Skill Middleware 为 Eino ADK Agent 提供了 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来更准确、高效地完成任务。
-什么是 Skill Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。 Skill 的核心是一个 SKILL.md 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行特定任务的说明。
+<!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>Skill | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="Skill"><meta property="og:description" content="Skill Middleware 为 Eino ADK Agent 提供 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来完成任务。
+什么是 Skill Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。核心是 SKILL.md 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行任务的说明。
 my-skill/ ├── SKILL.md # 必需：指令 + 元数据 ├── scripts/ # 可选：可执行代码 ├── references/ # 可选：参考文档 └── assets/ # 可选：模板、资源 Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下文：
-发现（Discovery）：启动时，Agent 仅加载每个可用 Skill 的名称和描述，足以判断何时可能需要使用该 Skill 激活**（Activation）**：当任务匹配某个 Skill 的描述时，Agent 将完整的 SKILL.md 内容读入上下文 执行（Execution）：Agent 遵循指令执行任务，也可以根据需要加载其他文件或执行捆绑的代码这种方式让 Agent 保持快速响应，同时能够按需访问更多上下文。 💡 Ref: https://agentskills.io/home
-接口介绍 FrontMatter Skill 的元数据结构，用于在发现阶段快速展示 Skill 信息，避免加载完整内容："><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-03-24T00:00:00+00:00"><meta property="article:modified_time" content="2026-03-24T20:03:40+08:00"><meta itemprop=name content="Skill"><meta itemprop=description content="Skill Middleware 为 Eino ADK Agent 提供了 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来更准确、高效地完成任务。
-什么是 Skill Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。 Skill 的核心是一个 SKILL.md 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行特定任务的说明。
+发现（Discovery）：Agent 仅加载每个可用 Skill 的 name 和 description，足以判断何时可能需要使用该 Skill 激活（Activation）：当任务匹配某个 Skill 时，Agent 将完整的 SKILL.md 内容读入上下文 执行（Execution）：Agent 遵循指令执行任务，按需加载其他文件或执行捆绑代码 💡 Ref: https://agentskills.io/home
+接口介绍 FrontMatter Skill 的元数据结构，从 SKILL.md 的 YAML frontmatter 中解析。用于在发现阶段快速展示 Skill 信息："><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-05-17T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-21T19:31:45+08:00"><meta itemprop=name content="Skill"><meta itemprop=description content="Skill Middleware 为 Eino ADK Agent 提供 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来完成任务。
+什么是 Skill Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。核心是 SKILL.md 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行任务的说明。
 my-skill/ ├── SKILL.md # 必需：指令 + 元数据 ├── scripts/ # 可选：可执行代码 ├── references/ # 可选：参考文档 └── assets/ # 可选：模板、资源 Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下文：
-发现（Discovery）：启动时，Agent 仅加载每个可用 Skill 的名称和描述，足以判断何时可能需要使用该 Skill 激活**（Activation）**：当任务匹配某个 Skill 的描述时，Agent 将完整的 SKILL.md 内容读入上下文 执行（Execution）：Agent 遵循指令执行任务，也可以根据需要加载其他文件或执行捆绑的代码这种方式让 Agent 保持快速响应，同时能够按需访问更多上下文。 💡 Ref: https://agentskills.io/home
-接口介绍 FrontMatter Skill 的元数据结构，用于在发现阶段快速展示 Skill 信息，避免加载完整内容："><meta itemprop=datePublished content="2026-03-24T00:00:00+00:00"><meta itemprop=dateModified content="2026-03-24T20:03:40+08:00"><meta itemprop=wordCount content="1299"><meta name=twitter:card content="summary"><meta name=twitter:title content="Skill"><meta name=twitter:description content="Skill Middleware 为 Eino ADK Agent 提供了 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来更准确、高效地完成任务。
-什么是 Skill Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。 Skill 的核心是一个 SKILL.md 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行特定任务的说明。
+发现（Discovery）：Agent 仅加载每个可用 Skill 的 name 和 description，足以判断何时可能需要使用该 Skill 激活（Activation）：当任务匹配某个 Skill 时，Agent 将完整的 SKILL.md 内容读入上下文 执行（Execution）：Agent 遵循指令执行任务，按需加载其他文件或执行捆绑代码 💡 Ref: https://agentskills.io/home
+接口介绍 FrontMatter Skill 的元数据结构，从 SKILL.md 的 YAML frontmatter 中解析。用于在发现阶段快速展示 Skill 信息："><meta itemprop=datePublished content="2026-05-17T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-21T19:31:45+08:00"><meta itemprop=wordCount content="619"><meta name=twitter:card content="summary"><meta name=twitter:title content="Skill"><meta name=twitter:description content="Skill Middleware 为 Eino ADK Agent 提供 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来完成任务。
+什么是 Skill Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。核心是 SKILL.md 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行任务的说明。
 my-skill/ ├── SKILL.md # 必需：指令 + 元数据 ├── scripts/ # 可选：可执行代码 ├── references/ # 可选：参考文档 └── assets/ # 可选：模板、资源 Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下文：
-发现（Discovery）：启动时，Agent 仅加载每个可用 Skill 的名称和描述，足以判断何时可能需要使用该 Skill 激活**（Activation）**：当任务匹配某个 Skill 的描述时，Agent 将完整的 SKILL.md 内容读入上下文 执行（Execution）：Agent 遵循指令执行任务，也可以根据需要加载其他文件或执行捆绑的代码这种方式让 Agent 保持快速响应，同时能够按需访问更多上下文。 💡 Ref: https://agentskills.io/home
-接口介绍 FrontMatter Skill 的元数据结构，用于在发现阶段快速展示 Skill 信息，避免加载完整内容："><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
+发现（Discovery）：Agent 仅加载每个可用 Skill 的 name 和 description，足以判断何时可能需要使用该 Skill 激活（Activation）：当任务匹配某个 Skill 时，Agent 将完整的 SKILL.md 内容读入上下文 执行（Execution）：Agent 遵循指令执行任务，按需加载其他文件或执行捆绑代码 💡 Ref: https://agentskills.io/home
+接口介绍 FrontMatter Skill 的元数据结构，从 SKILL.md 的 YAML frontmatter 中解析。用于在发现阶段快速展示 Skill 信息："><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
 </a><button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#main_navbar aria-controls=main_navbar aria-expanded=false aria-label="Toggle navigation">
 <span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0 ms-auto"><li class="dropdown sub-menu active"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>文档</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=/zh/docs/kitex/>Kitex</a>
 <a class=dropdown-item href=/zh/docs/hertz/>Hertz</a>
@@ -34,7 +34,8 @@ Auto
 <label for=m-zhdocseinoovervieweino_open_source-check><a href=/zh/docs/eino/overview/eino_open_source/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_open_source><span>大语言模型应用开发框架 —— Eino 正式开源！</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk0_1-li><input type=checkbox id=m-zhdocseinoovervieweino_adk0_1-check>
 <label for=m-zhdocseinoovervieweino_adk0_1-check><a href=/zh/docs/eino/overview/eino_adk0_1/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk0_1><span>Eino ADK：一文搞定 AI Agent 核心设计模式，从 0 到 1 搭建智能体系统</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_excel_agent-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_excel_agent-check>
 <label for=m-zhdocseinoovervieweino_adk_excel_agent-check><a href=/zh/docs/eino/overview/eino_adk_excel_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_excel_agent><span>用 Eino ADK 构建你的第一个 AI 智能体：从 Excel Agent 实战开始</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinooverviewgraph_or_agent-li><input type=checkbox id=m-zhdocseinooverviewgraph_or_agent-check>
-<label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
+<label for=m-zhdocseinooverviewgraph_or_agent-check><a href=/zh/docs/eino/overview/graph_or_agent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinooverviewgraph_or_agent><span>Agent 还是 Graph？AI 应用路线辨析</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoovervieweino_adk_quickstart-li><input type=checkbox id=m-zhdocseinoovervieweino_adk_quickstart-check>
+<label for=m-zhdocseinoovervieweino_adk_quickstart-check><a href=/zh/docs/eino/overview/eino_adk_quickstart/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoovervieweino_adk_quickstart><span>五分钟上手 Eino ADK</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinoquick_start-li><input type=checkbox id=m-zhdocseinoquick_start-check checked>
 <label for=m-zhdocseinoquick_start-check><a href=/zh/docs/eino/quick_start/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinoquick_start><span>快速开始</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-li><input type=checkbox id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check>
 <label for=m-zhdocseinoquick_startchapter_01_chatmodel_and_message-check><a href=/zh/docs/eino/quick_start/chapter_01_chatmodel_and_message/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_01_chatmodel_and_message><span>第一章：ChatModel 与 Message（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-li><input type=checkbox id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check>
 <label for=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent-check><a href=/zh/docs/eino/quick_start/chapter_02_chatmodelagent_runner_agentevent/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_02_chatmodelagent_runner_agentevent><span>第二章：ChatModelAgent、Runner、AgentEvent（Console 多轮）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_03_memory_and_session-li><input type=checkbox id=m-zhdocseinoquick_startchapter_03_memory_and_session-check>
@@ -44,8 +45,9 @@ Auto
 <label for=m-zhdocseinoquick_startchapter_06_callback_and_trace-check><a href=/zh/docs/eino/quick_start/chapter_06_callback_and_trace/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_06_callback_and_trace><span>第六章：Callback 与 Trace（可观测性）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_07_interrupt_resume-li><input type=checkbox id=m-zhdocseinoquick_startchapter_07_interrupt_resume-check>
 <label for=m-zhdocseinoquick_startchapter_07_interrupt_resume-check><a href=/zh/docs/eino/quick_start/chapter_07_interrupt_resume/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_07_interrupt_resume><span>第七章：Interrupt/Resume（中断与恢复）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_08_graph_tool-li><input type=checkbox id=m-zhdocseinoquick_startchapter_08_graph_tool-check>
 <label for=m-zhdocseinoquick_startchapter_08_graph_tool-check><a href=/zh/docs/eino/quick_start/chapter_08_graph_tool/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_08_graph_tool><span>第八章：Graph Tool（复杂工作流）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_skill_console-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_skill_console-check>
-<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill（Console）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check>
-<label for=m-zhdocseinoquick_startchapter_09_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_09_a2ui_protocol/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_a2ui_protocol><span>第十章：A2UI 协议（流式 UI 组件）</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
+<label for=m-zhdocseinoquick_startchapter_09_skill_console-check><a href=/zh/docs/eino/quick_start/chapter_09_skill_console/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_09_skill_console><span>第九章：Skill Middleware</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_10_a2ui_protocol-li><input type=checkbox id=m-zhdocseinoquick_startchapter_10_a2ui_protocol-check>
+<label for=m-zhdocseinoquick_startchapter_10_a2ui_protocol-check><a href=/zh/docs/eino/quick_start/chapter_10_a2ui_protocol/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_10_a2ui_protocol><span>第十章：A2UI 协议（流式 UI 组件）</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinoquick_startchapter_11_turnloop-li><input type=checkbox id=m-zhdocseinoquick_startchapter_11_turnloop-check>
+<label for=m-zhdocseinoquick_startchapter_11_turnloop-check><a href=/zh/docs/eino/quick_start/chapter_11_turnloop/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinoquick_startchapter_11_turnloop><span>第十一章：TurnLoop — 抢占、中止与多轮生命周期</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocookbook-li><input type=checkbox id=m-zhdocseinocookbook-check checked>
 <label for=m-zhdocseinocookbook-check><a href=/zh/docs/eino/cookbook/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocookbook><span>Cookbook</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_modules-li><input type=checkbox id=m-zhdocseinocore_modules-check checked>
 <label for=m-zhdocseinocore_modules-check><a href=/zh/docs/eino/core_modules/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modules><span>核心模块</span></a></label><ul class="ul-3 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponents-li><input type=checkbox id=m-zhdocseinocore_modulescomponents-check>
 <label for=m-zhdocseinocore_modulescomponents-check><a href=/zh/docs/eino/core_modules/components/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulescomponents><span>Components 组件</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-li><input type=checkbox id=m-zhdocseinocore_modulescomponentsdocument_loader_guide-check>
@@ -79,18 +81,17 @@ Auto
 <label for=m-zhdocseinocore_moduleseino_adkagent_preview-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_preview/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_preview><span>概述</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_interface-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_interface-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_interface-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_interface/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_interface><span>Agent 抽象</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_collaboration-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_collaboration-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_collaboration-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_collaboration/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_collaboration><span>Agent 协作</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkagent_implementation-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementation-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementation-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementation><span>Agent 实现</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model><span>ChatModelAgent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/workflow/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationworkflow><span>Workflow Agents</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-check>
-<label for=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/supervisor/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationsupervisor><span>Supervisor Agent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementation-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementation><span>Agent 实现</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_model><span>ChatModelAgent</span></a></label><ul class="ul-6 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/chat_model/chatmodel_failover_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationchat_modelchatmodel_failover_guide><span>ChatModel Failover 功能文档</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/plan_execute/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationplan_execute><span>Plan-Execute Agent</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_implementation/deepagents/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_implementationdeepagents><span>DeepAgents</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_extension-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_extension-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_extension-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_extension/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_extension><span>Agent Runner 与扩展</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_hitl-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_hitl-check>
 <label for=m-zhdocseinocore_moduleseino_adkagent_hitl-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_hitl/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_hitl><span>Eino human-in-the-loop框架：技术架构指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-check checked>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddleware><span>ChatModelAgentMiddleware</span></a></label><ul class="ul-5 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backend><span>FileSystem Backend</span></a></label><ul class="ul-6 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check>
-<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_ark_agentkit_sandbox/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox><span>Ark Agentkit Sandbox</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-check>
-<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_e69cace59cb0e69687e4bbb6e7b3bbe7bb9f><span>本地文件系统</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check>
+<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_ark_agentkit_sandbox/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_ark_agentkit_sandbox><span>Ark Agentkit Sandbox</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-check>
+<label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/filesystem_backend/backend_local_filesystem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewarefilesystem_backendbackend_local_filesystem><span>本地文件系统</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_filesystem><span>FileSystem</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-check checked>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/ class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_skill><span class=td-sidebar-nav-active-item>Skill</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_summarization/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_summarization><span>Summarization</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolreduction-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolreduction-check>
@@ -99,7 +100,8 @@ Auto
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolsearch-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_toolsearch/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_toolsearch><span>ToolSearch</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_patchtoolcalls/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_patchtoolcalls><span>PatchToolCalls</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-check>
 <label for=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd-check><a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_agentsmd/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkeino_adk_chatmodelagentmiddlewaremiddleware_agentsmd><span>AgentsMD</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check>
-<label for=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check><a href=/zh/docs/eino/core_modules/eino_adk/adk_agent_callback/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback><span>Agent Callback</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulesdevops-li><input type=checkbox id=m-zhdocseinocore_modulesdevops-check>
+<label for=m-zhdocseinocore_moduleseino_adkadk_agent_callback-check><a href=/zh/docs/eino/core_modules/eino_adk/adk_agent_callback/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkadk_agent_callback><span>Agent Callback</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-li><input type=checkbox id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-check>
+<label for=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart-check><a href=/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_moduleseino_adkagent_cancel_and_turnloop_quickstart><span>Agent Cancel 与 TurnLoop 快速入门</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinocore_modulesdevops-li><input type=checkbox id=m-zhdocseinocore_modulesdevops-check>
 <label for=m-zhdocseinocore_modulesdevops-check><a href=/zh/docs/eino/core_modules/devops/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinocore_modulesdevops><span>应用开发工具链</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopside_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopside_plugin_guide-check>
 <label for=m-zhdocseinocore_modulesdevopside_plugin_guide-check><a href=/zh/docs/eino/core_modules/devops/ide_plugin_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_modulesdevopside_plugin_guide><span>Eino Dev 插件安装指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-check>
 <label for=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide-check><a href=/zh/docs/eino/core_modules/devops/visual_orchestration_plugin_guide/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinocore_modulesdevopsvisual_orchestration_plugin_guide><span>Eino Dev 可视化编排插件功能指南</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinocore_modulesdevopsvisual_debug_plugin_guide-li><input type=checkbox id=m-zhdocseinocore_modulesdevopsvisual_debug_plugin_guide-check>
@@ -123,12 +125,14 @@ Auto
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v05_-adk_implementation-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.5._-adk_implementation/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v05_-adk_implementation><span>v0.5.*-ADK implementation</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-check>
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.6._-jsonschema_optimization/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v06_-jsonschema_optimization><span>v0.6.*-jsonschema optimization</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-check>
 <label for=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.7._-interrupt_resume_refactor/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v07_-interrupt_resume_refactor><span>v0.7.*-interrupt resume refactor</span></a></label></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check>
-<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares><span>v0.8.*-adk middlewares</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-check>
-<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_%E4%B8%8D%E5%85%BC%E5%AE%B9%E6%9B%B4%E6%96%B0/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_e4b88de585bce5aeb9e69bb4e696b0><span>Eino v0.8 不兼容更新</span></a></label></li></ul></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinofaq-li><input type=checkbox id=m-zhdocseinofaq-check checked>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewares><span>v0.8.*-adk middlewares</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.8._-adk_middlewares/eino_v0.8_breaking_changes/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v08_-adk_middlewareseino_v08_breaking_changes><span>Eino v0.8 不兼容更新</span></a></label></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.9._agentic-runtime/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtime><span>v0.9.* agentic-runtime</span></a></label><ul class="ul-4 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-li><input type=checkbox id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-check>
+<label for=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes-check><a href=/zh/docs/eino/release_notes_and_migration/eino_v0.9._agentic-runtime/eino_v0.9_migration_notes/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinorelease_notes_and_migrationeino_v09_agentic-runtimeeino_v09_migration_notes><span>Eino V0.9 更新注意事项</span></a></label></li></ul></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-zhdocseinofaq-li><input type=checkbox id=m-zhdocseinofaq-check checked>
 <label for=m-zhdocseinofaq-check><a href=/zh/docs/eino/faq/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinofaq><span>FAQ</span></a></label></li></ul></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ms-2 pb-1 pt-2 mb-0"><a href=https://github.com/cloudwego/cloudwego.github.io/edit/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware/Middleware_Skill.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/new/main/content/zh/docs/eino/core_modules/eino_adk/Eino_ADK_ChatModelAgentMiddleware?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/issues/new?title=Skill" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-brands fa-github fa-fw"></i> 提交文档问题</a>
-<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#frontmatter>FrontMatter</a><ul><li><a href=#contextmode-上下文模式>ContextMode 上下文模式</a></li></ul></li><li><a href=#skill>Skill</a></li><li><a href=#backend>Backend</a><ul><li><a href=#newbackendfromfilesystem><strong>NewBackendFromFilesystem</strong></a></li><li><a href=#filesystembackend-实现><strong>filesystem.Backend 实现</strong></a></li></ul></li><li><a href=#agenthub-和-modelhub>AgentHub 和 ModelHub</a><ul><li></li></ul></li><li><a href=#初始化>初始化</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/>Skill</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=Skill data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
+<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#frontmatter>FrontMatter</a><ul><li><a href=#contextmode>ContextMode</a></li></ul></li><li><a href=#skill>Skill</a></li><li><a href=#backend>Backend</a><ul><li><a href=#newbackendfromfilesystem>NewBackendFromFilesystem</a></li></ul></li><li><a href=#agenthub-和-modelhub>AgentHub 和 ModelHub</a></li><li><a href=#subagentinput-和-subagentoutput>SubAgentInput 和 SubAgentOutput</a></li></ul><ul><li><a href=#config>Config</a></li><li><a href=#newmiddleware>NewMiddleware</a></li><li><a href=#使用示例>使用示例</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/>ChatModelAgentMiddleware</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/>Skill</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title=Skill data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_skill/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
 <i class="fa-regular fa-copy"></i>
 <span>复制全文</span>
 </button>
@@ -138,11 +142,11 @@ Auto
 </button>
 <button class=dropdown-item data-copy-type=text>
 复制文本</button></div><div class=copy-fulltext__toast id=copy-fulltext-toast></div></div><script id=copy-fulltext-markdown type=text/plain>
-Skill Middleware 为 Eino ADK Agent 提供了 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来更准确、高效地完成任务。
+Skill Middleware 为 Eino ADK Agent 提供 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来完成任务。
 
 # 什么是 Skill
 
-Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。 Skill 的核心是一个 `SKILL.md` 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行特定任务的说明。
+Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。核心是 `SKILL.md` 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行任务的说明。
 
 ```
 my-skill/
@@ -154,9 +158,11 @@ my-skill/
 
 Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下文：
 
-1. **发现（Discovery）**：启动时，Agent 仅加载每个可用 Skill 的名称和描述，足以判断何时可能需要使用该 Skill
-2. **激活****（Activation）**：当任务匹配某个 Skill 的描述时，Agent 将完整的 `SKILL.md` 内容读入上下文
-3. **执行（Execution）**：Agent 遵循指令执行任务，也可以根据需要加载其他文件或执行捆绑的代码这种方式让 Agent 保持快速响应，同时能够按需访问更多上下文。
+<a href="/img/eino/X9I4wGCprhpho7bXk6icMHmwnRb.png" target="_blank"><img src="/img/eino/X9I4wGCprhpho7bXk6icMHmwnRb.png" width="100%" /></a>
+
+1. **发现（Discovery）**：Agent 仅加载每个可用 Skill 的 name 和 description，足以判断何时可能需要使用该 Skill
+2. **激活（Activation）**：当任务匹配某个 Skill 时，Agent 将完整的 `SKILL.md` 内容读入上下文
+3. **执行（Execution）**：Agent 遵循指令执行任务，按需加载其他文件或执行捆绑代码
 
 > 💡
 > Ref: [https://agentskills.io/home](https://agentskills.io/home)
@@ -165,7 +171,7 @@ Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下
 
 ## FrontMatter
 
-Skill 的元数据结构，用于在发现阶段快速展示 Skill 信息，避免加载完整内容：
+Skill 的元数据结构，从 SKILL.md 的 YAML frontmatter 中解析。用于在发现阶段快速展示 Skill 信息：
 
 ```go
 type FrontMatter struct {
@@ -179,14 +185,14 @@ type FrontMatter struct {
 
 <table>
 <tr><td>字段</td><td>类型</td><td>说明</td></tr>
-<tr><td><pre>Name</pre></td><td><pre>string</pre></td><td>Skill 的唯一标识符。Agent 通过此名称调用 Skill ，建议使用简短、有意义的名称（如 <pre>pdf-processing</pre>、<pre>web-research</pre>）。对应 SKILL.md 中 frontmatter 的 <pre>name</pre> 字段</td></tr>
-<tr><td><pre>Description</pre></td><td><pre>string</pre></td><td>Skill 的功能描述。这是 Agent 判断是否使用该 Skill 的关键依据，应清晰说明技 Skill 能适用的场景和能力。对应 SKILL.md 中 frontmatter 的 <pre>description</pre> 字段</td></tr>
-<tr><td><pre>Context</pre></td><td><pre>ContextMode</pre></td><td>上下文模式。可选值：<pre>fork_with_context</pre>（复制历史消息创建新 Agent 执行）、<pre>fork</pre>（隔离上下文创建新 Agent 执行）。留空表示内联模式（直接返回 Skill 内容）</td></tr>
-<tr><td><pre>Agent</pre></td><td><pre>string</pre></td><td>指定使用的 Agent 名称。配合 <pre>Context</pre> 字段使用，通过 <pre>AgentHub</pre> 获取对应的 Agent 工厂函数。留空时使用默认 Agent</td></tr>
-<tr><td><pre>Model</pre></td><td><pre>string</pre></td><td>指定使用的模型名称。通过 <pre>ModelHub</pre> 获取对应的模型实例。在 Context 模式下传递给 Agent 工厂；在内联模式下切换后续 ChatModel 调用使用的模型</td></tr>
+<tr><td><pre>Name</pre></td><td><pre>string</pre></td><td>Skill 的唯一标识符。建议使用简短、有意义的名称（如 <pre>pdf-processing</pre>、<pre>web-research</pre>）</td></tr>
+<tr><td><pre>Description</pre></td><td><pre>string</pre></td><td>Skill 的功能描述。Agent 判断是否使用该 Skill 的关键依据，应清晰说明适用场景和能力</td></tr>
+<tr><td><pre>Context</pre></td><td><pre>ContextMode</pre></td><td>上下文模式。可选值：<pre>fork</pre>（隔离上下文）、<pre>fork_with_context</pre>（复制历史消息）。留空表示内联模式</td></tr>
+<tr><td><pre>Agent</pre></td><td><pre>string</pre></td><td>指定使用的 Agent 名称，配合 <pre>Context</pre> 使用，通过 <pre>AgentHub</pre> 获取对应 Agent。留空使用默认 Agent</td></tr>
+<tr><td><pre>Model</pre></td><td><pre>string</pre></td><td>指定使用的模型名称，通过 <pre>ModelHub</pre> 获取对应模型实例</td></tr>
 </table>
 
-### ContextMode 上下文模式
+### ContextMode
 
 ```go
 const (
@@ -198,13 +204,13 @@ const (
 <table>
 <tr><td>模式</td><td>说明</td></tr>
 <tr><td>内联（默认）</td><td>Skill 内容直接作为工具结果返回，由当前 Agent 继续处理</td></tr>
-<tr><td>ForkWithContext</td><td>创建新 Agent，复制当前对话历史，独立执行 Skill 任务后返回结果</td></tr>
-<tr><td>Fork</td><td>创建新 Agent，使用隔离的上下文（仅包含 Skill 内容），独立执行后返回结果</td></tr>
+<tr><td><pre>fork_with_context</pre></td><td>创建新 Agent，复制当前对话历史，独立执行 Skill 任务后返回结果</td></tr>
+<tr><td><pre>fork</pre></td><td>创建新 Agent，使用隔离上下文（仅包含 Skill 内容），独立执行后返回结果</td></tr>
 </table>
 
 ## Skill
 
-完整的 Skill 结构，包含元数据和实际指令内容：
+完整的 Skill 结构，包含元数据和指令内容：
 
 ```go
 type Skill struct {
@@ -216,18 +222,14 @@ type Skill struct {
 
 <table>
 <tr><td>字段</td><td>类型</td><td>说明</td></tr>
-<tr><td><pre>FrontMatter</pre></td><td><pre>FrontMatter</pre></td><td>嵌入的元数据结构，包含 <pre>Name</pre>、<pre>Description</pre>、<pre>Context</pre>、<pre>Agent</pre>、<pre>Model</pre></td></tr>
-<tr><td><pre>Content</pre></td><td><pre>string</pre></td><td>SKILL.md 文件中 frontmatter 之后的正文内容。包含 Skill 的详细指令、工作流程、示例等，Agent 激活 Skill 后会读取此内容</td></tr>
-<tr><td><pre>BaseDirectory</pre></td><td><pre>string</pre></td><td>Skill 目录的绝对路径。Agent 可以使用此路径访问 Skill 目录中的其他资源文件（如脚本、模板、参考文档等）</td></tr>
+<tr><td><pre>FrontMatter</pre></td><td><pre>FrontMatter</pre></td><td>嵌入的元数据结构</td></tr>
+<tr><td><pre>Content</pre></td><td><pre>string</pre></td><td>SKILL.md 中 frontmatter 之后的正文内容，包含详细指令、工作流程、示例等</td></tr>
+<tr><td><pre>BaseDirectory</pre></td><td><pre>string</pre></td><td>Skill 目录的绝对路径，Agent 可用此路径访问目录中的其他资源文件</td></tr>
 </table>
 
 ## Backend
 
-Skill 后端接口，定义了技能的检索方式。Backend 接口将技能的存储与使用解耦，提供以下优势：
-
-- **灵活的存储方式**：技能可以存储在本地文件系统、数据库、远程服务、云存储等任意位置
-- **可扩展性**：团队可以根据需求实现自定义 Backend，如从 Git 仓库动态加载、从配置中心获取等
-- **测试友好**：可以轻松创建 Mock Backend 进行单元测试
+Skill 后端接口，将技能的存储与使用解耦：
 
 ```go
 type Backend interface {
@@ -238,13 +240,13 @@ type Backend interface {
 
 <table>
 <tr><td>方法</td><td>说明</td></tr>
-<tr><td><pre>List</pre></td><td>列出所有可用技能的元数据。在 Agent 启动时调用，用于构建技能工具的描述信息，让 Agent 知道有哪些技能可用</td></tr>
-<tr><td><pre>Get</pre></td><td>根据名称获取完整的技能内容。当 Agent 决定使用某个技能时调用，返回包含详细指令的完整 Skill 结构</td></tr>
+<tr><td><pre>List</pre></td><td>列出所有可用技能的元数据。Agent 启动时调用，用于构建技能工具的描述</td></tr>
+<tr><td><pre>Get</pre></td><td>根据名称获取完整的技能内容。Agent 决定使用某个技能时调用</td></tr>
 </table>
 
-### **NewBackendFromFilesystem**
+### NewBackendFromFilesystem
 
-基于 `filesystem.Backend` 接口的后端实现，在指定的目录下读取技能：
+基于 `filesystem.Backend` 接口的后端实现，扫描指定目录下的一级子目录读取技能：
 
 ```go
 type BackendFromFilesystemConfig struct {
@@ -257,8 +259,8 @@ func NewBackendFromFilesystem(ctx context.Context, config *BackendFromFilesystem
 
 <table>
 <tr><td>字段</td><td>类型</td><td>必需</td><td>说明</td></tr>
-<tr><td>Backend</td><td><pre>filesystem.Backend</pre></td><td>是</td><td>文件系统后端实现，用于文件操作</td></tr>
-<tr><td>BaseDir</td><td><pre>string</pre></td><td>是</td><td>技能根目录的路径。会扫描此目录下的所有一级子目录，查找包含 <pre>SKILL.md</pre> 文件的目录作为技能</td></tr>
+<tr><td><pre>Backend</pre></td><td><pre>filesystem.Backend</pre></td><td>是</td><td>文件系统后端实现，用于文件操作</td></tr>
+<tr><td><pre>BaseDir</pre></td><td><pre>string</pre></td><td>是</td><td>技能根目录路径。扫描此目录下的一级子目录，查找包含 <pre>SKILL.md</pre> 文件的目录</td></tr>
 </table>
 
 工作方式：
@@ -268,553 +270,265 @@ func NewBackendFromFilesystem(ctx context.Context, config *BackendFromFilesystem
 - 解析 YAML frontmatter 获取元数据
 - 深层嵌套的 `SKILL.md` 文件会被忽略
 
-### **filesystem.Backend 实现**
-
-`filesystem.Backend` 接口有以下两种实现可供选择，详见 [Middleware: FileSystem](/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem)
+`filesystem.Backend` 接口有两种实现可供选择，详见 FileSystem Backend 文档。
 
 ## AgentHub 和 ModelHub
 
-当 Skill 使用 Context 模式（fork/isolate）时，需要配置 AgentHub 和 ModelHub：
+当 Skill 使用 Context 模式（fork / fork\_with\_context）时，需要通过 AgentHub 和 ModelHub 提供 Agent 实例和模型实例。
+
+> 💡
+> 以下展示非泛型别名类型（即 `*schema.Message` 特化）。泛型版本 `TypedAgentHub[M]`、`TypedModelHub[M]` 可用于 `*schema.AgenticMessage` 场景，接口签名一致，仅消息类型参数不同。
 
 ```go
-// AgentHubOptions contains options passed to AgentHub.Get when creating an agent for skill execution.
-type AgentHubOptions struct {
-    // Model is the resolved model instance when a skill specifies a "model" field in frontmatter.
-    // nil means the skill did not specify a model override; implementations should use their default.
-    Model model.ToolCallingChatModel
+// AgentHubOptions 传递给 AgentHub.Get 的选项
+type AgentHubOptions = TypedAgentHubOptions[*schema.Message]
+
+type TypedAgentHubOptions[M adk.MessageType] struct {
+    // Model 为技能 frontmatter 中指定的模型实例（通过 ModelHub 解析）。
+    // nil 表示技能未指定模型覆盖，实现方应使用默认模型。
+    Model model.BaseModel[M]
 }
 
-// AgentHub provides agent instances for context mode (fork/fork_with_context) execution.
-type AgentHub interface {
-    // Get returns an Agent by name. When name is empty, implementations should return a default agent.
-    // The opts parameter carries skill-level overrides (e.g., model) resolved by the framework.
-    Get(ctx context.Context, name string, opts *AgentHubOptions) (adk.Agent, error)
+// AgentHub 为 Context 模式提供 Agent 实例
+type AgentHub = TypedAgentHub[*schema.Message]
+
+type TypedAgentHub[M adk.MessageType] interface {
+    // Get 根据名称返回 Agent。name 为空时应返回默认 Agent。
+    Get(ctx context.Context, name string, opts *TypedAgentHubOptions[M]) (adk.TypedAgent[M], error)
 }
 
-// ModelHub 提供模型实例
-type ModelHub interface {
-    Get(ctx context.Context, name string) (model.ToolCallingChatModel, error)
+// ModelHub 根据名称解析模型实例
+type ModelHub = TypedModelHub[*schema.Message]
+
+type TypedModelHub[M adk.MessageType] interface {
+    Get(ctx context.Context, name string) (model.BaseModel[M], error)
 }
 ```
 
-### 
+> 💡
+> 注意：`AgentHubOptions.Model` 和 `ModelHub.Get` 的返回类型为 `model.BaseModel[M]`，而非旧版文档中的 `model.ToolCallingChatModel`。
 
-## 初始化
+## SubAgentInput 和 SubAgentOutput
 
-创建 Skill Middleware（推荐使用 `NewMiddleware`）：
+这两个结构体在自定义 fork 模式行为时使用：
 
 ```go
-func NewMiddleware(ctx context.Context, config *Config) (adk.ChatModelAgentMiddleware, error)
+type SubAgentInput = TypedSubAgentInput[*schema.Message]
+
+type TypedSubAgentInput[M adk.MessageType] struct {
+    Skill        Skill
+    Mode         ContextMode
+    RawArguments string   // 原始 JSON 参数
+    SkillContent string   // 构建好的 Skill 内容
+    History      []M      // 对话历史（仅 fork_with_context 模式）
+    ToolCallID   string   // 工具调用 ID（仅 fork_with_context 模式）
+}
+
+type SubAgentOutput = TypedSubAgentOutput[*schema.Message]
+
+type TypedSubAgentOutput[M adk.MessageType] struct {
+    Skill        Skill
+    Mode         ContextMode
+    RawArguments string
+    Messages     []M      // 子 Agent 产生的所有消息
+    Results      []string // 提取的 assistant 消息文本内容
+}
 ```
 
-Config 中配置为：
+# 初始化
+
+## Config
 
 ```go
-type Config struct {
-    // Backend 技能后端实现，必填
-    Backend Backend
-    
-    // SkillToolName 技能工具名称，默认 "skill"
-    SkillToolName *string
-    
-    // AgentHub 提供 Agent 工厂函数，用于 Context 模式
-    // 当 Skill 使用 "context: fork" 或 "context: isolate" 时必填
-    AgentHub AgentHub
-    
-    // ModelHub 提供模型实例，用于 Skill 指定模型
-    ModelHub ModelHub
-    
-    // CustomSystemPrompt 自定义系统提示词
-    CustomSystemPrompt SystemPromptFunc
-    
-    // CustomToolDescription 自定义工具描述
+type Config = TypedConfig[*schema.Message]
+
+type TypedConfig[M adk.MessageType] struct {
+    Backend           Backend
+    SkillToolName     *string
+    AgentHub          TypedAgentHub[M]
+    ModelHub          TypedModelHub[M]
+
+    CustomSystemPrompt    SystemPromptFunc
     CustomToolDescription ToolDescriptionFunc
+    CustomToolParams      func(ctx context.Context, defaults map[string]*schema.ParameterInfo) (map[string]*schema.ParameterInfo, error)
+    BuildContent          func(ctx context.Context, skill Skill, rawArgs string) (string, error)
+    BuildForkMessages     func(ctx context.Context, in TypedSubAgentInput[M]) ([]M, error)
+    FormatForkResult      func(ctx context.Context, in TypedSubAgentOutput[M]) (string, error)
 }
 ```
 
 <table>
 <tr><td>字段</td><td>类型</td><td>必需</td><td>默认值</td><td>说明</td></tr>
-<tr><td><pre>Backend</pre></td><td><pre>Backend</pre></td><td>是</td><td><li></li></td><td>技能后端实现。负责技能的存储和检索，可使用内置的 <pre>LocalBackend</pre> 或自定义实现</td></tr>
-<tr><td><pre>SkillToolName</pre></td><td><pre>*string</pre></td><td>否</td><td><pre>"skill"</pre></td><td>技能工具的名称。Agent 通过此名称调用技能工具。如果你的 Agent 已有同名工具，可以通过此字段自定义名称避免冲突</td></tr>
-<tr><td><pre>AgentHub</pre></td><td><pre>AgentHub</pre></td><td>否</td><td><li></li></td><td>提供 Agent 工厂函数。当 Skill 使用 <pre>context: fork</pre> 或 <pre>context: isolate</pre> 时必填</td></tr>
-<tr><td><pre>ModelHub</pre></td><td><pre>ModelHub</pre></td><td>否</td><td><li></li></td><td>提供模型实例。当 Skill 指定 <pre>model</pre> 字段时使用</td></tr>
-<tr><td><pre>CustomSystemPrompt</pre></td><td><pre>SystemPromptFunc</pre></td><td>否</td><td>内置提示词</td><td>自定义系统提示词函数</td></tr>
-<tr><td><pre>CustomToolDescription</pre></td><td><pre>ToolDescriptionFunc</pre></td><td>否</td><td>内置描述</td><td>自定义工具描述函数</td></tr>
+<tr><td><pre>Backend</pre></td><td><pre>Backend</pre></td><td>是</td><td>-</td><td>技能后端实现，负责技能的存储和检索</td></tr>
+<tr><td><pre>SkillToolName</pre></td><td><pre>*string</pre></td><td>否</td><td><pre>"skill"</pre></td><td>技能工具名称。如已有同名工具，可自定义避免冲突</td></tr>
+<tr><td><pre>AgentHub</pre></td><td><pre>TypedAgentHub[M]</pre></td><td>否</td><td>-</td><td>提供 Agent 实例。使用 <pre>context: fork</pre> 或 <pre>fork_with_context</pre> 时必填</td></tr>
+<tr><td><pre>ModelHub</pre></td><td><pre>TypedModelHub[M]</pre></td><td>否</td><td>-</td><td>提供模型实例。Context 模式下传给 AgentHub；内联模式下通过 WrapModel 切换后续 ChatModel 调用的模型</td></tr>
+<tr><td><pre>CustomSystemPrompt</pre></td><td><pre>SystemPromptFunc</pre></td><td>否</td><td>内置提示词</td><td>自定义系统提示词。签名：<pre>func(ctx, toolName) string</pre></td></tr>
+<tr><td><pre>CustomToolDescription</pre></td><td><pre>ToolDescriptionFunc</pre></td><td>否</td><td>内置描述</td><td>自定义工具描述。签名：<pre>func(ctx, skills []FrontMatter) string</pre></td></tr>
+<tr><td><pre>CustomToolParams</pre></td><td><pre>func</pre></td><td>否</td><td>仅 <pre>skill</pre> 参数</td><td>自定义工具参数 schema。接收默认参数，返回自定义参数，始终保留 <pre>skill</pre> 为必填</td></tr>
+<tr><td><pre>BuildContent</pre></td><td><pre>func</pre></td><td>否</td><td>默认格式化</td><td>自定义 Skill 内容生成，可在内容中注入额外上下文</td></tr>
+<tr><td><pre>BuildForkMessages</pre></td><td><pre>func</pre></td><td>否</td><td>见下文</td><td>自定义 fork 模式下传给子 Agent 的初始消息。默认：<pre>fork</pre> → <pre>[UserMessage(content)]</pre>，<pre>fork_with_context</pre> → <pre>[history..., ToolMessage(content, callID)]</pre></td></tr>
+<tr><td><pre>FormatForkResult</pre></td><td><pre>func</pre></td><td>否</td><td>拼接内容</td><td>自定义子 Agent 结果格式化。默认将 assistant message 内容拼接后返回</td></tr>
 </table>
 
-# 快速开始
-
-以从本地加载 pdf skill 为例， 完整代码见 [https://github.com/cloudwego/eino-examples/tree/main/adk/middlewares/skill](https://github.com/cloudwego/eino-examples/tree/main/adk/middlewares/skill)。
-
-- 在工作目录中创建 skills 目录：
+## NewMiddleware
 
 ```go
-workdir/
-├── skills/
-│   └── pdf/
-│        ├── scripts
-│        │   └── analyze.py
-│        └── SKILL.md
-└── other files
+func NewMiddleware(ctx context.Context, config *Config) (adk.ChatModelAgentMiddleware, error)
 ```
 
-- 创建本地 filesystem backend，基于 backend 创建 Skill middleware：
-
-```go
-import (
-    "github.com/cloudwego/eino/adk/middlewares/skill"
-    "github.com/cloudwego/eino-ext/adk/backend/local"
-)
-
-ctx := context.Background() 
-
-be, err := local.NewBackend(ctx, &local.Config{})
-if err != nil {
-    log.Fatal(err)
-}
-
-skillBackend, err := skill.NewBackendFromFilesystem(ctx, &skill.BackendFromFilesystemConfig{
-    Backend: be,
-    BaseDir: skillsDir,
-})
-if err != nil {
-    log.Fatalf("Failed to create skill backend: %v", err)
-}
-
-sm, err := skill.NewMiddleware(ctx, &skill.Config{
-    Backend: skillBackend,
-})
-```
-
-- 基于 backend 创建本地 Filesystem Middleware，供 agent 读取 skill 其他文件以及执行脚本：
-
-```go
-import (
-    "github.com/cloudwego/eino/adk/middlewares/filesystem"
-)
-
-fsm, err := filesystem.New(ctx, &filesystem.MiddlewareConfig{
-    Backend:        be,
-    StreamingShell: be,
-})
-```
-
-- 创建 Agent 并配置 middlewares
-
-```go
-agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
-    Name:        "LogAnalysisAgent",
-    Description: "An agent that can analyze logs",
-    Instruction: "You are a helpful assistant.",
-    Model:       cm,
-    Handlers:    []adk.ChatModelAgentMiddleware{fsm, sm},
-})
-```
-
-- 调用 Agent，观察结果
-
-```go
-runner := adk.NewRunner(ctx, adk.RunnerConfig{
-    Agent: agent,
-})
-
-input := fmt.Sprintf("Analyze the %s file", filepath.Join(workDir, "test.log"))
-log.Println("User: ", input)
-
-iterator := runner.Query(ctx, input)
-for {
-    event, ok := iterator.Next()
-    if !ok {
-       break
-    }
-    if event.Err != nil {
-       log.Printf("Error: %v\n", event.Err)
-       break
-    }
-
-    prints.Event(event)
-}
-```
-
-agent 输出：
-
-```yaml
-name: LogAnalysisAgent
-path: [{LogAnalysisAgent}]
-tool name: skill
-arguments: {"skill":"log_analyzer"}
-
-name: LogAnalysisAgent
-path: [{LogAnalysisAgent}]
-tool response: Launching skill: log_analyzer
-Base directory for this skill: /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/skills/log_analyzer
-# SKILL.md content
-
-name: LogAnalysisAgent
-path: [{LogAnalysisAgent}]
-tool name: execute
-arguments:  {"command": "python3 /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/skills/log_analyzer/scripts/analyze.py /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/test.log"}
-
-name: LogAnalysisAgent
-path: [{LogAnalysisAgent}]
-tool response: Analysis Result for /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/test.log:
-Total Errors: 2
-Total Warnings: 1
-
-Error Details:
-Line 3: [2024-05-20 10:02:15] ERROR: Database connection failed.
-Line 5: [2024-05-20 10:03:05] ERROR: Connection timed out.
-
-Warning Details:
-Line 2: [2024-05-20 10:01:23] WARNING: High memory usage detected.
-
-
-name: LogAnalysisAgent
-path: [{LogAnalysisAgent}]
-answer: Here's the analysis result of the log file:
-
-### Summary
-- **Total Errors**: 2  
-- **Total Warnings**: 1  
-
-### Detailed Entries
-#### Errors:
-1. Line 3: [2024-05-20 10:02:15] ERROR: Database connection failed.  
-2. Line5: [2024-05-2010:03:05] ERROR: Connection timed out.  
-
-#### Warnings:
-1. Line2: [2024-05-2010:01:23] WARNING: High memory usage detected.  
-
-The log file contains critical issues related to database connectivity and a warning about memory usage. Let me know if you need further analysis!
-```
-
-# 原理
-
-Skill middleware 向 Agent 增加 system prompt 与 skill tool，system prompt 内容如下，{tool_name} 为 skill 工具的工具名：
-
-```python
-# Skills System
-
-**How to Use Skills (Progressive Disclosure):**
-
-Skills follow a **progressive disclosure** pattern - you see their name and description above, but only read full instructions when needed:
-
-1. **Recognize when a skill applies**: Check if the user's task matches a skill's description
-2. **Read the skill's full instructions**: Use the '{tool_name}' tool to load skill
-3. **Follow the skill's instructions**: tool result contains step-by-step workflows, best practices, and examples
-4. **Access supporting files**: Skills may include helper scripts, configs, or reference docs - use absolute paths
-
-**When to Use Skills:**
-- User's request matches a skill's domain (e.g., "research X" -> web-research skill)
-- You need specialized knowledge or structured workflows
-- A skill provides proven patterns for complex tasks
-
-**Executing Skill Scripts:**
-Skills may contain Python scripts or other executable files. Always use absolute paths.
-
-**Example Workflow:**
-
-User: "Can you research the latest developments in quantum computing?"
-
-1. Check available skills -> See "web-research" skill
-2. Call '{tool_name}' tool to read the full skill instructions
-3. Follow the skill's research workflow (search -> organize -> synthesize)
-4. Use any helper scripts with absolute paths
-
-Remember: Skills make you more capable and consistent. When in doubt, check if a skill exists for the task!
-```
-
-Skill 工具接收需要加载 skill name，返回对应 SKILL.md 中的完整内容，在工具描述中告知 agent 所有可使用的 skill 的 name 和 description：
-
-```sql
-Execute a skill within the main conversation
-
-<skills_instructions>
-When users ask you to perform tasks, check if any of the available skills below can help complete the task more effectively. Skills provide specialized capabilities and domain knowledge.
-
-How to invoke:
-- Use this tool with the skill name only (no arguments)
-- Examples:
-  - `skill: pdf` - invoke the pdf skill
-  - `skill: xlsx` - invoke the xlsx skill
-  - `skill: ms-office-suite:pdf` - invoke using fully qualified name
-
-Important:
-- When a skill is relevant, you must invoke this tool IMMEDIATELY as your first action
-- NEVER just announce or mention a skill in your text response without actually calling this tool
-- This is a BLOCKING REQUIREMENT: invoke the relevant Skill tool BEFORE generating any other response about the task
-- Only use skills listed in <available_skills> below
-- Do not invoke a skill that is already running
-- Do not use this tool for built-in CLI commands (like /help, /clear, etc.)
-</skills_instructions>
-
-<available_skills>
-{{- range .Matters }}
-<skill>
-<name>
-{{ .Name }}
-</name>
-<description>
-{{ .Description }}
-</description>
-</skill>
-{{- end }}
-</available_skills>
-```
-
-运行举例：
-
-<a href="/img/eino/GzIObeN6roy2SAxpEXBcMqrRnYb.png" target="_blank"><img src="/img/eino/GzIObeN6roy2SAxpEXBcMqrRnYb.png" width="100%" /></a>
+创建 Skill Middleware，返回 `adk.ChatModelAgentMiddleware`，传入 `ChatModelAgentConfig.Handlers` 使用。
 
 > 💡
-> Skill Middleware 仅提供了如上图所示的加载 SKILL.md 能力，如果 Skill 需要 agent 具备读取文件、执行脚本等能力，需要用户另外为 agent 配置。
-</script><h1>Skill</h1><header class=article-meta></header><p>Skill Middleware 为 Eino ADK Agent 提供了 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来更准确、高效地完成任务。</p><h1 id=什么是-skill>什么是 Skill</h1><p>Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。 Skill 的核心是一个 <code>SKILL.md</code> 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行特定任务的说明。</p><pre tabindex=0><code>my-skill/
+> 泛型版本 `NewTyped[M](ctx, config)` 返回 `adk.TypedChatModelAgentMiddleware[M]`，可用于 `*schema.AgenticMessage` 类型的 Agent。
+
+## 使用示例
+
+```go
+// 1. 创建 Backend
+backend, err := skill.NewBackendFromFilesystem(ctx, &skill.BackendFromFilesystemConfig{
+    Backend: fsBackend,
+    BaseDir: "/path/to/skills",
+})
+if err != nil {
+    return err
+}
+
+// 2. 创建 Middleware
+handler, err := skill.NewMiddleware(ctx, &skill.Config{
+    Backend:  backend,
+    AgentHub: myAgentHub, // 可选，仅 fork 模式需要
+    ModelHub: myModelHub, // 可选，仅使用 model 字段时需要
+})
+if err != nil {
+    return err
+}
+
+// 3. 传入 Agent 的 Handlers
+agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
+    // ... 其他配置
+    Handlers: []adk.ChatModelAgentMiddleware{handler},
+})
+```
+</script><h1>Skill</h1><header class=article-meta></header><p>Skill Middleware 为 Eino ADK Agent 提供 Skill 支持，使 Agent 能够动态发现和使用预定义的技能来完成任务。</p><h1 id=什么是-skill>什么是 Skill</h1><p>Skill 是包含指令、脚本和资源的文件夹，Agent 可以按需发现和使用这些 Skill 来扩展自身能力。核心是 <code>SKILL.md</code> 文件，包含元数据（至少需要 name 和 description）和指导 Agent 执行任务的说明。</p><pre tabindex=0><code>my-skill/
 ├── SKILL.md          # 必需：指令 + 元数据
 ├── scripts/          # 可选：可执行代码
 ├── references/       # 可选：参考文档
 └── assets/           # 可选：模板、资源
-</code></pre><p>Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下文：</p><ol><li><strong>发现（Discovery）</strong>：启动时，Agent 仅加载每个可用 Skill 的名称和描述，足以判断何时可能需要使用该 Skill</li><li><strong>激活</strong>**（Activation）**：当任务匹配某个 Skill 的描述时，Agent 将完整的 <code>SKILL.md</code> 内容读入上下文</li><li><strong>执行（Execution）</strong>：Agent 遵循指令执行任务，也可以根据需要加载其他文件或执行捆绑的代码这种方式让 Agent 保持快速响应，同时能够按需访问更多上下文。</li></ol><blockquote><p>💡
-Ref: <a href=https://agentskills.io/home>https://agentskills.io/home</a></p></blockquote><h1 id=接口介绍>接口介绍</h1><h2 id=frontmatter>FrontMatter</h2><p>Skill 的元数据结构，用于在发现阶段快速展示 Skill 信息，避免加载完整内容：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>FrontMatter</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</code></pre><p>Skill 使用**渐进式展示（Progressive Disclosure）**来高效管理上下文：</p><p><a href=/img/eino/X9I4wGCprhpho7bXk6icMHmwnRb.png target=_blank><img src=/img/eino/X9I4wGCprhpho7bXk6icMHmwnRb.png width=100%></a></p><ol><li><strong>发现（Discovery）</strong>：Agent 仅加载每个可用 Skill 的 name 和 description，足以判断何时可能需要使用该 Skill</li><li><strong>激活（Activation）</strong>：当任务匹配某个 Skill 时，Agent 将完整的 <code>SKILL.md</code> 内容读入上下文</li><li><strong>执行（Execution）</strong>：Agent 遵循指令执行任务，按需加载其他文件或执行捆绑代码</li></ol><blockquote><p>💡
+Ref: <a href=https://agentskills.io/home>https://agentskills.io/home</a></p></blockquote><h1 id=接口介绍>接口介绍</h1><h2 id=frontmatter>FrontMatter</h2><p>Skill 的元数据结构，从 SKILL.md 的 YAML frontmatter 中解析。用于在发现阶段快速展示 Skill 信息：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>FrontMatter</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Name</span><span class=w>        </span><span class=kt>string</span><span class=w>      </span><span class=s>`yaml:&#34;name&#34;`</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Description</span><span class=w> </span><span class=kt>string</span><span class=w>      </span><span class=s>`yaml:&#34;description&#34;`</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Context</span><span class=w>     </span><span class=nx>ContextMode</span><span class=w> </span><span class=s>`yaml:&#34;context&#34;`</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Agent</span><span class=w>       </span><span class=kt>string</span><span class=w>      </span><span class=s>`yaml:&#34;agent&#34;`</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=w>       </span><span class=kt>string</span><span class=w>      </span><span class=s>`yaml:&#34;model&#34;`</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>说明</td></tr><tr><td><pre>Name</pre></td><td><pre>string</pre></td><td>Skill 的唯一标识符。Agent 通过此名称调用 Skill ，建议使用简短、有意义的名称（如<pre>pdf-processing</pre>、<pre>web-research</pre>）。对应 SKILL.md 中 frontmatter 的<pre>name</pre>字段</td></tr><tr><td><pre>Description</pre></td><td><pre>string</pre></td><td>Skill 的功能描述。这是 Agent 判断是否使用该 Skill 的关键依据，应清晰说明技 Skill 能适用的场景和能力。对应 SKILL.md 中 frontmatter 的<pre>description</pre>字段</td></tr><tr><td><pre>Context</pre></td><td><pre>ContextMode</pre></td><td>上下文模式。可选值：<pre>fork_with_context</pre>（复制历史消息创建新 Agent 执行）、<pre>fork</pre>（隔离上下文创建新 Agent 执行）。留空表示内联模式（直接返回 Skill 内容）</td></tr><tr><td><pre>Agent</pre></td><td><pre>string</pre></td><td>指定使用的 Agent 名称。配合<pre>Context</pre>字段使用，通过<pre>AgentHub</pre>获取对应的 Agent 工厂函数。留空时使用默认 Agent</td></tr><tr><td><pre>Model</pre></td><td><pre>string</pre></td><td>指定使用的模型名称。通过<pre>ModelHub</pre>获取对应的模型实例。在 Context 模式下传递给 Agent 工厂；在内联模式下切换后续 ChatModel 调用使用的模型</td></tr></table><h3 id=contextmode-上下文模式>ContextMode 上下文模式</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>const</span><span class=w> </span><span class=p>(</span><span class=w>
+</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>说明</td></tr><tr><td><pre>Name</pre></td><td><pre>string</pre></td><td>Skill 的唯一标识符。建议使用简短、有意义的名称（如<pre>pdf-processing</pre>、<pre>web-research</pre>）</td></tr><tr><td><pre>Description</pre></td><td><pre>string</pre></td><td>Skill 的功能描述。Agent 判断是否使用该 Skill 的关键依据，应清晰说明适用场景和能力</td></tr><tr><td><pre>Context</pre></td><td><pre>ContextMode</pre></td><td>上下文模式。可选值：<pre>fork</pre>（隔离上下文）、<pre>fork_with_context</pre>（复制历史消息）。留空表示内联模式</td></tr><tr><td><pre>Agent</pre></td><td><pre>string</pre></td><td>指定使用的 Agent 名称，配合<pre>Context</pre>使用，通过<pre>AgentHub</pre>获取对应 Agent。留空使用默认 Agent</td></tr><tr><td><pre>Model</pre></td><td><pre>string</pre></td><td>指定使用的模型名称，通过<pre>ModelHub</pre>获取对应模型实例</td></tr></table><h3 id=contextmode>ContextMode</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>const</span><span class=w> </span><span class=p>(</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ContextModeFork</span><span class=w>            </span><span class=nx>ContextMode</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=s>&#34;fork&#34;</span><span class=w>              </span><span class=c1>// 隔离上下文</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ContextModeForkWithContext</span><span class=w> </span><span class=nx>ContextMode</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=s>&#34;fork_with_context&#34;</span><span class=w> </span><span class=c1>// 复制历史消息</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
-</span></span></span></code></pre></div><table><tr><td>模式</td><td>说明</td></tr><tr><td>内联（默认）</td><td>Skill 内容直接作为工具结果返回，由当前 Agent 继续处理</td></tr><tr><td>ForkWithContext</td><td>创建新 Agent，复制当前对话历史，独立执行 Skill 任务后返回结果</td></tr><tr><td>Fork</td><td>创建新 Agent，使用隔离的上下文（仅包含 Skill 内容），独立执行后返回结果</td></tr></table><h2 id=skill>Skill</h2><p>完整的 Skill 结构，包含元数据和实际指令内容：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Skill</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span></code></pre></div><table><tr><td>模式</td><td>说明</td></tr><tr><td>内联（默认）</td><td>Skill 内容直接作为工具结果返回，由当前 Agent 继续处理</td></tr><tr><td><pre>fork_with_context</pre></td><td>创建新 Agent，复制当前对话历史，独立执行 Skill 任务后返回结果</td></tr><tr><td><pre>fork</pre></td><td>创建新 Agent，使用隔离上下文（仅包含 Skill 内容），独立执行后返回结果</td></tr></table><h2 id=skill>Skill</h2><p>完整的 Skill 结构，包含元数据和指令内容：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Skill</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>FrontMatter</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Content</span><span class=w>       </span><span class=kt>string</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BaseDirectory</span><span class=w> </span><span class=kt>string</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>说明</td></tr><tr><td><pre>FrontMatter</pre></td><td><pre>FrontMatter</pre></td><td>嵌入的元数据结构，包含<pre>Name</pre>、<pre>Description</pre>、<pre>Context</pre>、<pre>Agent</pre>、<pre>Model</pre></td></tr><tr><td><pre>Content</pre></td><td><pre>string</pre></td><td>SKILL.md 文件中 frontmatter 之后的正文内容。包含 Skill 的详细指令、工作流程、示例等，Agent 激活 Skill 后会读取此内容</td></tr><tr><td><pre>BaseDirectory</pre></td><td><pre>string</pre></td><td>Skill 目录的绝对路径。Agent 可以使用此路径访问 Skill 目录中的其他资源文件（如脚本、模板、参考文档等）</td></tr></table><h2 id=backend>Backend</h2><p>Skill 后端接口，定义了技能的检索方式。Backend 接口将技能的存储与使用解耦，提供以下优势：</p><ul><li><strong>灵活的存储方式</strong>：技能可以存储在本地文件系统、数据库、远程服务、云存储等任意位置</li><li><strong>可扩展性</strong>：团队可以根据需求实现自定义 Backend，如从 Git 仓库动态加载、从配置中心获取等</li><li><strong>测试友好</strong>：可以轻松创建 Mock Backend 进行单元测试</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Backend</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>说明</td></tr><tr><td><pre>FrontMatter</pre></td><td><pre>FrontMatter</pre></td><td>嵌入的元数据结构</td></tr><tr><td><pre>Content</pre></td><td><pre>string</pre></td><td>SKILL.md 中 frontmatter 之后的正文内容，包含详细指令、工作流程、示例等</td></tr><tr><td><pre>BaseDirectory</pre></td><td><pre>string</pre></td><td>Skill 目录的绝对路径，Agent 可用此路径访问目录中的其他资源文件</td></tr></table><h2 id=backend>Backend</h2><p>Skill 后端接口，将技能的存储与使用解耦：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Backend</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>List</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=nx>FrontMatter</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Get</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>name</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>Skill</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><table><tr><td>方法</td><td>说明</td></tr><tr><td><pre>List</pre></td><td>列出所有可用技能的元数据。在 Agent 启动时调用，用于构建技能工具的描述信息，让 Agent 知道有哪些技能可用</td></tr><tr><td><pre>Get</pre></td><td>根据名称获取完整的技能内容。当 Agent 决定使用某个技能时调用，返回包含详细指令的完整 Skill 结构</td></tr></table><h3 id=newbackendfromfilesystem><strong>NewBackendFromFilesystem</strong></h3><p>基于 <code>filesystem.Backend</code> 接口的后端实现，在指定的目录下读取技能：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>BackendFromFilesystemConfig</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span></code></pre></div><table><tr><td>方法</td><td>说明</td></tr><tr><td><pre>List</pre></td><td>列出所有可用技能的元数据。Agent 启动时调用，用于构建技能工具的描述</td></tr><tr><td><pre>Get</pre></td><td>根据名称获取完整的技能内容。Agent 决定使用某个技能时调用</td></tr></table><h3 id=newbackendfromfilesystem>NewBackendFromFilesystem</h3><p>基于 <code>filesystem.Backend</code> 接口的后端实现，扫描指定目录下的一级子目录读取技能：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>BackendFromFilesystemConfig</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>Backend</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BaseDir</span><span class=w> </span><span class=kt>string</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>NewBackendFromFilesystem</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>config</span><span class=w> </span><span class=o>*</span><span class=nx>BackendFromFilesystemConfig</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>Backend</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
-</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>必需</td><td>说明</td></tr><tr><td>Backend</td><td><pre>filesystem.Backend</pre></td><td>是</td><td>文件系统后端实现，用于文件操作</td></tr><tr><td>BaseDir</td><td><pre>string</pre></td><td>是</td><td>技能根目录的路径。会扫描此目录下的所有一级子目录，查找包含<pre>SKILL.md</pre>文件的目录作为技能</td></tr></table><p>工作方式：</p><ul><li>扫描 <code>BaseDir</code> 下的一级子目录</li><li>查找每个子目录中的 <code>SKILL.md</code> 文件</li><li>解析 YAML frontmatter 获取元数据</li><li>深层嵌套的 <code>SKILL.md</code> 文件会被忽略</li></ul><h3 id=filesystembackend-实现><strong>filesystem.Backend 实现</strong></h3><p><code>filesystem.Backend</code> 接口有以下两种实现可供选择，详见 <a href=/zh/docs/eino/core_modules/eino_adk/eino_adk_chatmodelagentmiddleware/middleware_filesystem>Middleware: FileSystem</a></p><h2 id=agenthub-和-modelhub>AgentHub 和 ModelHub</h2><p>当 Skill 使用 Context 模式（fork/isolate）时，需要配置 AgentHub 和 ModelHub：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// AgentHubOptions contains options passed to AgentHub.Get when creating an agent for skill execution.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>AgentHubOptions</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Model is the resolved model instance when a skill specifies a &#34;model&#34; field in frontmatter.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// nil means the skill did not specify a model override; implementations should use their default.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=w> </span><span class=nx>model</span><span class=p>.</span><span class=nx>ToolCallingChatModel</span><span class=w>
+</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>必需</td><td>说明</td></tr><tr><td><pre>Backend</pre></td><td><pre>filesystem.Backend</pre></td><td>是</td><td>文件系统后端实现，用于文件操作</td></tr><tr><td><pre>BaseDir</pre></td><td><pre>string</pre></td><td>是</td><td>技能根目录路径。扫描此目录下的一级子目录，查找包含<pre>SKILL.md</pre>文件的目录</td></tr></table><p>工作方式：</p><ul><li>扫描 <code>BaseDir</code> 下的一级子目录</li><li>查找每个子目录中的 <code>SKILL.md</code> 文件</li><li>解析 YAML frontmatter 获取元数据</li><li>深层嵌套的 <code>SKILL.md</code> 文件会被忽略</li></ul><p><code>filesystem.Backend</code> 接口有两种实现可供选择，详见 FileSystem Backend 文档。</p><h2 id=agenthub-和-modelhub>AgentHub 和 ModelHub</h2><p>当 Skill 使用 Context 模式（fork / fork_with_context）时，需要通过 AgentHub 和 ModelHub 提供 Agent 实例和模型实例。</p><blockquote><p>💡
+以下展示非泛型别名类型（即 <code>*schema.Message</code> 特化）。泛型版本 <code>TypedAgentHub[M]</code>、<code>TypedModelHub[M]</code> 可用于 <code>*schema.AgenticMessage</code> 场景，接口签名一致，仅消息类型参数不同。</p></blockquote><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// AgentHubOptions 传递给 AgentHub.Get 的选项</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>AgentHubOptions</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>TypedAgentHubOptions</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedAgentHubOptions</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Model 为技能 frontmatter 中指定的模型实例（通过 ModelHub 解析）。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// nil 表示技能未指定模型覆盖，实现方应使用默认模型。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=w> </span><span class=nx>model</span><span class=p>.</span><span class=nx>BaseModel</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// AgentHub provides agent instances for context mode (fork/fork_with_context) execution.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>AgentHub</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Get returns an Agent by name. When name is empty, implementations should return a default agent.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// The opts parameter carries skill-level overrides (e.g., model) resolved by the framework.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Get</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>name</span><span class=w> </span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=w> </span><span class=o>*</span><span class=nx>AgentHubOptions</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>Agent</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// AgentHub 为 Context 模式提供 Agent 实例</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>AgentHub</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>TypedAgentHub</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedAgentHub</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Get 根据名称返回 Agent。name 为空时应返回默认 Agent。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Get</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>name</span><span class=w> </span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=w> </span><span class=o>*</span><span class=nx>TypedAgentHubOptions</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TypedAgent</span><span class=p>[</span><span class=nx>M</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// ModelHub 提供模型实例</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>ModelHub</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Get</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>name</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>model</span><span class=p>.</span><span class=nx>ToolCallingChatModel</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// ModelHub 根据名称解析模型实例</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>ModelHub</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>TypedModelHub</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedModelHub</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>interface</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Get</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>name</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>model</span><span class=p>.</span><span class=nx>BaseModel</span><span class=p>[</span><span class=nx>M</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><h3></h3><h2 id=初始化>初始化</h2><p>创建 Skill Middleware（推荐使用 <code>NewMiddleware</code>）：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=nf>NewMiddleware</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>config</span><span class=w> </span><span class=o>*</span><span class=nx>Config</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
-</span></span></span></code></pre></div><p>Config 中配置为：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Config</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Backend 技能后端实现，必填</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=w> </span><span class=nx>Backend</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// SkillToolName 技能工具名称，默认 &#34;skill&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>SkillToolName</span><span class=w> </span><span class=o>*</span><span class=kt>string</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// AgentHub 提供 Agent 工厂函数，用于 Context 模式</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 当 Skill 使用 &#34;context: fork&#34; 或 &#34;context: isolate&#34; 时必填</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>AgentHub</span><span class=w> </span><span class=nx>AgentHub</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// ModelHub 提供模型实例，用于 Skill 指定模型</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ModelHub</span><span class=w> </span><span class=nx>ModelHub</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// CustomSystemPrompt 自定义系统提示词</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomSystemPrompt</span><span class=w> </span><span class=nx>SystemPromptFunc</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// CustomToolDescription 自定义工具描述</span><span class=w>
+</span></span></span></code></pre></div><blockquote><p>💡
+注意：<code>AgentHubOptions.Model</code> 和 <code>ModelHub.Get</code> 的返回类型为 <code>model.BaseModel[M]</code>，而非旧版文档中的 <code>model.ToolCallingChatModel</code>。</p></blockquote><h2 id=subagentinput-和-subagentoutput>SubAgentInput 和 SubAgentOutput</h2><p>这两个结构体在自定义 fork 模式行为时使用：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>SubAgentInput</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>TypedSubAgentInput</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedSubAgentInput</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Skill</span><span class=w>        </span><span class=nx>Skill</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Mode</span><span class=w>         </span><span class=nx>ContextMode</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>RawArguments</span><span class=w> </span><span class=kt>string</span><span class=w>   </span><span class=c1>// 原始 JSON 参数</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>SkillContent</span><span class=w> </span><span class=kt>string</span><span class=w>   </span><span class=c1>// 构建好的 Skill 内容</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>History</span><span class=w>      </span><span class=p>[]</span><span class=nx>M</span><span class=w>      </span><span class=c1>// 对话历史（仅 fork_with_context 模式）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ToolCallID</span><span class=w>   </span><span class=kt>string</span><span class=w>   </span><span class=c1>// 工具调用 ID（仅 fork_with_context 模式）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>SubAgentOutput</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>TypedSubAgentOutput</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedSubAgentOutput</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Skill</span><span class=w>        </span><span class=nx>Skill</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Mode</span><span class=w>         </span><span class=nx>ContextMode</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>RawArguments</span><span class=w> </span><span class=kt>string</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Messages</span><span class=w>     </span><span class=p>[]</span><span class=nx>M</span><span class=w>      </span><span class=c1>// 子 Agent 产生的所有消息</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Results</span><span class=w>      </span><span class=p>[]</span><span class=kt>string</span><span class=w> </span><span class=c1>// 提取的 assistant 消息文本内容</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><h1 id=初始化>初始化</h1><h2 id=config>Config</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Config</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>TypedConfig</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>TypedConfig</span><span class=p>[</span><span class=nx>M</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageType</span><span class=p>]</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=w>           </span><span class=nx>Backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>SkillToolName</span><span class=w>     </span><span class=o>*</span><span class=kt>string</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>AgentHub</span><span class=w>          </span><span class=nx>TypedAgentHub</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ModelHub</span><span class=w>          </span><span class=nx>TypedModelHub</span><span class=p>[</span><span class=nx>M</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomSystemPrompt</span><span class=w>    </span><span class=nx>SystemPromptFunc</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomToolDescription</span><span class=w> </span><span class=nx>ToolDescriptionFunc</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>CustomToolParams</span><span class=w>      </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>defaults</span><span class=w> </span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>ParameterInfo</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>ParameterInfo</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BuildContent</span><span class=w>          </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>skill</span><span class=w> </span><span class=nx>Skill</span><span class=p>,</span><span class=w> </span><span class=nx>rawArgs</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BuildForkMessages</span><span class=w>     </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>in</span><span class=w> </span><span class=nx>TypedSubAgentInput</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>([]</span><span class=nx>M</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>FormatForkResult</span><span class=w>      </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>in</span><span class=w> </span><span class=nx>TypedSubAgentOutput</span><span class=p>[</span><span class=nx>M</span><span class=p>])</span><span class=w> </span><span class=p>(</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>必需</td><td>默认值</td><td>说明</td></tr><tr><td><pre>Backend</pre></td><td><pre>Backend</pre></td><td>是</td><td><li></li></td><td>技能后端实现。负责技能的存储和检索，可使用内置的<pre>LocalBackend</pre>或自定义实现</td></tr><tr><td><pre>SkillToolName</pre></td><td><pre>*string</pre></td><td>否</td><td><pre>"skill"</pre></td><td>技能工具的名称。Agent 通过此名称调用技能工具。如果你的 Agent 已有同名工具，可以通过此字段自定义名称避免冲突</td></tr><tr><td><pre>AgentHub</pre></td><td><pre>AgentHub</pre></td><td>否</td><td><li></li></td><td>提供 Agent 工厂函数。当 Skill 使用<pre>context: fork</pre>或<pre>context: isolate</pre>时必填</td></tr><tr><td><pre>ModelHub</pre></td><td><pre>ModelHub</pre></td><td>否</td><td><li></li></td><td>提供模型实例。当 Skill 指定<pre>model</pre>字段时使用</td></tr><tr><td><pre>CustomSystemPrompt</pre></td><td><pre>SystemPromptFunc</pre></td><td>否</td><td>内置提示词</td><td>自定义系统提示词函数</td></tr><tr><td><pre>CustomToolDescription</pre></td><td><pre>ToolDescriptionFunc</pre></td><td>否</td><td>内置描述</td><td>自定义工具描述函数</td></tr></table><h1 id=快速开始>快速开始</h1><p>以从本地加载 pdf skill 为例， 完整代码见 <a href=https://github.com/cloudwego/eino-examples/tree/main/adk/middlewares/skill>https://github.com/cloudwego/eino-examples/tree/main/adk/middlewares/skill</a>。</p><ul><li>在工作目录中创建 skills 目录：</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>workdir</span><span class=o>/</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>├──</span><span class=w> </span><span class=nx>skills</span><span class=o>/</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>│</span><span class=w>   </span><span class=err>└──</span><span class=w> </span><span class=nx>pdf</span><span class=o>/</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>│</span><span class=w>        </span><span class=err>├──</span><span class=w> </span><span class=nx>scripts</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>│</span><span class=w>        </span><span class=err>│</span><span class=w>   </span><span class=err>└──</span><span class=w> </span><span class=nx>analyze</span><span class=p>.</span><span class=nx>py</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>│</span><span class=w>        </span><span class=err>└──</span><span class=w> </span><span class=nx>SKILL</span><span class=p>.</span><span class=nx>md</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>└──</span><span class=w> </span><span class=nx>other</span><span class=w> </span><span class=nx>files</span><span class=w>
-</span></span></span></code></pre></div><ul><li>创建本地 filesystem backend，基于 backend 创建 Skill middleware：</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=p>(</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/adk/middlewares/skill&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino-ext/adk/backend/local&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>ctx</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nf>Background</span><span class=p>()</span><span class=w> 
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>be</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>local</span><span class=p>.</span><span class=nf>NewBackend</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>local</span><span class=p>.</span><span class=nx>Config</span><span class=p>{})</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Fatal</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>skillBackend</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>skill</span><span class=p>.</span><span class=nf>NewBackendFromFilesystem</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>skill</span><span class=p>.</span><span class=nx>BackendFromFilesystemConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w> </span><span class=nx>be</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BaseDir</span><span class=p>:</span><span class=w> </span><span class=nx>skillsDir</span><span class=p>,</span><span class=w>
+</span></span></span></code></pre></div><table><tr><td>字段</td><td>类型</td><td>必需</td><td>默认值</td><td>说明</td></tr><tr><td><pre>Backend</pre></td><td><pre>Backend</pre></td><td>是</td><td>-</td><td>技能后端实现，负责技能的存储和检索</td></tr><tr><td><pre>SkillToolName</pre></td><td><pre>*string</pre></td><td>否</td><td><pre>"skill"</pre></td><td>技能工具名称。如已有同名工具，可自定义避免冲突</td></tr><tr><td><pre>AgentHub</pre></td><td><pre>TypedAgentHub[M]</pre></td><td>否</td><td>-</td><td>提供 Agent 实例。使用<pre>context: fork</pre>或<pre>fork_with_context</pre>时必填</td></tr><tr><td><pre>ModelHub</pre></td><td><pre>TypedModelHub[M]</pre></td><td>否</td><td>-</td><td>提供模型实例。Context 模式下传给 AgentHub；内联模式下通过 WrapModel 切换后续 ChatModel 调用的模型</td></tr><tr><td><pre>CustomSystemPrompt</pre></td><td><pre>SystemPromptFunc</pre></td><td>否</td><td>内置提示词</td><td>自定义系统提示词。签名：<pre>func(ctx, toolName) string</pre></td></tr><tr><td><pre>CustomToolDescription</pre></td><td><pre>ToolDescriptionFunc</pre></td><td>否</td><td>内置描述</td><td>自定义工具描述。签名：<pre>func(ctx, skills []FrontMatter) string</pre></td></tr><tr><td><pre>CustomToolParams</pre></td><td><pre>func</pre></td><td>否</td><td>仅<pre>skill</pre>参数</td><td>自定义工具参数 schema。接收默认参数，返回自定义参数，始终保留<pre>skill</pre>为必填</td></tr><tr><td><pre>BuildContent</pre></td><td><pre>func</pre></td><td>否</td><td>默认格式化</td><td>自定义 Skill 内容生成，可在内容中注入额外上下文</td></tr><tr><td><pre>BuildForkMessages</pre></td><td><pre>func</pre></td><td>否</td><td>见下文</td><td>自定义 fork 模式下传给子 Agent 的初始消息。默认：<pre>fork</pre>→<pre>[UserMessage(content)]</pre>，<pre>fork_with_context</pre>→<pre>[history..., ToolMessage(content, callID)]</pre></td></tr><tr><td><pre>FormatForkResult</pre></td><td><pre>func</pre></td><td>否</td><td>拼接内容</td><td>自定义子 Agent 结果格式化。默认将 assistant message 内容拼接后返回</td></tr></table><h2 id=newmiddleware>NewMiddleware</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=nf>NewMiddleware</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>config</span><span class=w> </span><span class=o>*</span><span class=nx>Config</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></div><p>创建 Skill Middleware，返回 <code>adk.ChatModelAgentMiddleware</code>，传入 <code>ChatModelAgentConfig.Handlers</code> 使用。</p><blockquote><p>💡
+泛型版本 <code>NewTyped[M](ctx, config)</code> 返回 <code>adk.TypedChatModelAgentMiddleware[M]</code>，可用于 <code>*schema.AgenticMessage</code> 类型的 Agent。</p></blockquote><h2 id=使用示例>使用示例</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// 1. 创建 Backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>backend</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>skill</span><span class=p>.</span><span class=nf>NewBackendFromFilesystem</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>skill</span><span class=p>.</span><span class=nx>BackendFromFilesystemConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w> </span><span class=nx>fsBackend</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>BaseDir</span><span class=p>:</span><span class=w> </span><span class=s>&#34;/path/to/skills&#34;</span><span class=p>,</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Fatalf</span><span class=p>(</span><span class=s>&#34;Failed to create skill backend: %v&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>sm</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>skill</span><span class=p>.</span><span class=nf>NewMiddleware</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>skill</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w> </span><span class=nx>skillBackend</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 2. 创建 Middleware</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>handler</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>skill</span><span class=p>.</span><span class=nf>NewMiddleware</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>skill</span><span class=p>.</span><span class=nx>Config</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w>  </span><span class=nx>backend</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>AgentHub</span><span class=p>:</span><span class=w> </span><span class=nx>myAgentHub</span><span class=p>,</span><span class=w> </span><span class=c1>// 可选，仅 fork 模式需要</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ModelHub</span><span class=p>:</span><span class=w> </span><span class=nx>myModelHub</span><span class=p>,</span><span class=w> </span><span class=c1>// 可选，仅使用 model 字段时需要</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><ul><li>基于 backend 创建本地 Filesystem Middleware，供 agent 读取 skill 其他文件以及执行脚本：</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=p>(</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/adk/middlewares/filesystem&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>fsm</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>filesystem</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>filesystem</span><span class=p>.</span><span class=nx>MiddlewareConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Backend</span><span class=p>:</span><span class=w>        </span><span class=nx>be</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>StreamingShell</span><span class=p>:</span><span class=w> </span><span class=nx>be</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><ul><li>创建 Agent 并配置 middlewares</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>agent</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewChatModelAgent</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Name</span><span class=p>:</span><span class=w>        </span><span class=s>&#34;LogAnalysisAgent&#34;</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Description</span><span class=p>:</span><span class=w> </span><span class=s>&#34;An agent that can analyze logs&#34;</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Instruction</span><span class=p>:</span><span class=w> </span><span class=s>&#34;You are a helpful assistant.&#34;</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Model</span><span class=p>:</span><span class=w>       </span><span class=nx>cm</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Handlers</span><span class=p>:</span><span class=w>    </span><span class=p>[]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>{</span><span class=nx>fsm</span><span class=p>,</span><span class=w> </span><span class=nx>sm</span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span></code></pre></div><ul><li>调用 Agent，观察结果</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>runner</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewRunner</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>RunnerConfig</span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Agent</span><span class=p>:</span><span class=w> </span><span class=nx>agent</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>input</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;Analyze the %s file&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>workDir</span><span class=p>,</span><span class=w> </span><span class=s>&#34;test.log&#34;</span><span class=p>))</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;User: &#34;</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>iterator</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>runner</span><span class=p>.</span><span class=nf>Query</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>for</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>event</span><span class=p>,</span><span class=w> </span><span class=nx>ok</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>iterator</span><span class=p>.</span><span class=nf>Next</span><span class=p>()</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>if</span><span class=w> </span><span class=p>!</span><span class=nx>ok</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>       </span><span class=k>break</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>if</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>       </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;Error: %v\n&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Err</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>       </span><span class=k>break</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>prints</span><span class=p>.</span><span class=nf>Event</span><span class=p>(</span><span class=nx>event</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><p>agent 输出：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>LogAnalysisAgent</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=p>[</span>{<span class=l>LogAnalysisAgent}]</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tool name</span><span class=p>:</span><span class=w> </span><span class=l>skill</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>arguments</span><span class=p>:</span><span class=w> </span>{<span class=s2>&#34;skill&#34;</span><span class=p>:</span><span class=s2>&#34;log_analyzer&#34;</span>}<span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>LogAnalysisAgent</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=p>[</span>{<span class=l>LogAnalysisAgent}]</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tool response: Launching skill</span><span class=p>:</span><span class=w> </span><span class=l>log_analyzer</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Base directory for this skill</span><span class=p>:</span><span class=w> </span><span class=l>/Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/skills/log_analyzer</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c># SKILL.md content</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>LogAnalysisAgent</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=p>[</span>{<span class=l>LogAnalysisAgent}]</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tool name</span><span class=p>:</span><span class=w> </span><span class=l>execute</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>arguments</span><span class=p>:</span><span class=w>  </span>{<span class=nt>&#34;command&#34;: </span><span class=s2>&#34;python3 /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/skills/log_analyzer/scripts/analyze.py /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/test.log&#34;</span>}<span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>LogAnalysisAgent</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=p>[</span>{<span class=l>LogAnalysisAgent}]</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tool response</span><span class=p>:</span><span class=w> </span><span class=nt>Analysis Result for /Users/bytedance/go/src/github.com/cloudwego/eino-examples/adk/middlewares/skill/workdir/test.log</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Total Errors</span><span class=p>:</span><span class=w> </span><span class=m>2</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Total Warnings</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Error Details</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Line 3: [2024-05-20 10:02:15] ERROR</span><span class=p>:</span><span class=w> </span><span class=l>Database connection failed.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Line 5: [2024-05-20 10:03:05] ERROR</span><span class=p>:</span><span class=w> </span><span class=l>Connection timed out.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Warning Details</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>Line 2: [2024-05-20 10:01:23] WARNING</span><span class=p>:</span><span class=w> </span><span class=l>High memory usage detected.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>LogAnalysisAgent</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=p>[</span>{<span class=l>LogAnalysisAgent}]</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>answer</span><span class=p>:</span><span class=w> </span><span class=nt>Here&#39;s the analysis result of the log file</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c>### Summary</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span>- <span class=cp>**Total</span><span class=w> </span><span class=nt>Errors**</span><span class=p>:</span><span class=w> </span><span class=m>2</span><span class=w>  
-</span></span></span><span class=line><span class=cl><span class=w></span>- <span class=cp>**Total</span><span class=w> </span><span class=nt>Warnings**</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>  
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c>### Detailed Entries</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c>#### Errors:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>1. Line 3: [2024-05-20 10:02:15] ERROR</span><span class=p>:</span><span class=w> </span><span class=l>Database connection failed.  </span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>2. Line5: [2024-05-2010:03:05] ERROR</span><span class=p>:</span><span class=w> </span><span class=l>Connection timed out.  </span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=c>#### Warnings:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>1. Line2: [2024-05-2010:01:23] WARNING</span><span class=p>:</span><span class=w> </span><span class=l>High memory usage detected.  </span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=l>The log file contains critical issues related to database connectivity and a warning about memory usage. Let me know if you need further analysis!</span><span class=w>
-</span></span></span></code></pre></div><h1 id=原理>原理</h1><p>Skill middleware 向 Agent 增加 system prompt 与 skill tool，system prompt 内容如下，{tool_name} 为 skill 工具的工具名：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># Skills System</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=o>**</span><span class=n>How</span> <span class=n>to</span> <span class=n>Use</span> <span class=n>Skills</span> <span class=p>(</span><span class=n>Progressive</span> <span class=n>Disclosure</span><span class=p>):</span><span class=o>**</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=n>Skills</span> <span class=n>follow</span> <span class=n>a</span> <span class=o>**</span><span class=n>progressive</span> <span class=n>disclosure</span><span class=o>**</span> <span class=n>pattern</span> <span class=o>-</span> <span class=n>you</span> <span class=n>see</span> <span class=n>their</span> <span class=n>name</span> <span class=ow>and</span> <span class=n>description</span> <span class=n>above</span><span class=p>,</span> <span class=n>but</span> <span class=n>only</span> <span class=n>read</span> <span class=n>full</span> <span class=n>instructions</span> <span class=n>when</span> <span class=n>needed</span><span class=p>:</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=mf>1.</span> <span class=o>**</span><span class=n>Recognize</span> <span class=n>when</span> <span class=n>a</span> <span class=n>skill</span> <span class=n>applies</span><span class=o>**</span><span class=p>:</span> <span class=n>Check</span> <span class=k>if</span> <span class=n>the</span> <span class=n>user</span><span class=s1>&#39;s task matches a skill&#39;</span><span class=n>s</span> <span class=n>description</span>
-</span></span><span class=line><span class=cl><span class=mf>2.</span> <span class=o>**</span><span class=n>Read</span> <span class=n>the</span> <span class=n>skill</span><span class=s1>&#39;s full instructions**: Use the &#39;</span><span class=p>{</span><span class=n>tool_name</span><span class=p>}</span><span class=s1>&#39; tool to load skill</span>
-</span></span><span class=line><span class=cl><span class=mf>3.</span> <span class=o>**</span><span class=n>Follow</span> <span class=n>the</span> <span class=n>skill</span><span class=s1>&#39;s instructions**: tool result contains step-by-step workflows, best practices, and examples</span>
-</span></span><span class=line><span class=cl><span class=mf>4.</span> <span class=o>**</span><span class=n>Access</span> <span class=n>supporting</span> <span class=n>files</span><span class=o>**</span><span class=p>:</span> <span class=n>Skills</span> <span class=n>may</span> <span class=n>include</span> <span class=n>helper</span> <span class=n>scripts</span><span class=p>,</span> <span class=n>configs</span><span class=p>,</span> <span class=ow>or</span> <span class=n>reference</span> <span class=n>docs</span> <span class=o>-</span> <span class=n>use</span> <span class=n>absolute</span> <span class=n>paths</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=o>**</span><span class=n>When</span> <span class=n>to</span> <span class=n>Use</span> <span class=n>Skills</span><span class=p>:</span><span class=o>**</span>
-</span></span><span class=line><span class=cl><span class=o>-</span> <span class=n>User</span><span class=s1>&#39;s request matches a skill&#39;</span><span class=n>s</span> <span class=n>domain</span> <span class=p>(</span><span class=n>e</span><span class=o>.</span><span class=n>g</span><span class=o>.</span><span class=p>,</span> <span class=s2>&#34;research X&#34;</span> <span class=o>-&gt;</span> <span class=n>web</span><span class=o>-</span><span class=n>research</span> <span class=n>skill</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=o>-</span> <span class=n>You</span> <span class=n>need</span> <span class=n>specialized</span> <span class=n>knowledge</span> <span class=ow>or</span> <span class=n>structured</span> <span class=n>workflows</span>
-</span></span><span class=line><span class=cl><span class=o>-</span> <span class=n>A</span> <span class=n>skill</span> <span class=n>provides</span> <span class=n>proven</span> <span class=n>patterns</span> <span class=k>for</span> <span class=nb>complex</span> <span class=n>tasks</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=o>**</span><span class=n>Executing</span> <span class=n>Skill</span> <span class=n>Scripts</span><span class=p>:</span><span class=o>**</span>
-</span></span><span class=line><span class=cl><span class=n>Skills</span> <span class=n>may</span> <span class=n>contain</span> <span class=n>Python</span> <span class=n>scripts</span> <span class=ow>or</span> <span class=n>other</span> <span class=n>executable</span> <span class=n>files</span><span class=o>.</span> <span class=n>Always</span> <span class=n>use</span> <span class=n>absolute</span> <span class=n>paths</span><span class=o>.</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=o>**</span><span class=n>Example</span> <span class=n>Workflow</span><span class=p>:</span><span class=o>**</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=n>User</span><span class=p>:</span> <span class=s2>&#34;Can you research the latest developments in quantum computing?&#34;</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=mf>1.</span> <span class=n>Check</span> <span class=n>available</span> <span class=n>skills</span> <span class=o>-&gt;</span> <span class=n>See</span> <span class=s2>&#34;web-research&#34;</span> <span class=n>skill</span>
-</span></span><span class=line><span class=cl><span class=mf>2.</span> <span class=n>Call</span> <span class=s1>&#39;</span><span class=si>{tool_name}</span><span class=s1>&#39;</span> <span class=n>tool</span> <span class=n>to</span> <span class=n>read</span> <span class=n>the</span> <span class=n>full</span> <span class=n>skill</span> <span class=n>instructions</span>
-</span></span><span class=line><span class=cl><span class=mf>3.</span> <span class=n>Follow</span> <span class=n>the</span> <span class=n>skill</span><span class=s1>&#39;s research workflow (search -&gt; organize -&gt; synthesize)</span>
-</span></span><span class=line><span class=cl><span class=mf>4.</span> <span class=n>Use</span> <span class=nb>any</span> <span class=n>helper</span> <span class=n>scripts</span> <span class=k>with</span> <span class=n>absolute</span> <span class=n>paths</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=n>Remember</span><span class=p>:</span> <span class=n>Skills</span> <span class=n>make</span> <span class=n>you</span> <span class=n>more</span> <span class=n>capable</span> <span class=ow>and</span> <span class=n>consistent</span><span class=o>.</span> <span class=n>When</span> <span class=ow>in</span> <span class=n>doubt</span><span class=p>,</span> <span class=n>check</span> <span class=k>if</span> <span class=n>a</span> <span class=n>skill</span> <span class=n>exists</span> <span class=k>for</span> <span class=n>the</span> <span class=n>task</span><span class=err>!</span>
-</span></span></code></pre></div><p>Skill 工具接收需要加载 skill name，返回对应 SKILL.md 中的完整内容，在工具描述中告知 agent 所有可使用的 skill 的 name 和 description：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=line><span class=cl><span class=k>Execute</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=n>skill</span><span class=w> </span><span class=n>within</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>main</span><span class=w> </span><span class=n>conversation</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;</span><span class=n>skills_instructions</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>When</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=n>ask</span><span class=w> </span><span class=n>you</span><span class=w> </span><span class=k>to</span><span class=w> </span><span class=n>perform</span><span class=w> </span><span class=n>tasks</span><span class=p>,</span><span class=w> </span><span class=k>check</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=k>any</span><span class=w> </span><span class=k>of</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>available</span><span class=w> </span><span class=n>skills</span><span class=w> </span><span class=n>below</span><span class=w> </span><span class=n>can</span><span class=w> </span><span class=n>help</span><span class=w> </span><span class=n>complete</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>task</span><span class=w> </span><span class=k>more</span><span class=w> </span><span class=n>effectively</span><span class=p>.</span><span class=w> </span><span class=n>Skills</span><span class=w> </span><span class=n>provide</span><span class=w> </span><span class=n>specialized</span><span class=w> </span><span class=n>capabilities</span><span class=w> </span><span class=k>and</span><span class=w> </span><span class=k>domain</span><span class=w> </span><span class=n>knowledge</span><span class=p>.</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>How</span><span class=w> </span><span class=k>to</span><span class=w> </span><span class=n>invoke</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=n>Use</span><span class=w> </span><span class=n>this</span><span class=w> </span><span class=n>tool</span><span class=w> </span><span class=k>with</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>skill</span><span class=w> </span><span class=n>name</span><span class=w> </span><span class=k>only</span><span class=w> </span><span class=p>(</span><span class=k>no</span><span class=w> </span><span class=n>arguments</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=n>Examples</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=o>-</span><span class=w> </span><span class=o>`</span><span class=n>skill</span><span class=p>:</span><span class=w> </span><span class=n>pdf</span><span class=o>`</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=n>invoke</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>pdf</span><span class=w> </span><span class=n>skill</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=o>-</span><span class=w> </span><span class=o>`</span><span class=n>skill</span><span class=p>:</span><span class=w> </span><span class=n>xlsx</span><span class=o>`</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=n>invoke</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>xlsx</span><span class=w> </span><span class=n>skill</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=o>-</span><span class=w> </span><span class=o>`</span><span class=n>skill</span><span class=p>:</span><span class=w> </span><span class=n>ms</span><span class=o>-</span><span class=n>office</span><span class=o>-</span><span class=n>suite</span><span class=p>:</span><span class=n>pdf</span><span class=o>`</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=n>invoke</span><span class=w> </span><span class=k>using</span><span class=w> </span><span class=n>fully</span><span class=w> </span><span class=n>qualified</span><span class=w> </span><span class=n>name</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>Important</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=k>When</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=n>skill</span><span class=w> </span><span class=k>is</span><span class=w> </span><span class=n>relevant</span><span class=p>,</span><span class=w> </span><span class=n>you</span><span class=w> </span><span class=n>must</span><span class=w> </span><span class=n>invoke</span><span class=w> </span><span class=n>this</span><span class=w> </span><span class=n>tool</span><span class=w> </span><span class=n>IMMEDIATELY</span><span class=w> </span><span class=k>as</span><span class=w> </span><span class=n>your</span><span class=w> </span><span class=k>first</span><span class=w> </span><span class=n>action</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=n>NEVER</span><span class=w> </span><span class=n>just</span><span class=w> </span><span class=n>announce</span><span class=w> </span><span class=k>or</span><span class=w> </span><span class=n>mention</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=n>skill</span><span class=w> </span><span class=k>in</span><span class=w> </span><span class=n>your</span><span class=w> </span><span class=nb>text</span><span class=w> </span><span class=n>response</span><span class=w> </span><span class=k>without</span><span class=w> </span><span class=n>actually</span><span class=w> </span><span class=n>calling</span><span class=w> </span><span class=n>this</span><span class=w> </span><span class=n>tool</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=n>This</span><span class=w> </span><span class=k>is</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=n>BLOCKING</span><span class=w> </span><span class=n>REQUIREMENT</span><span class=p>:</span><span class=w> </span><span class=n>invoke</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>relevant</span><span class=w> </span><span class=n>Skill</span><span class=w> </span><span class=n>tool</span><span class=w> </span><span class=k>BEFORE</span><span class=w> </span><span class=n>generating</span><span class=w> </span><span class=k>any</span><span class=w> </span><span class=n>other</span><span class=w> </span><span class=n>response</span><span class=w> </span><span class=n>about</span><span class=w> </span><span class=n>the</span><span class=w> </span><span class=n>task</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=k>Only</span><span class=w> </span><span class=n>use</span><span class=w> </span><span class=n>skills</span><span class=w> </span><span class=n>listed</span><span class=w> </span><span class=k>in</span><span class=w> </span><span class=o>&lt;</span><span class=n>available_skills</span><span class=o>&gt;</span><span class=w> </span><span class=n>below</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=k>Do</span><span class=w> </span><span class=k>not</span><span class=w> </span><span class=n>invoke</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=n>skill</span><span class=w> </span><span class=n>that</span><span class=w> </span><span class=k>is</span><span class=w> </span><span class=n>already</span><span class=w> </span><span class=n>running</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>-</span><span class=w> </span><span class=k>Do</span><span class=w> </span><span class=k>not</span><span class=w> </span><span class=n>use</span><span class=w> </span><span class=n>this</span><span class=w> </span><span class=n>tool</span><span class=w> </span><span class=k>for</span><span class=w> </span><span class=n>built</span><span class=o>-</span><span class=k>in</span><span class=w> </span><span class=n>CLI</span><span class=w> </span><span class=n>commands</span><span class=w> </span><span class=p>(</span><span class=k>like</span><span class=w> </span><span class=o>/</span><span class=n>help</span><span class=p>,</span><span class=w> </span><span class=o>/</span><span class=n>clear</span><span class=p>,</span><span class=w> </span><span class=n>etc</span><span class=p>.)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;/</span><span class=n>skills_instructions</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;</span><span class=n>available_skills</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>{{</span><span class=o>-</span><span class=w> </span><span class=n>range</span><span class=w> </span><span class=p>.</span><span class=n>Matters</span><span class=w> </span><span class=err>}}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;</span><span class=n>skill</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;</span><span class=n>name</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>{{</span><span class=w> </span><span class=p>.</span><span class=n>Name</span><span class=w> </span><span class=err>}}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;/</span><span class=n>name</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;</span><span class=n>description</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>{{</span><span class=w> </span><span class=p>.</span><span class=n>Description</span><span class=w> </span><span class=err>}}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;/</span><span class=n>description</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;/</span><span class=n>skill</span><span class=o>&gt;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=err>{{</span><span class=o>-</span><span class=w> </span><span class=k>end</span><span class=w> </span><span class=err>}}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=o>&lt;/</span><span class=n>available_skills</span><span class=o>&gt;</span><span class=w>
-</span></span></span></code></pre></div><p>运行举例：</p><p><a href=/img/eino/GzIObeN6roy2SAxpEXBcMqrRnYb.png target=_blank><img src=/img/eino/GzIObeN6roy2SAxpEXBcMqrRnYb.png width=100%></a></p><blockquote><p>💡
-Skill Middleware 仅提供了如上图所示的加载 SKILL.md 能力，如果 Skill 需要 agent 具备读取文件、执行脚本等能力，需要用户另外为 agent 配置。</p></blockquote><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
-<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 March 24, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/df16769c7a363b99d877c61e88d3057721ae70af>docs(eino): sync docs from feishu (2026-03-24) (#1527) (df16769c7)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 3. 传入 Agent 的 Handlers</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>agent</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewChatModelAgent</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// ... 其他配置</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>Handlers</span><span class=p>:</span><span class=w> </span><span class=p>[]</span><span class=nx>adk</span><span class=p>.</span><span class=nx>ChatModelAgentMiddleware</span><span class=p>{</span><span class=nx>handler</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
+</span></span></span></code></pre></div><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 May 21, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/14c457e4b31e5215ffb722a7f0d1c47dae30835d>docs(eino): sync docs from feishu (2026-05-21) (#1545) (14c457e4b)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
 |
 <a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.7f61069e37ab04943083fa2376368a557ccd2a7d7da9f302c9b6030b765fc76f.js integrity="sha256-f2EGnjerBJQwg/ojdjaKVXzNKn19qfMCybYDC3Zfx28=" crossorigin=anonymous></script><script defer src=/js/click-to-copy.min.383b566d46ea827745a12d56f9f3bafd4eea8f8788fe225e4d72ff25e2752b35.js integrity="sha256-ODtWbUbqgndFoS1W+fO6/U7qj4eI/iJeTXL/JeJ1KzU=" crossorigin=anonymous></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>
