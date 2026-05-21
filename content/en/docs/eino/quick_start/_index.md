@@ -78,7 +78,8 @@ Notes:
 <tr><td>Chapter 7</td><td>Interrupt/Resume</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch07_interrupt_resume.md</td></tr>
 <tr><td>Chapter 8</td><td>Graph Tool (complex workflows)</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch08_graph_tool.md</td></tr>
 <tr><td>Chapter 9</td><td>Skill (Console)</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch09_skill.md</td></tr>
-<tr><td>Final</td><td>A2UI (Web)</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch10_a2ui.md</td></tr>
+<tr><td>Chapter 10</td><td>A2UI (Web)</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch10_a2ui.md</td></tr>
+<tr><td>Chapter 11</td><td>TurnLoop</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch11_turnloop.md</td></tr>
 </table>
 
 ## Final deliverable: an extensible end-to-end Agent application skeleton

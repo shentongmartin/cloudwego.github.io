@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-16"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: 快速开始
@@ -69,7 +69,7 @@ EINO_EXT_SKILLS_DIR="$(pwd)/skills/eino-ext" go run .
 
 <table>
 <tr><td>章节</td><td>主题</td><td>入口</td></tr>
-<tr><td>第一章</td><td>ChatModel 与 Message（Console）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch01_chatmodel_agent_console.md</td></tr>
+<tr><td>第一章</td><td>ChatModel 与 AgenticMessage（Console）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch01_chatmodel_agent_console.md</td></tr>
 <tr><td>第二章</td><td>Agent 与 Runner（Console 多轮）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch02_chatmodel_agent_runner_console.md</td></tr>
 <tr><td>第三章</td><td>Memory 与 Session（持久化对话）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch03_memory_session_jsonl.md</td></tr>
 <tr><td>第四章</td><td>Tool 与文件系统访问</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch04_tool_backend_filesystem.md</td></tr>
@@ -78,7 +78,8 @@ EINO_EXT_SKILLS_DIR="$(pwd)/skills/eino-ext" go run .
 <tr><td>第七章</td><td>Interrupt/Resume（中断与恢复）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch07_interrupt_resume.md</td></tr>
 <tr><td>第八章</td><td>Graph Tool（复杂工作流）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch08_graph_tool.md</td></tr>
 <tr><td>第九章</td><td>Skill（Console）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch09_skill.md</td></tr>
-<tr><td>最终章</td><td>A2UI（Web）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch10_a2ui.md</td></tr>
+<tr><td>第十章</td><td>A2UI（Web）</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch10_a2ui.md</td></tr>
+<tr><td>第十一章 </td><td>TurnLoop</td><td>https://github.com/cloudwego/eino-examples/blob/main/quickstart/chatwitheino/docs/ch11_turnloop.md |</td></tr>
 </table>
 
 ## 最终交付：一个可扩展的端到端 Agent 应用骨架

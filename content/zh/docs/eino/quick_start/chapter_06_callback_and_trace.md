@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-12"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: 第六章：Callback 与 Trace（可观测性）
@@ -159,12 +159,12 @@ callbacks.AppendGlobalHandlers(clc.NewLoopHandler(client))
 Callback 在组件生命周期的 5 个关键时机触发。下表中 `Timing*` 是 Eino 内部常量名（用于 `TimingChecker` 接口），对应的 Handler 接口方法是右侧所示：
 
 <table>
-<tr><td>时机常量</td><td>对应 Handler 方法</td><td>触发点</td><td>输入/输出</td></tr>
-<tr><td><pre>TimingOnStart</pre></td><td><pre>OnStart</pre></td><td>组件开始处理前</td><td>CallbackInput</td></tr>
-<tr><td><pre>TimingOnEnd</pre></td><td><pre>OnEnd</pre></td><td>组件成功返回后</td><td>CallbackOutput</td></tr>
-<tr><td><pre>TimingOnError</pre></td><td><pre>OnError</pre></td><td>组件返回错误时</td><td>error</td></tr>
-<tr><td><pre>TimingOnStartWithStreamInput</pre></td><td><pre>OnStartWithStreamInput</pre></td><td>组件接收流式输入时</td><td>StreamReader[CallbackInput]</td></tr>
-<tr><td><pre>TimingOnEndWithStreamOutput</pre></td><td><pre>OnEndWithStreamOutput</pre></td><td>组件返回流式输出时</td><td>StreamReader[CallbackOutput]</td></tr>
+<tr><td>时机常量</td><td>对应 Handler 方法</td><td>触发点</td><td>输入 / 输出</td></tr>
+<tr><td>TimingOnStart</td><td>OnStart</td><td>组件开始处理前</td><td>CallbackInput</td></tr>
+<tr><td>TimingOnEnd</td><td>OnEnd</td><td>组件成功返回后</td><td>CallbackOutput</td></tr>
+<tr><td>TimingOnError</td><td>OnError</td><td>组件返回错误时</td><td>error</td></tr>
+<tr><td>TimingOnStartWithStreamInput</td><td>OnStartWithStreamInput</td><td>组件接收流式输入时</td><td>StreamReader[CallbackInput]</td></tr>
+<tr><td>TimingOnEndWithStreamOutput</td><td>OnEndWithStreamOutput</td><td>组件返回流式输出时</td><td>StreamReader[CallbackOutput]</td></tr>
 </table>
 
 **示例：ChatModel 调用流程**
@@ -251,48 +251,26 @@ callbacks.AppendGlobalHandlers(handler)
 ### 2. 集成 CozeLoop
 
 ```go
-func setupCozeLoop(ctx context.Context) (*cozeloop.Client, error) {
-    apiToken := os.Getenv("COZELOOP_API_TOKEN")
-    workspaceID := os.Getenv("COZELOOP_WORKSPACE_ID")
-    
-    if apiToken == "" || workspaceID == "" {
-        return nil, nil  // 未配置则跳过
-    }
-    
+// Setup CozeLoop tracing (optional)
+// Set COZELOOP_API_TOKEN and COZELOOP_WORKSPACE_ID to enable
+cozeloopApiToken := os.Getenv("COZELOOP_API_TOKEN")
+cozeloopWorkspaceID := os.Getenv("COZELOOP_WORKSPACE_ID")
+if cozeloopApiToken != "" && cozeloopWorkspaceID != "" {
     client, err := cozeloop.NewClient(
-        cozeloop.WithAPIToken(apiToken),
-        cozeloop.WithWorkspaceID(workspaceID),
+        cozeloop.WithAPIToken(cozeloopApiToken),
+        cozeloop.WithWorkspaceID(cozeloopWorkspaceID),
     )
     if err != nil {
-        return nil, err
+        log.Fatalf("cozeloop.NewClient failed: %v", err)
     }
-    
-    // 注册为全局 Callback
+    defer func() {
+        time.Sleep(5 * time.Second)
+        client.Close(ctx)
+    }()
     callbacks.AppendGlobalHandlers(clc.NewLoopHandler(client))
-    
-    return client, nil
-}
-```
-
-### 3. 在 main 中使用
-
-```go
-func main() {
-    ctx := context.Background()
-    
-    // 设置 CozeLoop（可选）
-    client, err := setupCozeLoop(ctx)
-    if err != nil {
-        log.Printf("cozeloop setup failed: %v", err)
-    }
-    if client != nil {
-        defer func() {
-            time.Sleep(5 * time.Second)  // 等待数据上报
-            client.Close(ctx)
-        }()
-    }
-    
-    // 创建 Agent 并运行...
+    log.Println("CozeLoop tracing enabled")
+} else {
+    log.Println("CozeLoop tracing disabled (set COZELOOP_API_TOKEN and COZELOOP_WORKSPACE_ID to enable)")
 }
 ```
 

@@ -1,9 +1,9 @@
 ---
 Description: ""
-date: "2025-07-21"
+date: "2026-05-17"
 lastmod: ""
 tags: []
-title: 'Eino: Document Transformer User Guide'
+title: 'Document Transformer User Guide'
 weight: 3
 ---
 
@@ -160,9 +160,11 @@ for idx, doc := range outDocs {
 
 ## **Existing Implementations**
 
-1. Markdown Header Splitter: Document splitting based on Markdown headers [Splitter - markdown](/docs/eino/ecosystem_integration/document/splitter_markdown)
-2. Text Splitter: Document splitting based on text length or delimiters [Splitter - semantic](/docs/eino/ecosystem_integration/document/splitter_semantic)
-3. Document Filter: Filter document content based on rules [Splitter - recursive](/docs/eino/ecosystem_integration/document/splitter_recursive)
+<table>
+<tr><td>markdown</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/document/transformer/splitter/markdown/README_zh.md">README_zh.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/document/transformer/splitter/markdown/README.md">README.md</a></td></tr>
+<tr><td>recursive</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/document/transformer/splitter/recursive/README_zh.md">README_zh.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/document/transformer/splitter/recursive/README.md">README.md</a></td></tr>
+<tr><td>semantic</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/document/transformer/splitter/semantic/README_zh.md">README_zh.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/document/transformer/splitter/semantic/README.md">README.md</a></td></tr>
+</table>
 
 ## **Implementation Reference**
 

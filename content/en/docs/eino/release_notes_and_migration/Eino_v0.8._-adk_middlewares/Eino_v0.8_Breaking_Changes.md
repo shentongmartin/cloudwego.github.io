@@ -9,9 +9,9 @@ weight: 1
 
 ## 1. API Breaking Changes
 
-### 1.1 filesystem Shell Interface Renamed
+### 1.1 Filesystem Shell Interface Renamed
 
-**Location**: `adk/filesystem/backend.go` **Change Description**: Shell-related interfaces have been renamed and no longer embed the `Backend` interface. **Before (v0.7.x)**:
+**Location**: `adk/filesystem/backend.go` **Description**: Shell-related interfaces have been renamed and no longer embed the `Backend` interface. **Before (v0.7.x)**:
 
 ```go
 type ShellBackend interface {
@@ -41,38 +41,69 @@ type StreamingShell interface {
 
 - `ShellBackend` renamed to `Shell`
 - `StreamingShellBackend` renamed to `StreamingShell`
-- Interfaces no longer embed `Backend`. If your implementation depends on the composite interface, you need to implement them separately **Migration Guide**:
+- Interfaces no longer embed `Backend`; if your implementation relies on the combined interface, you need to implement them separately. **Migration Guide**:
 
 ```go
 // Before
 type MyBackend struct {}
 func (b *MyBackend) Execute(...) {...}
-// MyBackend implementing ShellBackend needed to implement all Backend methods
+// MyBackend implementing ShellBackend required implementing all Backend methods
 
 // After
 type MyShell struct {}
 func (s *MyShell) Execute(...) {...}
-// MyShell only needs to implement Shell interface methods
-// If you also need Backend functionality, implement both interfaces separately
+// MyShell only needs to implement the Shell interface methods
+// If Backend functionality is also needed, implement both interfaces separately
 ```
 
 ---
+
+### 1.2 Filesystem Backend: Read Return Value Breaking Change
+
+- **Location**: adk/filesystem/backend.go
+- **Description**: The return value of `Backend.Read` has been incompatibly changed from returning `string` to returning a `*FileContent` struct.
+
+**Before (v0.7.x)**:
+
+```go
+type Backend interface {
+    ...
+    Read(ctx context.Context, req *ReadRequest) (string, error)
+    ...
+ }
+```
+
+**After (v0.8.0)**:
+
+```go
+type Backend interface {
+    ...
+    Read(ctx context.Context, req *ReadRequest) (*FileContent, error)
+    ...
+ }
+```
+
+**Impact:**
+
+- v0.7.x Read interface returned `string`. v0.8.0 Read interface returns struct `FileContent`, which is a breaking change.
+- For Backend implementors: Need to replace the Read method implementation, changing from returning String to returning *FileContent.
+- For Backend consumers: Need to upgrade the Backend implementation to one supporting v0.8. Also need to modify the Backend.Read call to use the new *FileContent return value.
 
 ## 2. Behavioral Breaking Changes
 
 ### 2.1 AgentEvent Sending Mechanism Change
 
-**Location**: `adk/chatmodel.go` **Change Description**: `ChatModelAgent`'s `AgentEvent` sending mechanism changed from eino callback mechanism to Middleware mechanism. **Before (v0.7.x)**:
+**Location**: `adk/chatmodel.go` **Description**: The `AgentEvent` sending mechanism in `ChatModelAgent` has been changed from the eino callback mechanism to the Middleware mechanism. **Before (v0.7.x)**:
 
 - `AgentEvent` was sent through eino's callback mechanism
-- If users customized ChatModel or Tool Decorator/Wrapper, and the original ChatModel/Tool had embedded Callback points, `AgentEvent` would be sent **inside** the Decorator/Wrapper
-- This applied to all ChatModels implemented in eino-ext, but may not apply to most user-implemented Tools and Tools provided by eino **After (v0.8.0)**:
-- `AgentEvent` is sent through Middleware mechanism
-- `AgentEvent` is sent **outside** user-customized Decorator/Wrapper **Impact**:
+- If users customized a ChatModel or Tool Decorator/Wrapper, and the original ChatModel/Tool had embedded Callback hooks, the `AgentEvent` would be sent **inside** the Decorator/Wrapper
+- This applied to all ChatModels implemented in eino-ext, but might not apply to most user-implemented Tools and Tools provided by eino directly **After (v0.8.0)**:
+- `AgentEvent` is sent through the Middleware mechanism
+- `AgentEvent` is sent **outside** the user's custom Decorator/Wrapper **Impact**:
 - Under normal circumstances, users won't notice this change
-- If users previously implemented their own ChatModel or Tool Decorator/Wrapper, the relative position of event sending will change
-- Position change may cause `AgentEvent` content to change: previous events didn't include Decorator/Wrapper modifications, current events will include them **Reason for Change**:
-- In normal business scenarios, we want emitted events to include Decorator/Wrapper modifications **Migration Guide**: If you previously wrapped ChatModel or Tool through Decorator/Wrapper, you need to implement the `ChatModelAgentMiddleware` interface instead:
+- If users previously implemented a ChatModel or Tool Decorator/Wrapper, the relative position of event sending changes
+- Position change may cause the content of `AgentEvent` to change: previously events did not include changes made by Decorator/Wrapper, now events will include them **Rationale**:
+- In normal business scenarios, we want the emitted events to include changes made by Decorator/Wrapper **Migration Guide**: If you previously wrapped ChatModel or Tool through Decorator/Wrapper, switch to implementing the `ChatModelAgentMiddleware` interface:
 
 ```go
 // Before: Wrapping ChatModel through Decorator/Wrapper
@@ -85,19 +116,19 @@ func (w *MyModelWrapper) Generate(ctx context.Context, input []*schema.Message, 
     return w.inner.Generate(ctx, input, opts...)
 }
 
-// After: Implement WrapModel method of ChatModelAgentMiddleware
+// After: Implement the WrapModel method of ChatModelAgentMiddleware
 type MyMiddleware struct{}
 
 func (m *MyMiddleware) WrapModel(ctx context.Context, chatModel model.BaseChatModel, mc *ModelContext) (model.BaseChatModel, error) {
     return &myWrappedModel{inner: chatModel}, nil
 }
 
-// For Tool Wrappers, implement WrapInvokableToolCall / WrapStreamableToolCall methods instead
+// For Tool Wrappers, switch to implementing WrapInvokableToolCall / WrapStreamableToolCall methods
 ```
 
 ### 2.2 filesystem.ReadRequest.Offset Semantic Change
 
-**Location**: `adk/filesystem/backend.go` **Change Description**: `Offset` field changed from 0-based to 1-based. **Before (v0.7.x)**:
+**Location**: `adk/filesystem/backend.go` **Description**: The `Offset` field has been changed from 0-based to 1-based. **Before (v0.7.x)**:
 
 ```go
 type ReadRequest struct {
@@ -112,6 +143,7 @@ type ReadRequest struct {
 
 ```go
 type ReadRequest struct {
+
     FilePath string
     // Offset specifies the starting line number (1-based) for reading.
     // Line 1 is the first line of the file.
@@ -124,10 +156,10 @@ type ReadRequest struct {
 **Migration Guide**:
 
 ```go
-// Before: Read from line 0 (i.e., first line)
+// Before: Reading from line 0 (i.e., the first line)
 req := &ReadRequest{Offset: 0, Limit: 100}
 
-// After: Read from line 1 (i.e., first line)
+// After: Reading from line 1 (i.e., the first line)
 req := &ReadRequest{Offset: 1, Limit: 100}
 
 // If you previously used Offset: 10 to mean starting from line 11
@@ -138,7 +170,7 @@ req := &ReadRequest{Offset: 1, Limit: 100}
 
 ### 2.3 filesystem.FileInfo.Path Semantic Change
 
-**Location**: `adk/filesystem/backend.go` **Change Description**: `FileInfo.Path` field is no longer guaranteed to be an absolute path. **Before (v0.7.x)**:
+**Location**: `adk/filesystem/backend.go` **Description**: The `FileInfo.Path` field no longer guarantees an absolute path. **Before (v0.7.x)**:
 
 ```go
 type FileInfo struct {
@@ -160,18 +192,25 @@ type FileInfo struct {
 
 **Impact**:
 
-- Code that depends on `Path` being an absolute path may have issues
+- Code that depends on `Path` being an absolute path may encounter issues
 - Need to check and handle relative path cases
 
 ---
 
 ### 2.4 filesystem.WriteRequest Behavior Change
 
-**Location**: `adk/filesystem/backend.go` **Change Description**: `WriteRequest` write behavior changed from "error if file exists" to "overwrite if file exists". **Before (v0.7.x)**:
+**Location**: `adk/filesystem/backend.go` **Description**: The write behavior of `WriteRequest` has been changed from "error if file exists" to "overwrite if file exists". **Before (v0.7.x)**:
 
 ```go
 // WriteRequest comment:
 // The file will be created if it does not exist, or error if file exists.
+type WriteRequest struct {
+    // FilePath is the absolute path of the file to write. Must start with '/'.
+    // The file will be created if it does not exist, or error if file exists.
+    FilePath string
+
+    ...
+}
 ```
 
 **After (v0.8.0)**:
@@ -179,19 +218,26 @@ type FileInfo struct {
 ```go
 // WriteRequest comment:
 // Creates the file if it does not exist, overwrites if it exists.
+type WriteRequest struct {
+    // FilePath is the path of the file to write.
+    FilePath string
+
+    ....
+}
 ```
 
 **Impact**:
 
-- Code that previously relied on "error if file exists" behavior will no longer error, but directly overwrite
-- May cause unexpected data loss **Migration Guide**:
-- If you need to preserve the original behavior, check if the file exists before writing
+- Code that previously relied on "error if file exists" behavior will no longer error, but instead overwrite directly
+- May lead to unexpected data loss **Migration Guide**:
+- If you need to preserve the original behavior, check whether the file exists before writing
+- Previously FilePath represented an absolute path; the new version does not stipulate that FilePath must be an absolute path. Scenarios that depended on absolute paths need to adapt accordingly
 
 ---
 
 ### 2.5 GrepRequest.Pattern Semantic Change
 
-**Location**: `adk/filesystem/backend.go` **Change Description**: `GrepRequest.Pattern` changed from literal matching to regular expression matching. **Before (v0.7.x)**:
+**Location**: `adk/filesystem/backend.go` **Description**: `GrepRequest.Pattern` has been changed from literal matching to regular expression matching. **Before (v0.7.x)**:
 
 ```go
 // Pattern is the literal string to search for. This is not a regular expression.
@@ -208,16 +254,16 @@ type FileInfo struct {
 **Impact**:
 
 - Search patterns containing regex special characters will behave differently
-- For example, searching for `interface{}` now needs to be escaped as `interface\{\}` **Migration Guide**:
+- For example, searching for `interface{}` now requires escaping to `interface\{\}` **Migration Guide**:
 
 ```go
 // Before: Literal search
 req := &GrepRequest{Pattern: "interface{}"}
 
-// After: Regex search, need to escape special characters
+// After: Regex search, special characters need escaping
 req := &GrepRequest{Pattern: "interface\\{\\}"}
 
-// Or if searching for literals containing . * + ?, also need to escape
+// Or if searching for literals containing . * + ?, they also need escaping
 // Before
 req := &GrepRequest{Pattern: "config.json"}
 // After
@@ -226,11 +272,37 @@ req := &GrepRequest{Pattern: "config\\.json"}
 
 ---
 
+### 2.6 EditRequest.FilePath Semantic Change
+
+**Location**: `adk/filesystem/backend.go` **Description**: The mandatory absolute path description has been removed from EditRequest.FilePath comments. **Before (v0.7.x)**:
+
+```go
+type EditRequest struct {
+     // FilePath is the absolute path of the file to edit. Must start with '/'.
+      FilePath string
+    ....
+    }
+  }
+```
+
+**After (v0.8.0)**:
+
+```go
+type EditRequest struct {
+   // FilePath is the path of the file to edit.
+    FilePath string
+}
+```
+
+**Impact**:
+
+- In the old version, `FilePath` defaulted to representing an absolute path; the new version no longer guarantees `FilePath` is an absolute path. Logic that previously relied on `FilePath` being an absolute path needs to be adapted accordingly.
+
 ## Migration Recommendations
 
-1. **Handle compile errors first**: Type changes (like Shell interface renaming) will cause compilation failures, need to fix first
-2. **Pay attention to semantic changes**: `ReadRequest.Offset` changed from 0-based to 1-based, `Pattern` changed from literal to regex - these won't cause compile errors but will change runtime behavior
-3. **Check file operations**: `WriteRequest` overwrite behavior change may cause data loss, requires additional checks
-4. **Migrate Decorator/Wrapper**: If you have custom ChatModel/Tool Decorator/Wrapper, change to implement `ChatModelAgentMiddleware`
-5. Upgrade backend implementations as needed: If using local/ark agentkit backend provided by eino-ext, upgrade to corresponding alpha versions: [local backend v0.2.0-alpha](https://github.com/cloudwego/eino-ext/releases/tag/adk%2Fbackend%2Flocal%2Fv0.2.0-alpha.1), [ark agentkit backend v0.2.0-alpha](https://github.com/cloudwego/eino-ext/releases/tag/adk%2Fbackend%2Fagentkit%2Fv0.2.0-alpha.1)
-6. **Test verification**: After migration, perform comprehensive testing, especially for code involving file operations and search functionality
+1. **Fix compilation errors first**: Type changes (such as Shell interface renaming) will cause compilation failures and need to be fixed first
+2. **Pay attention to semantic changes**: `ReadRequest.Offset` changing from 0-based to 1-based, `Pattern` changing from literal to regex—these won't cause compilation errors but will change runtime behavior
+3. **Check file operations**: The overwrite behavior change in `WriteRequest` may lead to data loss and requires additional checking
+4. **Migrate Decorator/Wrapper**: If you have custom ChatModel/Tool Decorator/Wrappers, switch to implementing `ChatModelAgentMiddleware`
+5. **Upgrade backend implementations as needed**: If using the local/ark agentkit backend provided by eino-ext, upgrade to the corresponding latest version: [adk/backend/local/v0.2.1](https://github.com/cloudwego/eino-ext/releases/tag/adk%2Fbackend%2Flocal%2Fv0.2.1) [adk/backend/agentkit/v0.2.1](https://github.com/cloudwego/eino-ext/releases/tag/adk%2Fbackend%2Fagentkit%2Fv0.2.1)
+6. **Test verification**: After migration, conduct comprehensive testing, especially code involving file operations and search functionality

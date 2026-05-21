@@ -4,7 +4,7 @@ date: "2026-03-02"
 lastmod: ""
 tags: []
 title: 发布记录 & 迁移指引
-weight: 8
+weight: 7
 ---
 
 # 版本管理规范

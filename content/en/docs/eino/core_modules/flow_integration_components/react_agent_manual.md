@@ -1,9 +1,9 @@
 ---
 Description: ""
-date: "2026-03-16"
+date: "2026-05-17"
 lastmod: ""
 tags: []
-title: 'Eino: ReAct Agent Manual'
+title: ReAct Agent Manual
 weight: 1
 ---
 

@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-12"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: 第四章：Tool 与文件系统访问
@@ -135,7 +135,7 @@ backend, err := localbk.NewBackend(ctx, &localbk.Config{})
 <tr><td>添加自定义 Tool</td><td>✅ 手动注册每个 Tool</td><td>✅ 手动注册或自动注册</td></tr>
 <tr><td>文件系统访问（Backend）</td><td>❌ 需手动创建并注册所有文件工具</td><td>✅ 一级配置，自动注册</td></tr>
 <tr><td>命令执行（StreamingShell）</td><td>❌ 需手动创建</td><td>✅ 一级配置，自动注册</td></tr>
-<tr><td>内置任务管理</td><td>❌</td><td>✅ <pre>write_todos</pre> 工具</td></tr>
+<tr><td>内置任务管理</td><td>❌</td><td>✅ write_todos 工具</td></tr>
 <tr><td>支持子 Agent</td><td>❌</td><td>✅</td></tr>
 </table>
 
@@ -170,7 +170,7 @@ agent, err := deep.New(ctx, &deep.Config{
     Name:           "Ch04ToolAgent",
     Description:    "ChatWithDoc agent with filesystem access via LocalBackend.",
     ChatModel:      cm,
-    Instruction:    instruction,
+    Instruction:    agentInstruction,
     Backend:        backend,        // 提供文件系统操作能力
     StreamingShell: backend,        // 提供命令执行能力
     MaxIteration:   50,
@@ -214,7 +214,7 @@ ls $PROJECT_ROOT
 go run ./cmd/ch04
 ```
 
-**PROJECT_ROOT 说明：**
+**PROJECT_ROOT**** 说明：**
 
 - **不设置时**：`PROJECT_ROOT` 默认为当前工作目录（`chatwitheino` 所在目录），Agent 只能访问本示例项目的文件。这对于快速试验已足够。
 - **设置后**：指向 Eino 核心库根目录，Agent 可以检索 Eino 框架的完整代码库（核心库、扩展库、示例库）。这是 ChatWithEino 的完整使用场景。

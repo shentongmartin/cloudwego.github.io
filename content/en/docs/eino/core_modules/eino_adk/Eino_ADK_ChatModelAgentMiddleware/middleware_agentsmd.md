@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-24"
+date: "2026-05-17"
 lastmod: ""
 tags: []
 title: AgentsMD
@@ -9,85 +9,45 @@ weight: 9
 
 ## Overview
 
-`agentsmd` is an Eino ADK middleware that **automatically injects the content of Agents.md into the model input messages on every model call**. The injection is ephemeral: it is added dynamically for each model call and is not persisted into the session state, so it **won’t be processed by summarization/compression middlewares**.
+`agentsmd` is an Eino ADK middleware that **automatically injects the content of Agents.md files into the message sequence on every model call**. The injected message is persisted by the framework into the agent's internal state, but **idempotency checks** (`Extra["__agentsmd_content__"]` marker) ensure it is never injected more than once. Since the injected content is fixed at its first appearance, **it will not change with subsequent summarization/compression**.
 
-**Core value**: define system-level behavior instructions and context for an agent via an Agents.md file (similar to Claude Code’s CLAUDE.md), without manually composing system prompts.
+**Core value**: Define system-level behavior instructions and context for an Agent via Agents.md files (similar to Claude Code's CLAUDE.md), without manually managing system prompt composition.
 
-**Package**: `github.com/cloudwego/eino/adk/middlewares/agentsmd`
-
----
+**Package path**: `github.com/cloudwego/eino/adk/middlewares/agentsmd`
 
 ## Quick Start
 
-### Minimal Example
-
 ```go
-package main
+ctx := context.Background()
 
-import (
-        "context"
-        "fmt"
-
-        "github.com/cloudwego/eino/adk"
-        "github.com/cloudwego/eino/adk/middlewares/agentsmd"
-)
-
-func main() {
-        ctx := context.Background()
-
-        // 1. Prepare Backend (file reading backend)
-        backend := NewLocalFileBackend("/path/to/project")
-
-        // 2. Create agentsmd middleware
-        mw, err := agentsmd.New(ctx, &agentsmd.Config{
-                Backend:       backend,
-                AgentsMDFiles: []string{"/home/user/project/agents.md"},
-        })
-        if err != nil {
-                panic(err)
-        }
-
-        // 3. Attach the middleware to the agent
-        // agent := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
-        //     Middlewares: []adk.ChatModelAgentMiddleware{mw},
-        // })
-        _ = mw
-        fmt.Println("agentsmd middleware created successfully")
+// 1. Create agentsmd middleware
+mw, err := agentsmd.New(ctx, &agentsmd.Config{
+    Backend:       myBackend, // Implements agentsmd.Backend interface
+    AgentsMDFiles: []string{"/project/agents.md"},
+})
+if err != nil {
+    panic(err)
 }
+
+// 2. Configure with Agent
+agent, _ := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
+    Model:    chatModel,
+    Handlers: []adk.ChatModelAgentMiddleware{mw},
+})
 ```
 
 ---
 
-## Configuration
+## Configuration Details
 
-### Config
+### Config Struct
 
 ```go
 type Config struct {
-    // Backend provides file access to load Agents.md files.
-    // It can be a local filesystem, remote storage, or any other backend.
-    // Required.
-    Backend Backend
-
-    // AgentsMDFiles is an ordered list of Agents.md file paths to load.
-    // Files are loaded and injected in the given order.
-    // Files support recursive @import (max depth 5).
-    AgentsMDFiles []string
-
-    // AllAgentsMDMaxBytes limits the total bytes of all loaded Agents.md content.
-    // Files are loaded in order; once the cumulative size exceeds this limit,
-    // the remaining files will be skipped.
-    // Each individual file is always loaded in full.
-    // 0 means unlimited.
+    Backend             Backend
+    AgentsMDFiles       []string
     AllAgentsMDMaxBytes int
-
-    // OnLoadWarning is an optional callback invoked on non-fatal errors during loading
-    // (e.g. file not found, cyclic @import, depth limit exceeded).
-    // If nil, warnings are printed via log.Printf.
-    //
-    // Note: Backend.Read errors other than os.ErrNotExist (e.g. permission denied, I/O errors)
-    // are not treated as warnings and will abort the loading process.
-    OnLoadWarning func(filePath string, err error)
+    OnLoadWarning       func(filePath string, err error)
 }
 ```
 
@@ -95,56 +55,77 @@ type Config struct {
 
 <table>
 <tr><td>Parameter</td><td>Type</td><td>Required</td><td>Default</td><td>Description</td></tr>
-<tr><td><pre>Backend</pre></td><td><pre>Backend</pre></td><td>Yes</td><td>-</td><td>File reading backend that performs the actual I/O</td></tr>
-<tr><td><pre>AgentsMDFiles</pre></td><td><pre>[]string</pre></td><td>Yes</td><td>-</td><td>List of Agents.md file paths to load (at least one)</td></tr>
-<tr><td><pre>AllAgentsMDMaxBytes</pre></td><td><pre>int</pre></td><td>No</td><td><pre>0</pre> (unlimited)</td><td>Total byte limit for all files</td></tr>
-<tr><td><pre>OnLoadWarning</pre></td><td><pre>func(string, error)</pre></td><td>No</td><td><pre>log.Printf</pre></td><td>Callback for non-fatal errors</td></tr>
+<tr><td><pre>Backend</pre></td><td><pre>Backend</pre></td><td>Yes</td><td>—</td><td>File reading backend, responsible for actual file I/O</td></tr>
+<tr><td><pre>AgentsMDFiles</pre></td><td><pre>[]string</pre></td><td>Yes</td><td>—</td><td>List of Agents.md file paths to load (at least one), loaded and injected in order</td></tr>
+<tr><td><pre>AllAgentsMDMaxBytes</pre></td><td><pre>int</pre></td><td>No</td><td><pre>0</pre> (unlimited)</td><td>Total byte limit for all files; subsequent files are skipped once exceeded, but each file is always loaded in full</td></tr>
+<tr><td><pre>OnLoadWarning</pre></td><td><pre>func(string, error)</pre></td><td>No</td><td><pre>log.Printf</pre></td><td>Callback for non-fatal errors (file missing, cyclic @import, depth limit exceeded, etc.)</td></tr>
 </table>
+
+### Validation Rules
+
+`New` / `NewTyped` validates Config on creation:
+
+- `Config` must not be nil
+- `Backend` must not be nil
+- `AgentsMDFiles` must contain at least one path
+- `AllAgentsMDMaxBytes` must not be negative
 
 ---
 
+## Constructors
+
+### New — Standard Constructor
+
+```go
+func New(ctx context.Context, cfg *Config) (adk.ChatModelAgentMiddleware, error)
+```
+
+Returns `ChatModelAgentMiddleware` (i.e., `TypedChatModelAgentMiddleware[*schema.Message]`), suitable for standard `ChatModelAgent`.
+
+### NewTyped — Generic Constructor
+
+```go
+func NewTyped[M adk.MessageType](_ context.Context, cfg *Config) (adk.TypedChatModelAgentMiddleware[M], error)
+```
+
+Generic version, supporting both `*schema.Message` and `*schema.AgenticMessage` message types. `New` internally calls `NewTyped[*schema.Message]`.
+
 ## Backend Interface
 
-### Definition
+### Interface Definition
 
 ```go
 type Backend interface {
-    // Read reads file content.
-    // If the file does not exist, implementations should return an error that wraps os.ErrNotExist
-    // (so errors.Is(err, os.ErrNotExist) returns true).
-    // This lets the loader skip missing files silently and notify via OnLoadWarning.
-    // Other errors (permission denied, I/O errors) abort the loading process.
     Read(ctx context.Context, req *ReadRequest) (*FileContent, error)
 }
 ```
 
-### Types
+### Type Definitions
+
+`ReadRequest` and `FileContent` are aliases for the same-named types in the `github.com/cloudwego/eino/adk/filesystem` package:
 
 ```go
-// ReadRequest defines request parameters for reading a file
-type ReadRequest struct {
-    FilePath string // file path
-    Offset   int    // starting line number (1-based)
-}
-
-// FileContent defines the return structure of file content
-type FileContent struct {
-    Content string // file text content
-}
+type ReadRequest = filesystem.ReadRequest
+type FileContent = filesystem.FileContent
 ```
+
+> 💡
+> **Backend Implementation Requirements**
+>
+> - When a file does not exist, implementations **must** return an error wrapping `os.ErrNotExist` (so that `errors.Is(err, os.ErrNotExist)` returns `true`); the loader uses this to distinguish "file missing" from "real I/O error"
+> - Other errors (permission denied, I/O errors) will **abort the entire loading process** and are not treated as warnings
+> - The `Read` method should be concurrency-safe
 
 ---
 
 ## @import Syntax
 
-Agents.md supports `@import` to recursively include other files.
+Agents.md files support the `@path` syntax for recursive inclusion of other files.
 
-### Syntax
-
-In Agents.md, use `@path/to/file` to reference another file:
+### Syntax Format
 
 ```markdown
-# Project instructions
+# Project Instructions
 
 You are a coding assistant.
 
@@ -153,68 +134,84 @@ Please follow these rules:
 @rules/api-conventions.md
 ```
 
-### Rules
+### Matching Rules
 
-1. **Path resolution**: relative paths are resolved from the current file’s directory; absolute paths are used as-is
-2. **Max recursion depth**: 5 (beyond that the import is skipped and `OnLoadWarning` is triggered)
-3. **Cycle detection**: cyclic imports are detected and skipped (`OnLoadWarning` is triggered)
-4. **Global de-duplication**: the same file is not loaded twice
-5. **Supported extensions** (when the path contains no `/`): `.md`, `.txt`, `.mdx`, `.yaml`, `.yml`, `.json`, `.toml`
-6. **False-positive filtering**: `@ref` without `/` whose extension is not allowed will be ignored (to avoid treating `@someone` or `@example.com` as an import)
+The loader uses the regex `@([a-zA-Z0-9_.~/][a-zA-Z0-9_.~/\-]*)` to scan file content, with the following filtering logic:
 
-### Example Directory Layout
+- **Paths containing /**: directly treated as @import (e.g., `@rules/style.md`)
+- **Paths without /**: treated as @import only when the extension is in the allow list; otherwise ignored
+
+**Allowed extensions**: `.md`, `.txt`, `.mdx`, `.yaml`, `.yml`, `.json`, `.toml`
+
+This design avoids misinterpreting `@someone`, `@example.com`, etc. as import targets.
+
+### Resolution Behavior
+
+<table>
+<tr><td>Rule</td><td>Description</td></tr>
+<tr><td>Path resolution</td><td>Relative paths are resolved from the current file's directory; absolute paths are used as-is</td></tr>
+<tr><td>Maximum recursion depth</td><td><strong>5 levels</strong> (exceeded paths are skipped and trigger <pre>OnLoadWarning</pre>)</td></tr>
+<tr><td>Cycle detection</td><td>Paths already present in the current ancestor chain are skipped (triggers <pre>OnLoadWarning</pre>)</td></tr>
+<tr><td>Global deduplication</td><td>The same file path is read and injected only once across the entire load</td></tr>
+<tr><td>Original text preserved</td><td>@imported files are appended as separate paragraphs; the <pre>@path</pre> text in the original is <strong>not removed</strong></td></tr>
+<tr><td>Byte budget</td><td>Once cumulative bytes exceed <pre>AllAgentsMDMaxBytes</pre>, subsequent imports are skipped</td></tr>
+</table>
+
+### Directory Structure Example
 
 ```
 project/
-├── Agents.md               # entry file
+├── Agents.md               # Main entry file
 ├── rules/
-│   ├── code-style.md       # code style rules
-│   ├── api-conventions.md  # API conventions
-│   └── testing.md          # testing rules
+│   ├── code-style.md       # @rules/code-style.md
+│   ├── api-conventions.md  # @rules/api-conventions.md
+│   └── testing.md
 └── context/
-    └── architecture.md     # architecture notes
+    └── architecture.md
 ```
 
 ---
 
 ## How It Works
 
+### Implementation Hook
+
+The middleware implements the `BeforeModelRewriteState` method of the `TypedChatModelAgentMiddleware` interface (**not** WrapModel). This hook triggers before each model call, when the state is being rewritten.
+
 ### Injection Flow
 
+### Message Sequence After Injection
+
 ```
-User message + history
-       │
-       ▼
-┌─────────────────────┐
-│  agentsmd middleware │
-│  (WrapModel)         │
-│                      │
-│  1. Load Agents.md   │
-│  2. Cache in RunLocal│
-│  3. Build injected msg│
-└─────────────────────┘
-       │
-       ▼
-┌─────────────────────────────────────┐
-│  Injected message sequence           │
-│                                     │
-│  [System]  system prompt            │
-│  [User]    ← Agents.md injection    │  ← inserted before the first User message
-│  [User]    previous user message 1  │
-│  [Assistant] assistant reply 1      │
-│  [User]    current user message     │
-└─────────────────────────────────────┘
-       │
-       ▼
-Model call (Generate / Stream)
+[System]     System prompt
+[User]       ← Agents.md content (with Extra marker)
+[User]       User historical message 1
+[Assistant]  Assistant reply 1
+[User]       Current user message
 ```
 
-### Key Mechanics
+### Key Mechanisms
 
-1. **Ephemeral injection**: Agents.md content is inserted only for model calls and not written into `ChatModelAgentState`, so it won’t be summarized/compressed
-2. **Run-level caching**: within a single agent `Run()`, the loaded Agents.md content is cached in `RunLocalValue`; subsequent model calls reuse it to avoid repeated reads
-3. **Insertion position**: injected as a `User` role message before the first user message; if there is no user message, it is appended to the end
-4. **I18n**: formatted output adapts to Chinese/English automatically (based on the system language environment)
+**1. Persistent injection + idempotency guarantee**
+
+The framework persists the state returned by `BeforeModelRewriteState` into the agent's internal state (`st.Messages = state.Messages`). The injected message is marked with `Extra["__agentsmd_content__"]`; each time the hook is entered, it first scans for this marker — if found, it returns the original state directly, avoiding duplicate injection. Therefore, in effect: the content is injected and persisted on the first model call, and subsequent iterations do not re-insert it.
+
+**2. Run-level caching**
+
+Within the same `Run()`, content loaded for the first time is cached in RunLocal storage via `adk.SetRunLocalValue`. Subsequent model calls (e.g., during multi-turn tool calls) directly reuse the cache via `adk.GetRunLocalValue`. Each new `Run()` reloads from scratch, so file modifications take effect on the next Run.
+
+**4. Insertion position**
+
+Content is inserted as a `User` role message **before the first User message**. If there are no User messages in the sequence, it is appended to the end.
+
+**5. Content formatting**
+
+Loaded file content is formatted:
+
+- Wrapped in `<system-reminder>` tags
+- Includes i18n header (prompting the model to follow instructions) and footer (noting the context may not be relevant)
+- Each file is displayed independently with a `File content: {path} (instructions):` prefix
+- Language (Chinese/English) is controlled globally via `adk.SetLanguage`
 
 ---
 
@@ -222,15 +219,13 @@ Model call (Generate / Stream)
 
 ### Middleware Ordering
 
-**It is recommended to place the `agentsmd` middleware after summarization/compression middlewares.** This ensures Agents.md content:
-
-- won’t be compressed away by summarization
-- is fully available on every model call
+> 💡
+> **It is recommended to place the agentsmd middleware after summarization/compression middlewares.** This ensures Agents.md content is not compressed by summarization, and the model receives full instructions on every call.
 
 ```go
-Middlewares: []adk.ChatModelAgentMiddleware{
-    summarizationMiddleware, // summarize first
-    agentsMDMiddleware,      // then inject Agents.md
+Handlers: []adk.ChatModelAgentMiddleware{
+    summarizationMiddleware, // Summarize first
+    agentsMDMiddleware,      // Then inject Agents.md
 }
 ```
 
@@ -238,44 +233,51 @@ Middlewares: []adk.ChatModelAgentMiddleware{
 
 <table>
 <tr><td>Scenario</td><td>Behavior</td></tr>
-<tr><td>File not found (<pre>os.ErrNotExist</pre>)</td><td>Skip the file and trigger <pre>OnLoadWarning</pre></td></tr>
-<tr><td>Cyclic <pre>@import</pre></td><td>Skip the cyclic file and trigger <pre>OnLoadWarning</pre></td></tr>
-<tr><td><pre>@import</pre> depth &gt; 5</td><td>Skip and trigger <pre>OnLoadWarning</pre></td></tr>
-<tr><td>Total size exceeds <pre>AllAgentsMDMaxBytes</pre></td><td>Skip remaining files and trigger <pre>OnLoadWarning</pre> (the first file is always loaded fully)</td></tr>
-<tr><td>Permission denied / I/O error</td><td><strong>Abort loading and return error</strong></td></tr>
+<tr><td>File not found (<pre>os.ErrNotExist</pre>)</td><td>Skip the file, trigger <pre>OnLoadWarning</pre></td></tr>
+<tr><td>Cyclic @import</td><td>Skip the cyclic file, trigger <pre>OnLoadWarning</pre></td></tr>
+<tr><td>@import depth exceeds 5 levels</td><td>Skip, trigger <pre>OnLoadWarning</pre></td></tr>
+<tr><td>Cumulative size exceeds <pre>AllAgentsMDMaxBytes</pre></td><td>Skip subsequent files, trigger <pre>OnLoadWarning</pre> (the first file is always loaded in full)</td></tr>
+<tr><td>Permission denied / I/O error</td><td><strong>Abort loading, return error</strong></td></tr>
 <tr><td>All file contents empty</td><td>Do not inject; pass through original messages</td></tr>
 </table>
 
-### Backend Requirements
-
-- When a file does not exist, implementations **must** return an error that wraps `os.ErrNotExist` (e.g. `fmt.Errorf(\"... : %w\", os.ErrNotExist)`), otherwise the loader cannot distinguish “missing file” vs “real I/O error”
-- `Read` should be concurrency-safe
-
 ### Performance Considerations
 
-- Set `AllAgentsMDMaxBytes` reasonably to avoid injecting too much content and consuming the model context window
-- Agents.md is loaded once per `Run()` (run-level caching), but **every new `Run()` reloads it**, so file edits take effect on the next run
-- Avoid importing too many files; the recursion depth limit is 5
+- Set `AllAgentsMDMaxBytes` reasonably to avoid injecting too much content that occupies the context window
+- Agents.md content is loaded only once per `Run()` (run-level caching), but **every new `Run()` reloads**, so file edits take effect on the next Run
+- Avoid importing too many files; the recursion depth limit is 5 levels
 
-### Writing Agents.md
+### Agents.md Writing Guidelines
 
-- Keep it concise and include only instructions that truly affect model behavior
-- Use `@import` to split concerns (code style, API conventions, architecture notes, etc.)
-- Avoid large code examples or datasets in Agents.md to prevent wasting context window
-- The content is wrapped in `<system-reminder>` tags when passed to the model, so the model treats it as system-level instructions
+- Keep content concise; only include instructions that truly affect model behavior
+- Use @import to split by concerns (code standards, API conventions, architecture notes, etc.)
+- Avoid including large code examples or data to prevent wasting the context window
+- File content is wrapped in `<system-reminder>` tags when passed to the model
 
 ---
 
 ## FAQ
 
 **Q: Will Agents.md content be saved into the conversation history?**
-A: No. The content is injected dynamically during model calls and is not written into `ChatModelAgentState`, so it won’t appear in history.
+
+A: Yes. The state returned by `BeforeModelRewriteState` is persisted by the framework. However, due to the idempotency check (`Extra["__agentsmd_content__"]` marker), content is only injected once on the first model call; subsequent iterations skip it directly. It is recommended to place agentsmd after summarization to avoid the injected content being compressed by summarization.
 
 **Q: What happens if an Agents.md file does not exist?**
-A: The file is skipped and `OnLoadWarning` is triggered (defaults to `log.Printf`). It does not fail the whole load.
+
+A: That file is skipped, triggering the `OnLoadWarning` callback (defaults to `log.Printf`), without affecting other files' loading.
 
 **Q: What is the base directory for @import paths?**
+
 A: The directory of the current file. For example, `@rules/style.md` in `/project/Agents.md` resolves to `/project/rules/style.md`.
 
-**Q: If multiple files import the same file, will it be loaded multiple times?**
-A: No. The loader maintains a global de-duplication map; the same file path is read and injected only once.
+**Q: If multiple files @import the same file, will it be loaded multiple times?**
+
+A: No. The loader maintains a global deduplication map (`seen`); the same path is read and injected only once.
+
+**Q: Will the @path reference in the original text be replaced?**
+
+A: No. @imported files are appended as separate paragraphs after the original text; the original content remains unchanged.
+
+**Q: What is the difference between New and NewTyped?**
+
+A: `New` returns `ChatModelAgentMiddleware` (i.e., `TypedChatModelAgentMiddleware[*schema.Message]`), suitable for standard Agents. `NewTyped` is the generic version that additionally supports the `*schema.AgenticMessage` type, for Agentic Model scenarios.

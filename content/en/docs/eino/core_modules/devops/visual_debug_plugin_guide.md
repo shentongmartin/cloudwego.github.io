@@ -1,9 +1,9 @@
 ---
 Description: ""
-date: "2025-11-20"
+date: "2026-05-17"
 lastmod: ""
 tags: []
-title: Eino Dev Visual Debugging Guide
+title: Eino Dev Visual Debugging Plugin Guide
 weight: 3
 ---
 
@@ -155,6 +155,7 @@ Because debugging starts an HTTP service in your main process to interact with t
 > 1. Ensure the target orchestration has run `Compile()` at least once.
 > 2. `devops.Init()` must run before calling `Compile()`.
 > 3. Make sure the main process stays alive after `devops.Init()`.
+> 4. Starting from v0.1.9, the debug service default listen address changed from `0.0.0.0` to `127.0.0.1` (local connections only). For remote debugging, explicitly specify the listen IP via `WithDevServerIP`, e.g.: `devops.Init(ctx, devops.WithDevServerIP("0.0.0.0"))`.
 
 ```go
 // 1. Initialize debug service
@@ -201,10 +202,18 @@ func main() {
 
 ### Configure Address
 
-- IP: `127.0.0.1` for local; remote server IP for remote (IPv4/IPv6).
-- Port: default `52538`, configurable via `WithDevServerPort`.
+- **IP**: IP address of the server where the user process is running.
+  - If the user process is running on local computer, enter `127.0.0.1`;
+  - If the user process is running on a remote server, enter the remote server's IP address, supporting both IPv4 and IPv6.
+- **Port**: Port the debug service listens on, default is `52538`, configurable via the `WithDevServerPort` option method.
 
-Allow network prompts locally; ensure remote ports are reachable. Once connected, the status indicator turns green.
+> 💡
+> Notes
+>
+> - Local debugging: The system may pop up a network access warning; allow access.
+> - Remote debugging: Ensure the port is accessible. Additionally, starting from v0.1.9, the default listen address is `127.0.0.1` only; for remote debugging you must specify an accessible IP (e.g., `0.0.0.0`) via `WithDevServerIP` when calling `devops.Init()`.
+
+Once IP and Port are configured, click confirm. The debug plugin will automatically connect to the target debug server. If successfully connected, the connection status indicator will turn green.
 
 <a href="/img/eino/eino_debug_ip_port_show_page.png" target="_blank"><img src="/img/eino/eino_debug_ip_port_show_page.png" width="100%" /></a>
 
@@ -222,9 +231,21 @@ Ensure your target orchestration has been compiled at least once. Multiple `Comp
 
 <a href="/img/eino/eino_debug_run_input_mock_data_2_page.png" target="_blank"><img src="/img/eino/eino_debug_run_input_mock_data_2_page.png" width="100%" /></a>
 
-- From a specific node: click the run button on that node.
+- From a specific node: click the run button on that node to start debugging from there.
 
 <a href="/img/eino/eino_debug_button_run_code.png" target="_blank"><img src="/img/eino/eino_debug_button_run_code.png" width="100%" /></a>
+
+<a href="/img/eino/eino_debug_run_of_mock_input_of_page.png" target="_blank"><img src="/img/eino/eino_debug_run_of_mock_input_of_page.png" width="100%" /></a>
+
+### View Execution Results
+
+Debugging from the START node: after clicking Test Run, view debug results in the plugin panel below.
+
+<a href="/img/eino/eino_debug_test_run_result_page.png" target="_blank"><img src="/img/eino/eino_debug_test_run_result_page.png" width="100%" /></a>
+
+Debugging from any operable node: view debug results in the plugin panel below.
+
+<a href="/img/eino/eino_debug_results.png" target="_blank"><img src="/img/eino/eino_debug_results.png" width="100%" /></a>
 
 ## Advanced
 
@@ -290,11 +311,21 @@ func RegisterGraphOfInterfaceType(ctx context.Context) {
 err := devops.Init(ctx, devops.AppendType(&graph.NodeInfo{}))
 ```
 
-3) During Test Run, interface fields show `{}` by default. Type a space inside `{}` to view all built-in and custom types, select the concrete implementation, then fill `_value`.
+3) During Test Run, interface fields show `{}` by default. Type a space inside `{}` to view all built-in and custom types, and select the concrete implementation type for that interface.
 
-### Debugging `map[string]any`
+<a href="/img/eino/eino_debug_run_code.png" target="_blank"><img src="/img/eino/eino_debug_run_code.png" width="100%" /></a>
 
-If a node input is `map[string]any`:
+4) Fill in the debug node input in the `_value` field.
+
+<a href="/img/eino/eino_debug_run_code_3.png" target="_blank"><img src="/img/eino/eino_debug_run_code_3.png" width="100%" /></a>
+
+5) Click confirm to view the debug results.
+
+<a href="/img/eino/eino_debug_panel_2.png" target="_blank"><img src="/img/eino/eino_debug_panel_2.png" width="100%" /></a>
+
+#### Debugging `map[string]any`
+
+Here we explain how to debug when the input type is `map[string]any`. If a node's input type is `map[string]any`, as shown below:
 
 ```go
 func RegisterAnyInputGraph(ctx context.Context) {
@@ -341,7 +372,7 @@ func RegisterAnyInputGraph(ctx context.Context) {
 }
 ```
 
-During debugging, in the Test Run JSON input box, use the following format to specify concrete types for values:
+During debugging, in the Test Run JSON input box, you need to enter content in the following format:
 
 ```json
 {

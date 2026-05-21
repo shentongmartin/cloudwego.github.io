@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-02"
+date: "2026-05-19"
 lastmod: ""
 tags: []
 title: ChatModel
@@ -30,4 +30,25 @@ For detailed documentation of each component in this category, please refer to t
 
 - The links above point directly to the latest documentation in the GitHub repository
 - Chinese and English documentation are updated synchronously
+- To view historical versions or submit documentation suggestions, please visit the GitHub repository
+
+# AgenticModel Component List
+
+For detailed documentation of each component in this category, please refer to the GitHub README:
+
+<table>
+<tr><td>Component Name</td><td>Chinese Docs</td><td>English Docs</td></tr>
+<tr><td>AgenticARK</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticark/README.zh_CN.md">README.zh_CN.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticark/README.md">README.md</a></td></tr>
+<tr><td>AgenticDeepSeek</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticdeepseek/README_zh.md">README_zh.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticdeepseek/README.md">README.md</a></td></tr>
+<tr><td>AgenticOpenAI</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticopenai/README.zh_CN.md">README.zh_CN.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticopenai/README.md">README.md</a></td></tr>
+<tr><td>AgenticGemini</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticgemini/README.zh_CN.md">README.zh_CN.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticgemini/README.md">README.md</a></td></tr>
+<tr><td>AgenticQwen</td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticqwen/README_zh.md">README_zh.md</a></td><td><a href="https://github.com/cloudwego/eino-ext/blob/main/components/model/agenticqwen/README.md">README.md</a></td></tr>
+</table>
+
+---
+
+**Notes**:
+
+- The links above point directly to the latest documentation in the GitHub repository
+- AgenticModel is a model interface designed for agentic scenarios, supporting advanced capabilities such as Server Tools, MCP Tools, and prefix caching
 - To view historical versions or submit documentation suggestions, please visit the GitHub repository
