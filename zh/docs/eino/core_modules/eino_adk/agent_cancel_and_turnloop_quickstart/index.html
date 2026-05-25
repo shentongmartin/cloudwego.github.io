@@ -1,25 +1,18 @@
 <!doctype html><html lang=zh class=no-js data-theme-init><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.151.0"><script>(function(){const t="td-color-theme",n=localStorage.getItem(t);let e=n||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");e==="auto"&&(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),document.documentElement.setAttribute("data-bs-theme",e)})()</script><meta name=color-scheme content="light dark"><style>html{background:Canvas;color:CanvasText}@media(prefers-color-scheme:dark){html{background:#0b0d12;color:#e6e6e6}}html[data-theme-init] *{transition:none!important}</style><meta name=ROBOTS content="INDEX, FOLLOW"><link rel="shortcut icon" href=/favicons/favicon.ico><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/favicons/android-192x192.png sizes=192x192><title>Agent Cancel 与 TurnLoop 快速入门 | CloudWeGo</title><meta name=description content="A leading practice for building enterprise cloud native middleware!"><meta property="og:url" content="https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/"><meta property="og:site_name" content="CloudWeGo"><meta property="og:title" content="Agent Cancel 与 TurnLoop 快速入门"><meta property="og:description" content='Eino ADK 中 Agent 取消 和 TurnLoop 两项核心特性的快速入门指南。自 v0.9.0-alpha.9 版本引入。
 类型约定 本文示例统一使用以下泛型实例化：
-T = string（推送给 TurnLoop 的业务项类型） M = *schema.Message（Agent 消息类型，即标准 Message） ADK 中相关类型别名：
-type Agent = TypedAgent[*schema.Message] type AgentInput = TypedAgentInput[*schema.Message] type AgentEvent = TypedAgentEvent[*schema.Message] 当需要使用 *schema.AgenticMessage 时，将 M 替换为对应类型即可，所有 API 签名完全对称。
-第一部分：Agent 取消 场景 用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。
-核心 API // 创建取消选项和取消函数 cancelOpt, cancelFunc := adk.WithCancel() // 启动 agent，传入取消选项 iter := runner.Run(ctx, []*schema.Message{schema.UserMessage("你好")}, cancelOpt) // 发起取消（可在任意 goroutine 调用） handle, contributed := cancelFunc(adk.WithAgentCancelMode(adk.CancelImmediate)) // contributed == true: 本次调用影响了执行结果 // contributed == false: agent 已结束或取消已完成，本次调用无实际效果 err := handle.Wait() CancelHandle.Wait() 的三种返回值：'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-05-17T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-21T19:31:45+08:00"><meta itemprop=name content="Agent Cancel 与 TurnLoop 快速入门"><meta itemprop=description content='Eino ADK 中 Agent 取消 和 TurnLoop 两项核心特性的快速入门指南。自 v0.9.0-alpha.9 版本引入。
+T = string（推送给 TurnLoop 的业务项类型） M = *schema.Message（Agent 消息类型，即标准 Message）ADK 中相关类型别名： type Agent = TypedAgent[*schema.Message] type AgentInput = TypedAgentInput[*schema.Message] type AgentEvent = TypedAgentEvent[*schema.Message] 当需要使用 *schema.AgenticMessage 时，将 M 替换为对应类型即可，所有 API 签名完全对称。 第一部分：Agent 取消 场景 用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。
+核心 API // 创建取消选项和取消函数 cancelOpt, cancelFunc := adk.WithCancel() // 启动 agent，传入取消选项 iter := runner.Run(ctx, []*schema.Message{schema.UserMessage("你好")}, cancelOpt) // 发起取消（可在任意 goroutine 调用） handle, contributed := cancelFunc(adk.WithAgentCancelMode(adk.CancelImmediate)) // contributed == true: 本次调用影响了执行结果 // contributed == false: agent 已结束或取消已完成，本次调用无实际效果 err := handle.Wait() CancelHandle.Wait() 的三种返回值：'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:published_time" content="2026-05-22T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-22T17:22:30+08:00"><meta itemprop=name content="Agent Cancel 与 TurnLoop 快速入门"><meta itemprop=description content='Eino ADK 中 Agent 取消 和 TurnLoop 两项核心特性的快速入门指南。自 v0.9.0-alpha.9 版本引入。
 类型约定 本文示例统一使用以下泛型实例化：
-T = string（推送给 TurnLoop 的业务项类型） M = *schema.Message（Agent 消息类型，即标准 Message） ADK 中相关类型别名：
-type Agent = TypedAgent[*schema.Message] type AgentInput = TypedAgentInput[*schema.Message] type AgentEvent = TypedAgentEvent[*schema.Message] 当需要使用 *schema.AgenticMessage 时，将 M 替换为对应类型即可，所有 API 签名完全对称。
-第一部分：Agent 取消 场景 用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。
-核心 API // 创建取消选项和取消函数 cancelOpt, cancelFunc := adk.WithCancel() // 启动 agent，传入取消选项 iter := runner.Run(ctx, []*schema.Message{schema.UserMessage("你好")}, cancelOpt) // 发起取消（可在任意 goroutine 调用） handle, contributed := cancelFunc(adk.WithAgentCancelMode(adk.CancelImmediate)) // contributed == true: 本次调用影响了执行结果 // contributed == false: agent 已结束或取消已完成，本次调用无实际效果 err := handle.Wait() CancelHandle.Wait() 的三种返回值：'><meta itemprop=datePublished content="2026-05-17T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-21T19:31:45+08:00"><meta itemprop=wordCount content="1112"><meta name=twitter:card content="summary"><meta name=twitter:title content="Agent Cancel 与 TurnLoop 快速入门"><meta name=twitter:description content='Eino ADK 中 Agent 取消 和 TurnLoop 两项核心特性的快速入门指南。自 v0.9.0-alpha.9 版本引入。
+T = string（推送给 TurnLoop 的业务项类型） M = *schema.Message（Agent 消息类型，即标准 Message）ADK 中相关类型别名： type Agent = TypedAgent[*schema.Message] type AgentInput = TypedAgentInput[*schema.Message] type AgentEvent = TypedAgentEvent[*schema.Message] 当需要使用 *schema.AgenticMessage 时，将 M 替换为对应类型即可，所有 API 签名完全对称。 第一部分：Agent 取消 场景 用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。
+核心 API // 创建取消选项和取消函数 cancelOpt, cancelFunc := adk.WithCancel() // 启动 agent，传入取消选项 iter := runner.Run(ctx, []*schema.Message{schema.UserMessage("你好")}, cancelOpt) // 发起取消（可在任意 goroutine 调用） handle, contributed := cancelFunc(adk.WithAgentCancelMode(adk.CancelImmediate)) // contributed == true: 本次调用影响了执行结果 // contributed == false: agent 已结束或取消已完成，本次调用无实际效果 err := handle.Wait() CancelHandle.Wait() 的三种返回值：'><meta itemprop=datePublished content="2026-05-22T00:00:00+00:00"><meta itemprop=dateModified content="2026-05-22T17:22:30+08:00"><meta itemprop=wordCount content="1376"><meta name=twitter:card content="summary"><meta name=twitter:title content="Agent Cancel 与 TurnLoop 快速入门"><meta name=twitter:description content='Eino ADK 中 Agent 取消 和 TurnLoop 两项核心特性的快速入门指南。自 v0.9.0-alpha.9 版本引入。
 类型约定 本文示例统一使用以下泛型实例化：
-T = string（推送给 TurnLoop 的业务项类型） M = *schema.Message（Agent 消息类型，即标准 Message） ADK 中相关类型别名：
-type Agent = TypedAgent[*schema.Message] type AgentInput = TypedAgentInput[*schema.Message] type AgentEvent = TypedAgentEvent[*schema.Message] 当需要使用 *schema.AgenticMessage 时，将 M 替换为对应类型即可，所有 API 签名完全对称。
-第一部分：Agent 取消 场景 用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。
+T = string（推送给 TurnLoop 的业务项类型） M = *schema.Message（Agent 消息类型，即标准 Message）ADK 中相关类型别名： type Agent = TypedAgent[*schema.Message] type AgentInput = TypedAgentInput[*schema.Message] type AgentEvent = TypedAgentEvent[*schema.Message] 当需要使用 *schema.AgenticMessage 时，将 M 替换为对应类型即可，所有 API 签名完全对称。 第一部分：Agent 取消 场景 用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。
 核心 API // 创建取消选项和取消函数 cancelOpt, cancelFunc := adk.WithCancel() // 启动 agent，传入取消选项 iter := runner.Run(ctx, []*schema.Message{schema.UserMessage("你好")}, cancelOpt) // 发起取消（可在任意 goroutine 调用） handle, contributed := cancelFunc(adk.WithAgentCancelMode(adk.CancelImmediate)) // contributed == true: 本次调用影响了执行结果 // contributed == false: agent 已结束或取消已完成，本次调用无实际效果 err := handle.Wait() CancelHandle.Wait() 的三种返回值：'><script async src="https://www.googletagmanager.com/gtag/js?id=G-QYWRQRLPRM"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-QYWRQRLPRM")</script><script>var _hmt=_hmt||[];(function(){var e,t=document.createElement("script");t.src="https://hm.baidu.com/hm.js?f1808c42af827f368aa7eca3baae6d55",e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(t,e)})()</script><link rel=preload href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css as=style><link href=/scss/main.min.30e7edf0a315436a3eb852158c6274b97d2940d1958389de36cc4e6e851ee2f5.css rel=stylesheet integrity><script src=/js/jquery.min.js></script><link rel=stylesheet href=/css/docsearch.css></head><body class=td-page><header><nav class="js-navbar-scroll navbar navbar-expand-xl navbar-dark td-navbar"><a class=navbar-brand href=/zh/><span class=navbar-logo><img src=/img/logo.png></span>
 </a><button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#main_navbar aria-controls=main_navbar aria-expanded=false aria-label="Toggle navigation">
 <span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0 ms-auto"><li class="dropdown sub-menu active"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>文档</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=/zh/docs/kitex/>Kitex</a>
 <a class=dropdown-item href=/zh/docs/hertz/>Hertz</a>
 <a class=dropdown-item href=/zh/docs/volo/>Volo</a>
-<a class=dropdown-item href=/zh/docs/eino/>Eino</a></div></li><li class="nav-item me-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/about/><span>关于</span></a></li><li class="nav-item me-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/blog/><span>博客</span></a></li><li class="nav-item me-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/cooperation/><span>用户案例</span></a></li><li class="dropdown sub-menu"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>企业级解决方案</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=https://www.volcengine.com/docs/6431/1469323>可观测解决方案</a></div></li><li class="dropdown sub-menu"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>安全</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=/zh/security/safety-bulletin/>安全公告</a>
-<a class=dropdown-item href=/zh/security/vulnerability-reporting/>漏洞管理</a></div></li><li class="nav-item dropdown me-2 me-lg-4"><a class="nav-link dropdown-toggle d-flex align-items-center" href=# id=navbarLangDropdownLink role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>中文</span></a><div class="dropdown-menu dropdown-menu-end" aria-labelledby=navbarLangDropdownLink><a class=dropdown-item href=/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/>English</a></div></li><li class="nav-item dropdown td-navbar__light-dark-menu"><svg class="d-none"><symbol id="check2" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5.0 010 .708l-7 7a.5.5.0 01-.708.0l-3.5-3.5a.5.5.0 11.708-.708L6.5 10.293l6.646-6.647a.5.5.0 01.708.0z"/></symbol><symbol id="circle-half" viewBox="0 0 16 16"><path d="M8 15A7 7 0 108 1v14zm0 1A8 8 0 118 0a8 8 0 010 16z"/></symbol><symbol id="moon-stars-fill" viewBox="0 0 16 16"><path d="M6 .278a.768.768.0 01.08.858 7.208 7.208.0 00-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527.0 1.04-.055 1.533-.16a.787.787.0 01.81.316.733.733.0 01-.031.893A8.349 8.349.0 018.344 16C3.734 16 0 12.286.0 7.71.0 4.266 2.114 1.312 5.124.06A.752.752.0 016 .278z"/><path d="M10.794 3.148a.217.217.0 01.412.0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217.0 010 .412l-1.162.387A1.734 1.734.0 0011.593 7.69l-.387 1.162a.217.217.0 01-.412.0l-.387-1.162A1.734 1.734.0 009.31 6.593l-1.162-.387a.217.217.0 010-.412l1.162-.387a1.734 1.734.0 001.097-1.097l.387-1.162zM13.863.099a.145.145.0 01.274.0l.258.774c.115.346.386.617.732.732l.774.258a.145.145.0 010 .274l-.774.258a1.156 1.156.0 00-.732.732l-.258.774a.145.145.0 01-.274.0l-.258-.774a1.156 1.156.0 00-.732-.732l-.774-.258a.145.145.0 010-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/></symbol><symbol id="sun-fill" viewBox="0 0 16 16"><path d="M8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.5.5.0 01.5.5v2a.5.5.0 01-1 0v-2A.5.5.0 018 0zm0 13a.5.5.0 01.5.5v2a.5.5.0 01-1 0v-2A.5.5.0 018 13zm8-5a.5.5.0 01-.5.5h-2a.5.5.0 010-1h2a.5.5.0 01.5.5zM3 8a.5.5.0 01-.5.5h-2a.5.5.0 010-1h2A.5.5.0 013 8zm10.657-5.657a.5.5.0 010 .707l-1.414 1.415a.5.5.0 11-.707-.708l1.414-1.414a.5.5.0 01.707.0zm-9.193 9.193a.5.5.0 010 .707L3.05 13.657a.5.5.0 01-.707-.707l1.414-1.414a.5.5.0 01.707.0zm9.193 2.121a.5.5.0 01-.707.0l-1.414-1.414a.5.5.0 01.707-.707l1.414 1.414a.5.5.0 010 .707zM4.464 4.465a.5.5.0 01-.707.0L2.343 3.05a.5.5.0 11.707-.707l1.414 1.414a.5.5.0 010 .708z"/></symbol></svg>
+<a class=dropdown-item href=/zh/docs/eino/>Eino</a></div></li><li class="nav-item me-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/about/><span>关于</span></a></li><li class="nav-item me-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/blog/><span>博客</span></a></li><li class="nav-item me-4 mb-2 mb-lg-0"><a class=nav-link href=/zh/cooperation/><span>用户案例</span></a></li><li class="dropdown sub-menu"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>企业级解决方案</span></a><div class=dropdown-menu aria-labelledby=navbarDropdown><a class=dropdown-item href=https://www.volcengine.com/docs/6431/1469323>可观测解决方案</a></div></li><li class="nav-item dropdown me-2 me-lg-4"><a class="nav-link dropdown-toggle d-flex align-items-center" href=# id=navbarLangDropdownLink role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false><span>中文</span></a><div class="dropdown-menu dropdown-menu-end" aria-labelledby=navbarLangDropdownLink><a class=dropdown-item href=/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/>English</a></div></li><li class="nav-item dropdown td-navbar__light-dark-menu"><svg class="d-none"><symbol id="check2" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5.0 010 .708l-7 7a.5.5.0 01-.708.0l-3.5-3.5a.5.5.0 11.708-.708L6.5 10.293l6.646-6.647a.5.5.0 01.708.0z"/></symbol><symbol id="circle-half" viewBox="0 0 16 16"><path d="M8 15A7 7 0 108 1v14zm0 1A8 8 0 118 0a8 8 0 010 16z"/></symbol><symbol id="moon-stars-fill" viewBox="0 0 16 16"><path d="M6 .278a.768.768.0 01.08.858 7.208 7.208.0 00-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527.0 1.04-.055 1.533-.16a.787.787.0 01.81.316.733.733.0 01-.031.893A8.349 8.349.0 018.344 16C3.734 16 0 12.286.0 7.71.0 4.266 2.114 1.312 5.124.06A.752.752.0 016 .278z"/><path d="M10.794 3.148a.217.217.0 01.412.0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217.0 010 .412l-1.162.387A1.734 1.734.0 0011.593 7.69l-.387 1.162a.217.217.0 01-.412.0l-.387-1.162A1.734 1.734.0 009.31 6.593l-1.162-.387a.217.217.0 010-.412l1.162-.387a1.734 1.734.0 001.097-1.097l.387-1.162zM13.863.099a.145.145.0 01.274.0l.258.774c.115.346.386.617.732.732l.774.258a.145.145.0 010 .274l-.774.258a1.156 1.156.0 00-.732.732l-.258.774a.145.145.0 01-.274.0l-.258-.774a1.156 1.156.0 00-.732-.732l-.774-.258a.145.145.0 010-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/></symbol><symbol id="sun-fill" viewBox="0 0 16 16"><path d="M8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.5.5.0 01.5.5v2a.5.5.0 01-1 0v-2A.5.5.0 018 0zm0 13a.5.5.0 01.5.5v2a.5.5.0 01-1 0v-2A.5.5.0 018 13zm8-5a.5.5.0 01-.5.5h-2a.5.5.0 010-1h2a.5.5.0 01.5.5zM3 8a.5.5.0 01-.5.5h-2a.5.5.0 010-1h2A.5.5.0 013 8zm10.657-5.657a.5.5.0 010 .707l-1.414 1.415a.5.5.0 11-.707-.708l1.414-1.414a.5.5.0 01.707.0zm-9.193 9.193a.5.5.0 010 .707L3.05 13.657a.5.5.0 01-.707-.707l1.414-1.414a.5.5.0 01.707.0zm9.193 2.121a.5.5.0 01-.707.0l-1.414-1.414a.5.5.0 01.707-.707l1.414 1.414a.5.5.0 010 .707zM4.464 4.465a.5.5.0 01-.707.0L2.343 3.05a.5.5.0 11.707-.707l1.414 1.414a.5.5.0 010 .708z"/></symbol></svg>
 <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" id=bd-theme type=button aria-expanded=false data-bs-toggle=dropdown data-bs-offset=0,0 aria-label="Toggle theme (auto)">
 <svg class="bi my-1 theme-icon-active"><use href="#circle-half"/></svg></button><ul class="dropdown-menu dropdown-menu-end" aria-labelledby=bd-theme><li><button type=button class="dropdown-item d-flex align-items-center" data-bs-theme-value=light aria-pressed=false>
 <svg class="bi me-2 opacity-50"><use href="#sun-fill"/></svg>
@@ -135,7 +128,7 @@ Auto
 <label for=m-zhdocseinofaq-check><a href=/zh/docs/eino/faq/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-zhdocseinofaq><span>FAQ</span></a></label></li></ul></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ms-2 pb-1 pt-2 mb-0"><a href=https://github.com/cloudwego/cloudwego.github.io/edit/main/content/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 编辑此页</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/new/main/content/zh/docs/eino/core_modules/eino_adk?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> 添加子页面</a>
 <a href="https://github.com/cloudwego/cloudwego.github.io/issues/new?title=Agent%20Cancel%20%e4%b8%8e%20TurnLoop%20%e5%bf%ab%e9%80%9f%e5%85%a5%e9%97%a8" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-brands fa-github fa-fw"></i> 提交文档问题</a>
-<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#类型约定>类型约定</a></li><li><a href=#第一部分agent-取消>第一部分：Agent 取消</a><ul><li><a href=#场景>场景</a></li><li><a href=#核心-api>核心 API</a></li><li><a href=#三种取消模式>三种取消模式</a></li><li><a href=#安全点取消>安全点取消</a></li><li><a href=#递归取消>递归取消</a></li><li><a href=#消费端识别取消>消费端识别取消</a></li></ul></li><li><a href=#第二部分turnloop>第二部分：TurnLoop</a><ul><li><a href=#场景-1>场景</a></li><li><a href=#turn-生命周期>Turn 生命周期</a></li><li><a href=#基本用法>基本用法</a></li><li><a href=#核心回调>核心回调</a></li><li><a href=#抢占preempt>抢占（Preempt）</a></li><li><a href=#带超时--带延迟的抢占>带超时 / 带延迟的抢占</a></li><li><a href=#条件抢占withpushstrategy>条件抢占：WithPushStrategy</a></li><li><a href=#在-onagentevents-中感知抢占和停止>在 OnAgentEvents 中感知抢占和停止</a></li><li><a href=#停止-turnloop>停止 TurnLoop</a></li><li><a href=#附带停止原因>附带停止原因</a></li></ul></li><li><a href=#第三部分声明式-checkpoint-恢复>第三部分：声明式 Checkpoint 恢复</a><ul><li><a href=#场景-2>场景</a></li><li><a href=#配置-checkpoint>配置 Checkpoint</a></li><li><a href=#恢复流程>恢复流程</a></li><li><a href=#跳过-checkpoint>跳过 Checkpoint</a></li><li><a href=#实现-checkpointstore>实现 CheckPointStore</a></li></ul></li><li><a href=#第四部分完整示例>第四部分：完整示例</a></li><li><a href=#常见问题>常见问题</a><ul><li><a href=#q-安全点取消会不会永远等不到安全点>Q: 安全点取消会不会永远等不到安全点？</a></li><li><a href=#q-withrecursive-什么时候需要>Q: <code>WithRecursive</code> 什么时候需要？</a></li><li><a href=#q-泛型参数-t-有什么要求>Q: 泛型参数 T 有什么要求？</a></li><li><a href=#q-push-在-loop-停止后会怎样>Q: <code>Push</code> 在 loop 停止后会怎样？</a></li><li><a href=#q-多次调用-stop-会怎样>Q: 多次调用 <code>Stop()</code> 会怎样？</a></li><li><a href=#q-geninput-返回的-items-不在-consumed-也不在-remaining-会怎样>Q: <code>GenInput</code> 返回的 items 不在 Consumed 也不在 Remaining 会怎样？</a></li></ul></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/>Agent Cancel 与 TurnLoop 快速入门</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title="Agent Cancel 与 TurnLoop 快速入门" data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
+<a href=https://github.com/cloudwego/eino/issues/new/choose class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> 提交项目问题</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#类型约定>类型约定</a></li><li><a href=#当需要使用-schemaagenticmessage-时将-m-替换为对应类型即可所有-api-签名完全对称>当需要使用 <code>*schema.AgenticMessage</code> 时，将 <code>M</code> 替换为对应类型即可，所有 API 签名完全对称。</a></li><li><a href=#第一部分agent-取消>第一部分：Agent 取消</a><ul><li><a href=#场景>场景</a></li><li><a href=#核心-api>核心 API</a></li><li><a href=#三种取消模式>三种取消模式</a></li><li><a href=#安全点取消>安全点取消</a></li><li><a href=#递归取消>递归取消</a></li><li><a href=#消费端识别取消>消费端识别取消</a></li></ul></li><li><a href=#第二部分turnloop>第二部分：TurnLoop</a><ul><li><a href=#场景-1>场景</a></li><li><a href=#turn-生命周期>Turn 生命周期</a></li><li><a href=#基本用法>基本用法</a></li><li><a href=#核心回调>核心回调</a></li><li><a href=#抢占preempt>抢占（Preempt）</a></li><li><a href=#带超时--带延迟的抢占>带超时 / 带延迟的抢占</a></li><li><a href=#条件抢占withpushstrategy>条件抢占：WithPushStrategy</a></li><li><a href=#在-onagentevents-中感知抢占和停止>在 OnAgentEvents 中感知抢占和停止</a></li><li><a href=#停止-turnloop>停止 TurnLoop</a></li><li><a href=#附带停止原因>附带停止原因</a></li></ul></li><li><a href=#第三部分声明式-checkpoint-恢复>第三部分：声明式 Checkpoint 恢复</a><ul><li><a href=#场景-2>场景</a></li><li><a href=#配置-checkpoint>配置 Checkpoint</a></li><li><a href=#恢复流程>恢复流程</a></li><li><a href=#跳过-checkpoint>跳过 Checkpoint</a></li><li><a href=#实现-checkpointstore>实现 CheckPointStore</a></li></ul></li><li><a href=#第四部分完整示例>第四部分：完整示例</a></li><li><a href=#常见问题>常见问题</a><ul><li><a href=#q-安全点取消会不会永远等不到安全点>Q: 安全点取消会不会永远等不到安全点？</a></li><li><a href=#q-withrecursive-什么时候需要>Q: <code>WithRecursive</code> 什么时候需要？</a></li><li><a href=#q-泛型参数-t-有什么要求>Q: 泛型参数 T 有什么要求？</a></li><li><a href=#q-push-在-loop-停止后会怎样>Q: <code>Push</code> 在 loop 停止后会怎样？</a></li><li><a href=#q-多次调用-stop-会怎样>Q: 多次调用 <code>Stop()</code> 会怎样？</a></li><li><a href=#q-geninput-返回的-items-不在-consumed-也不在-remaining-会怎样>Q: <code>GenInput</code> 返回的 items 不在 Consumed 也不在 Remaining 会怎样？</a></li></ul></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class="d-none d-md-block d-print-none"><ol class="breadcrumb spb-1"><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/>文档</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/>Eino</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/>核心模块</a></li><li class=breadcrumb-item><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/>ADK - Agent Development Kit</a></li><li class="breadcrumb-item active" aria-current=page><a href=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/>Agent Cancel 与 TurnLoop 快速入门</a></li></ol></nav><div class=td-content><div class="copy-fulltext btn-group" id=copy-fulltext data-title="Agent Cancel 与 TurnLoop 快速入门" data-url=https://www.cloudwego.io/zh/docs/eino/core_modules/eino_adk/agent_cancel_and_turnloop_quickstart/ data-success-markdown="已复制 Markdown 格式" data-success-text=已复制纯文本><button type=button class="btn btn-sm btn-outline-secondary" id=copy-fulltext-default title=复制全文>
 <i class="fa-regular fa-copy"></i>
 <span>复制全文</span>
 </button>
@@ -152,9 +145,7 @@ Eino ADK 中 **Agent 取消** 和 **TurnLoop** 两项核心特性的快速入门
 本文示例统一使用以下泛型实例化：
 
 - `T = string`（推送给 TurnLoop 的业务项类型）
-- `M = *schema.Message`（Agent 消息类型，即标准 `Message`）
-
-ADK 中相关类型别名：
+- `M = *schema.Message`（Agent 消息类型，即标准 `Message`）ADK 中相关类型别名：
 
 ```go
 type Agent         = TypedAgent[*schema.Message]
@@ -162,9 +153,7 @@ type AgentInput    = TypedAgentInput[*schema.Message]
 type AgentEvent    = TypedAgentEvent[*schema.Message]
 ```
 
-当需要使用 `*schema.AgenticMessage` 时，将 `M` 替换为对应类型即可，所有 API 签名完全对称。
-
----
+## 当需要使用 `*schema.AgenticMessage` 时，将 `M` 替换为对应类型即可，所有 API 签名完全对称。
 
 ## 第一部分：Agent 取消
 
@@ -267,8 +256,6 @@ for {
 构建一个持续运行的 agent 服务：用户随时发送消息，agent 按轮次处理；紧急消息可抢占当前执行。
 
 ### Turn 生命周期
-
-<a href="/img/eino/XrWqwC669hGGoibW1q3c2ToTnvf.png" target="_blank"><img src="/img/eino/XrWqwC669hGGoibW1q3c2ToTnvf.png" width="100%" /></a>
 
 ### 基本用法
 
@@ -544,105 +531,199 @@ type CheckPointDeleter interface {
 
 ## 第四部分：完整示例
 
-模拟一个支持优先级调度、抢占和 checkpoint 恢复的聊天服务：
+模拟一个支持优先级调度、抢占和 checkpoint 恢复的聊天服务。本示例可直接编译运行（需替换 `myModel` 为真实 ChatModel 实现）。
 
 ```go
 package main
 
 import (
-    "context"
-    "log"
-    "strings"
-    "time"
+	"context"
+	"fmt"
+	"log"
+	"sort"
+	"strings"
+	"sync"
+	"time"
 
-    "github.com/cloudwego/eino/adk"
-    "github.com/cloudwego/eino/schema"
+	"github.com/cloudwego/eino/adk"
+	"github.com/cloudwego/eino/schema"
 )
 
+// --- 1. 实现 CheckPointStore 接口 ---
+
+type InMemoryStore struct {
+	mu sync.Mutex
+	m  map[string][]byte
+}
+
+func NewInMemoryStore() *InMemoryStore {
+	return &InMemoryStore{m: make(map[string][]byte)}
+}
+
+func (s *InMemoryStore) Get(_ context.Context, id string) ([]byte, bool, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	data, ok := s.m[id]
+	return data, ok, nil
+}
+
+func (s *InMemoryStore) Set(_ context.Context, id string, data []byte) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.m[id] = data
+	return nil
+}
+
+// 可选：实现 CheckPointDeleter 以支持自动清理过期 checkpoint
+func (s *InMemoryStore) Delete(_ context.Context, id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.m, id)
+	return nil
+}
+
+// --- 2. 实现一个最小 Agent（生产环境请使用 adk.NewChatModelAgent） ---
+
+type echoAgent struct{}
+
+func (a *echoAgent) Name(_ context.Context) string        { return "EchoAgent" }
+func (a *echoAgent) Description(_ context.Context) string { return "echoes input" }
+
+func (a *echoAgent) Run(ctx context.Context, input *adk.AgentInput, _ ...adk.AgentRunOption) *adk.AsyncIterator[*adk.AgentEvent] {
+	iter, gen := adk.NewAsyncIteratorPair[*adk.AgentEvent]()
+	go func() {
+		defer gen.Close()
+		// 模拟耗时处理
+		select {
+		case <-time.After(500 * time.Millisecond):
+		case <-ctx.Done():
+			gen.Send(&adk.AgentEvent{Err: ctx.Err()})
+			return
+		}
+		// 返回 echo 结果
+		reply := "Echo: "
+		if len(input.Messages) > 0 {
+			reply += input.Messages[0].Content
+		}
+		gen.Send(&adk.AgentEvent{
+			AgentName: "EchoAgent",
+			Output: &adk.AgentOutput{
+				MessageOutput: &adk.MessageVariant{
+					Message: schema.AssistantMessage(reply, nil),
+				},
+			},
+		})
+	}()
+	return iter
+}
+
+// --- 3. 优先级排序辅助函数 ---
+
+func sortByPriority(items []string) []string {
+	sorted := make([]string, len(items))
+	copy(sorted, items)
+	sort.SliceStable(sorted, func(i, j int) bool {
+		// 以 "!" 开头的视为高优先级
+		return strings.HasPrefix(sorted[i], "!") && !strings.HasPrefix(sorted[j], "!")
+	})
+	return sorted
+}
+
+// --- 4. 主流程 ---
+
 func main() {
-    ctx := context.Background()
-    store := adk.NewInMemoryStore()
+	ctx := context.Background()
+	store := NewInMemoryStore()
+	agent := &echoAgent{}
 
-    cfg := adk.TurnLoopConfig[string, *schema.Message]{
-        GenInput: func(ctx context.Context, loop *adk.TurnLoop[string, *schema.Message], items []string) (*adk.GenInputResult[string, *schema.Message], error) {
-            // 按优先级排序后，只消费第一条，其余留给后续轮次
-            sorted := sortByPriority(items)
-            return &adk.GenInputResult[string, *schema.Message]{
-                Input:     &adk.AgentInput{Messages: []*schema.Message{schema.UserMessage(sorted[0])}},
-                Consumed:  sorted[:1],
-                Remaining: sorted[1:], // 不在两者中的项目会被丢弃
-            }, nil
-        },
+	cfg := adk.TurnLoopConfig[string, *schema.Message]{
+		GenInput: func(ctx context.Context, loop *adk.TurnLoop[string, *schema.Message], items []string) (*adk.GenInputResult[string, *schema.Message], error) {
+			// 按优先级排序后，只消费第一条，其余留给后续轮次
+			sorted := sortByPriority(items)
+			return &adk.GenInputResult[string, *schema.Message]{
+				Input:     &adk.AgentInput{Messages: []*schema.Message{schema.UserMessage(sorted[0])}},
+				Consumed:  sorted[:1],
+				Remaining: sorted[1:],
+			}, nil
+		},
 
-        GenResume: func(ctx context.Context, loop *adk.TurnLoop[string, *schema.Message], interruptedItems, unhandledItems, newItems []string) (*adk.GenResumeResult[string, *schema.Message], error) {
-            all := append(append(interruptedItems, unhandledItems...), newItems...)
-            return &adk.GenResumeResult[string, *schema.Message]{
-                Consumed:  all[:1],
-                Remaining: all[1:],
-            }, nil
-        },
+		GenResume: func(ctx context.Context, loop *adk.TurnLoop[string, *schema.Message], interruptedItems, unhandledItems, newItems []string) (*adk.GenResumeResult[string, *schema.Message], error) {
+			all := append(append(interruptedItems, unhandledItems...), newItems...)
+			return &adk.GenResumeResult[string, *schema.Message]{
+				Consumed:  all[:1],
+				Remaining: all[1:],
+			}, nil
+		},
 
-        PrepareAgent: func(ctx context.Context, loop *adk.TurnLoop[string, *schema.Message], consumed []string) (adk.Agent, error) {
-            return buildAgent(consumed), nil
-        },
+		PrepareAgent: func(ctx context.Context, loop *adk.TurnLoop[string, *schema.Message], consumed []string) (adk.Agent, error) {
+			return agent, nil
+		},
 
-        OnAgentEvents: func(ctx context.Context, tc *adk.TurnContext[string, *schema.Message], events *adk.AsyncIterator[*adk.AgentEvent]) error {
-            for {
-                event, ok := events.Next()
-                if !ok {
-                    break
-                }
-                // 感知抢占/停止信号，做收尾处理
-                select {
-                case <-tc.Preempted:
-                    log.Println("被更高优先级消息抢占")
-                case <-tc.Stopped:
-                    log.Printf("服务关停: %s", tc.StopCause())
-                default:
-                }
-                if event.Err != nil {
-                    // 不传播 CancelError，框架自动处理
-                    return event.Err
-                }
-                log.Printf("[%s] %s", event.AgentName, extractText(event))
-            }
-            return nil
-        },
+		OnAgentEvents: func(ctx context.Context, tc *adk.TurnContext[string, *schema.Message], events *adk.AsyncIterator[*adk.AgentEvent]) error {
+			for {
+				event, ok := events.Next()
+				if !ok {
+					break
+				}
+				// 感知抢占/停止信号，做收尾处理
+				select {
+				case <-tc.Preempted:
+					log.Println("被更高优先级消息抢占")
+				case <-tc.Stopped:
+					log.Printf("服务关停: %s", tc.StopCause())
+				default:
+				}
+				if event.Err != nil {
+					// 不传播 CancelError，框架自动处理
+					return event.Err
+				}
+				if event.Output != nil && event.Output.MessageOutput != nil {
+					fmt.Printf("[%s] %s\n", event.AgentName, event.Output.MessageOutput.Message.Content)
+				}
+			}
+			return nil
+		},
 
-        Store:        store,
-        CheckpointID: "chat-session-001",
-    }
+		Store:        store,
+		CheckpointID: "session-123",
+	}
 
-    loop := adk.NewTurnLoop(cfg)
-    loop.Push("你好，帮我查一下天气")
-    loop.Run(ctx)
+	// 第一次运行
+	loop := adk.NewTurnLoop(cfg)
+	loop.Push("普通消息")
+	loop.Push("低优先级任务")
+	loop.Run(ctx)
 
-    // 1 秒后发送紧急消息抢占
-    time.AfterFunc(1*time.Second, func() {
-        loop.Push("停！先帮我处理这个紧急问题",
-            adk.WithPreempt[string, *schema.Message](adk.AnySafePoint),
-        )
-    })
+	// 模拟延迟后推入紧急消息（触发抢占）
+	time.AfterFunc(200*time.Millisecond, func() {
+		accepted, ack := loop.Push("!紧急消息",
+			adk.WithPreempt[string, *schema.Message](adk.AnySafePoint),
+		)
+		if accepted {
+			<-ack
+			log.Println("抢占信号已确认")
+		}
+	})
 
-    // 5 秒后优雅关停
-    time.AfterFunc(5*time.Second, func() {
-        loop.Stop(
-            adk.WithGracefulTimeout(3*time.Second),
-            adk.WithStopCause("service shutdown"),
-        )
-    })
+	// 2 秒后优雅停止
+	time.AfterFunc(2*time.Second, func() {
+		loop.Stop(
+			adk.WithGraceful(),
+			adk.WithStopCause("demo timeout"),
+		)
+	})
 
-    result := loop.Wait()
-    log.Printf("退出原因: %v", result.ExitReason)
-    log.Printf("未处理消息: %v", result.UnhandledItems)
-    log.Printf("停止原因: %s", result.StopCause)
-    log.Printf("checkpoint: attempted=%v, err=%v", result.CheckpointAttempted, result.CheckpointErr)
+	result := loop.Wait()
+	fmt.Printf("退出原因: %v\n", result.ExitReason)
+	fmt.Printf("停止原因: %s\n", result.StopCause)
+	fmt.Printf("checkpoint: attempted=%v, err=%v\n", result.CheckpointAttempted, result.CheckpointErr)
 
-    // 下次以相同 cfg 启动将自动从 checkpoint 恢复
+	// 第二次运行（相同 cfg，包含相同 CheckpointID）将自动从 checkpoint 恢复
 }
 ```
 
----
+> 💡
+> 生产环境中，将 `echoAgent` 替换为 `adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{...})`。`CheckPointStore` 实现可使用 Redis / 数据库等持久化方案。
 
 ## 常见问题
 
@@ -676,10 +757,10 @@ time.AfterFunc(3*time.Second, func() {
 ### Q: `GenInput` 返回的 items 不在 Consumed 也不在 Remaining 会怎样？
 
 会被丢弃。这是刻意设计——允许 `GenInput` 在决策时过滤掉不需要的项目。
-</script><h1>Agent Cancel 与 TurnLoop 快速入门</h1><header class=article-meta></header><p>Eino ADK 中 <strong>Agent 取消</strong> 和 <strong>TurnLoop</strong> 两项核心特性的快速入门指南。自 <a href=https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.9>v0.9.0-alpha.9</a> 版本引入。</p><h2 id=类型约定>类型约定</h2><p>本文示例统一使用以下泛型实例化：</p><ul><li><code>T = string</code>（推送给 TurnLoop 的业务项类型）</li><li><code>M = *schema.Message</code>（Agent 消息类型，即标准 <code>Message</code>）</li></ul><p>ADK 中相关类型别名：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Agent</span><span class=w>         </span><span class=p>=</span><span class=w> </span><span class=nx>TypedAgent</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
+</script><h1>Agent Cancel 与 TurnLoop 快速入门</h1><header class=article-meta></header><p>Eino ADK 中 <strong>Agent 取消</strong> 和 <strong>TurnLoop</strong> 两项核心特性的快速入门指南。自 <a href=https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.9>v0.9.0-alpha.9</a> 版本引入。</p><h2 id=类型约定>类型约定</h2><p>本文示例统一使用以下泛型实例化：</p><ul><li><code>T = string</code>（推送给 TurnLoop 的业务项类型）</li><li><code>M = *schema.Message</code>（Agent 消息类型，即标准 <code>Message</code>）ADK 中相关类型别名：</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Agent</span><span class=w>         </span><span class=p>=</span><span class=w> </span><span class=nx>TypedAgent</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>AgentInput</span><span class=w>    </span><span class=p>=</span><span class=w> </span><span class=nx>TypedAgentInput</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>AgentEvent</span><span class=w>    </span><span class=p>=</span><span class=w> </span><span class=nx>TypedAgentEvent</span><span class=p>[</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]</span><span class=w>
-</span></span></span></code></pre></div><p>当需要使用 <code>*schema.AgenticMessage</code> 时，将 <code>M</code> 替换为对应类型即可，所有 API 签名完全对称。</p><hr><h2 id=第一部分agent-取消>第一部分：Agent 取消</h2><h3 id=场景>场景</h3><p>用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。</p><h3 id=核心-api>核心 API</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// 创建取消选项和取消函数</span><span class=w>
+</span></span></span></code></pre></div><h2 id=当需要使用-schemaagenticmessage-时将-m-替换为对应类型即可所有-api-签名完全对称>当需要使用 <code>*schema.AgenticMessage</code> 时，将 <code>M</code> 替换为对应类型即可，所有 API 签名完全对称。</h2><h2 id=第一部分agent-取消>第一部分：Agent 取消</h2><h3 id=场景>场景</h3><p>用户向 agent 发送请求后，因等待过长或需求变更，希望取消当前执行。</p><h3 id=核心-api>核心 API</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// 创建取消选项和取消函数</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>cancelOpt</span><span class=p>,</span><span class=w> </span><span class=nx>cancelFunc</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithCancel</span><span class=p>()</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 启动 agent，传入取消选项</span><span class=w>
@@ -725,7 +806,7 @@ time.AfterFunc(3*time.Second, func() {
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 处理正常事件...</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><hr><h2 id=第二部分turnloop>第二部分：TurnLoop</h2><h3 id=场景-1>场景</h3><p>构建一个持续运行的 agent 服务：用户随时发送消息，agent 按轮次处理；紧急消息可抢占当前执行。</p><h3 id=turn-生命周期>Turn 生命周期</h3><p><a href=/img/eino/XrWqwC669hGGoibW1q3c2ToTnvf.png target=_blank><img src=/img/eino/XrWqwC669hGGoibW1q3c2ToTnvf.png width=100%></a></p><h3 id=基本用法>基本用法</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>loop</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewTurnLoop</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoopConfig</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
+</span></span></span></code></pre></div><hr><h2 id=第二部分turnloop>第二部分：TurnLoop</h2><h3 id=场景-1>场景</h3><p>构建一个持续运行的 agent 服务：用户随时发送消息，agent 按轮次处理；紧急消息可抢占当前执行。</p><h3 id=turn-生命周期>Turn 生命周期</h3><h3 id=基本用法>基本用法</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>loop</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewTurnLoop</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoopConfig</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// GenInput：接收缓冲区所有项目，决定本轮消费哪些</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>GenInput</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>items</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenInputResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenInputResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
@@ -883,104 +964,198 @@ time.AfterFunc(3*time.Second, func() {
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nf>Delete</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>checkPointID</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
 </span></span></span></code></pre></div><p>正常退出（未保存新 checkpoint）时，TurnLoop 会尝试删除先前加载的 checkpoint 以防过期恢复。<strong>只有实现了 CheckPointDeleter 的 Store 才会执行删除</strong>；否则由 Store 自身管理生命周期。</p><blockquote><p>💡
-使用 <code>Store</code> 时，泛型参数 <code>T</code> 必须支持 <code>encoding/gob</code> 编解码——TurnLoop 通过 gob 持久化 runner checkpoint 和 item 簿记信息。</p></blockquote><hr><h2 id=第四部分完整示例>第四部分：完整示例</h2><p>模拟一个支持优先级调度、抢占和 checkpoint 恢复的聊天服务：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>package</span><span class=w> </span><span class=nx>main</span><span class=w>
+使用 <code>Store</code> 时，泛型参数 <code>T</code> 必须支持 <code>encoding/gob</code> 编解码——TurnLoop 通过 gob 持久化 runner checkpoint 和 item 簿记信息。</p></blockquote><hr><h2 id=第四部分完整示例>第四部分：完整示例</h2><p>模拟一个支持优先级调度、抢占和 checkpoint 恢复的聊天服务。本示例可直接编译运行（需替换 <code>myModel</code> 为真实 ChatModel 实现）。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>package</span><span class=w> </span><span class=nx>main</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=kn>import</span><span class=w> </span><span class=p>(</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;context&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;log&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;strings&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;time&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;context&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;fmt&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;log&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;sort&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;strings&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;sync&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;time&#34;</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/adk&#34;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s>&#34;github.com/cloudwego/eino/schema&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;github.com/cloudwego/eino/adk&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=s>&#34;github.com/cloudwego/eino/schema&#34;</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>)</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>main</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>ctx</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nf>Background</span><span class=p>()</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>store</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewInMemoryStore</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// --- 1. 实现 CheckPointStore 接口 ---</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>cfg</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoopConfig</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>GenInput</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>items</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenInputResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=c1>// 按优先级排序后，只消费第一条，其余留给后续轮次</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>sorted</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nf>sortByPriority</span><span class=p>(</span><span class=nx>items</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenInputResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>Input</span><span class=p>:</span><span class=w>     </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentInput</span><span class=p>{</span><span class=nx>Messages</span><span class=p>:</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>{</span><span class=nx>schema</span><span class=p>.</span><span class=nf>UserMessage</span><span class=p>(</span><span class=nx>sorted</span><span class=p>[</span><span class=mi>0</span><span class=p>])}},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>Consumed</span><span class=p>:</span><span class=w>  </span><span class=nx>sorted</span><span class=p>[:</span><span class=mi>1</span><span class=p>],</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>Remaining</span><span class=p>:</span><span class=w> </span><span class=nx>sorted</span><span class=p>[</span><span class=mi>1</span><span class=p>:],</span><span class=w> </span><span class=c1>// 不在两者中的项目会被丢弃</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>GenResume</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>interruptedItems</span><span class=p>,</span><span class=w> </span><span class=nx>unhandledItems</span><span class=p>,</span><span class=w> </span><span class=nx>newItems</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenResumeResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>all</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nb>append</span><span class=p>(</span><span class=nb>append</span><span class=p>(</span><span class=nx>interruptedItems</span><span class=p>,</span><span class=w> </span><span class=nx>unhandledItems</span><span class=o>...</span><span class=p>),</span><span class=w> </span><span class=nx>newItems</span><span class=o>...</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenResumeResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>Consumed</span><span class=p>:</span><span class=w>  </span><span class=nx>all</span><span class=p>[:</span><span class=mi>1</span><span class=p>],</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>Remaining</span><span class=p>:</span><span class=w> </span><span class=nx>all</span><span class=p>[</span><span class=mi>1</span><span class=p>:],</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>PrepareAgent</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>consumed</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>Agent</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=nf>buildAgent</span><span class=p>(</span><span class=nx>consumed</span><span class=p>),</span><span class=w> </span><span class=kc>nil</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>OnAgentEvents</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>tc</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnContext</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>events</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AsyncIterator</span><span class=p>[</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentEvent</span><span class=p>])</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>for</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>event</span><span class=p>,</span><span class=w> </span><span class=nx>ok</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>events</span><span class=p>.</span><span class=nf>Next</span><span class=p>()</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>if</span><span class=w> </span><span class=p>!</span><span class=nx>ok</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=k>break</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=c1>// 感知抢占/停止信号，做收尾处理</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>select</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>case</span><span class=w> </span><span class=o>&lt;-</span><span class=nx>tc</span><span class=p>.</span><span class=nx>Preempted</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;被更高优先级消息抢占&#34;</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>case</span><span class=w> </span><span class=o>&lt;-</span><span class=nx>tc</span><span class=p>.</span><span class=nx>Stopped</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;服务关停: %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>tc</span><span class=p>.</span><span class=nf>StopCause</span><span class=p>())</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>default</span><span class=p>:</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>if</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=c1>// 不传播 CancelError，框架自动处理</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=k>return</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Err</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;[%s] %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>AgentName</span><span class=p>,</span><span class=w> </span><span class=nf>extractText</span><span class=p>(</span><span class=nx>event</span><span class=p>))</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>},</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>Store</span><span class=p>:</span><span class=w>        </span><span class=nx>store</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>CheckpointID</span><span class=p>:</span><span class=w> </span><span class=s>&#34;chat-session-001&#34;</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>loop</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewTurnLoop</span><span class=p>(</span><span class=nx>cfg</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Push</span><span class=p>(</span><span class=s>&#34;你好，帮我查一下天气&#34;</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Run</span><span class=p>(</span><span class=nx>ctx</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 1 秒后发送紧急消息抢占</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>time</span><span class=p>.</span><span class=nf>AfterFunc</span><span class=p>(</span><span class=mi>1</span><span class=o>*</span><span class=nx>time</span><span class=p>.</span><span class=nx>Second</span><span class=p>,</span><span class=w> </span><span class=kd>func</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Push</span><span class=p>(</span><span class=s>&#34;停！先帮我处理这个紧急问题&#34;</span><span class=p>,</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>adk</span><span class=p>.</span><span class=nx>WithPreempt</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>](</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AnySafePoint</span><span class=p>),</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>})</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 5 秒后优雅关停</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>time</span><span class=p>.</span><span class=nf>AfterFunc</span><span class=p>(</span><span class=mi>5</span><span class=o>*</span><span class=nx>time</span><span class=p>.</span><span class=nx>Second</span><span class=p>,</span><span class=w> </span><span class=kd>func</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Stop</span><span class=p>(</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithGracefulTimeout</span><span class=p>(</span><span class=mi>3</span><span class=o>*</span><span class=nx>time</span><span class=p>.</span><span class=nx>Second</span><span class=p>),</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithStopCause</span><span class=p>(</span><span class=s>&#34;service shutdown&#34;</span><span class=p>),</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>})</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>result</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Wait</span><span class=p>()</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;退出原因: %v&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>ExitReason</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;未处理消息: %v&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>UnhandledItems</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;停止原因: %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>StopCause</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;checkpoint: attempted=%v, err=%v&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>CheckpointAttempted</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>CheckpointErr</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 下次以相同 cfg 启动将自动从 checkpoint 恢复</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>InMemoryStore</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>mu</span><span class=w> </span><span class=nx>sync</span><span class=p>.</span><span class=nx>Mutex</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>m</span><span class=w>  </span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>][]</span><span class=kt>byte</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><hr><h2 id=常见问题>常见问题</h2><h3 id=q-安全点取消会不会永远等不到安全点>Q: 安全点取消会不会永远等不到安全点？</h3><p>会。如果 agent 陷入长时间运行的 tool 或 model 调用，安全点可能迟迟不到。<strong>务必配合 WithAgentCancelTimeout 使用</strong>，超时后自动升级为 <code>CancelImmediate</code>。</p><h3 id=q-withrecursive-什么时候需要>Q: <code>WithRecursive</code> 什么时候需要？</h3><p>默认取消仅影响根 agent。当 agent 层级中包含 AgentTool 嵌套的子 agent，且你希望子 agent 也在安全点响应取消时，才需要。不确定时，先不加。</p><h3 id=q-泛型参数-t-有什么要求>Q: 泛型参数 T 有什么要求？</h3><p>当配置了 <code>Store</code> 时，<code>T</code> 必须可被 <code>encoding/gob</code> 编解码。基础类型（<code>string</code>、<code>int</code> 等）和全导出字段的 struct 默认支持。若 <code>T</code> 包含 interface 字段，需通过 <code>gob.Register</code> 注册具体类型。</p><h3 id=q-push-在-loop-停止后会怎样>Q: <code>Push</code> 在 loop 停止后会怎样？</h3><p><code>Push</code> 返回 <code>(false, closedCh)</code>。这些 &ldquo;late items&rdquo; 不会进入 checkpoint，可在 <code>Wait()</code> 返回后通过 <code>result.TakeLateItems()</code> 回收。一旦调用 <code>TakeLateItems()</code>，后续 <code>Push</code> 会 panic 以防数据静默丢失。</p><h3 id=q-多次调用-stop-会怎样>Q: 多次调用 <code>Stop()</code> 会怎样？</h3><p>安全——每次调用可以升级取消策略。典型模式：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>loop</span><span class=p>.</span><span class=nf>Stop</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithGraceful</span><span class=p>())</span><span class=w>           </span><span class=c1>// 先尝试优雅停止</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>NewInMemoryStore</span><span class=p>()</span><span class=w> </span><span class=o>*</span><span class=nx>InMemoryStore</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=o>&amp;</span><span class=nx>InMemoryStore</span><span class=p>{</span><span class=nx>m</span><span class=p>:</span><span class=w> </span><span class=nb>make</span><span class=p>(</span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>][]</span><span class=kt>byte</span><span class=p>)}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>s</span><span class=w> </span><span class=o>*</span><span class=nx>InMemoryStore</span><span class=p>)</span><span class=w> </span><span class=nf>Get</span><span class=p>(</span><span class=nx>_</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>id</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span><span class=w> </span><span class=kt>bool</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>s</span><span class=p>.</span><span class=nx>mu</span><span class=p>.</span><span class=nf>Lock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>defer</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>mu</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>data</span><span class=p>,</span><span class=w> </span><span class=nx>ok</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>m</span><span class=p>[</span><span class=nx>id</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>data</span><span class=p>,</span><span class=w> </span><span class=nx>ok</span><span class=p>,</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>s</span><span class=w> </span><span class=o>*</span><span class=nx>InMemoryStore</span><span class=p>)</span><span class=w> </span><span class=nf>Set</span><span class=p>(</span><span class=nx>_</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>id</span><span class=w> </span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=nx>data</span><span class=w> </span><span class=p>[]</span><span class=kt>byte</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>s</span><span class=p>.</span><span class=nx>mu</span><span class=p>.</span><span class=nf>Lock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>defer</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>mu</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>s</span><span class=p>.</span><span class=nx>m</span><span class=p>[</span><span class=nx>id</span><span class=p>]</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// 可选：实现 CheckPointDeleter 以支持自动清理过期 checkpoint</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>s</span><span class=w> </span><span class=o>*</span><span class=nx>InMemoryStore</span><span class=p>)</span><span class=w> </span><span class=nf>Delete</span><span class=p>(</span><span class=nx>_</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>id</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>s</span><span class=p>.</span><span class=nx>mu</span><span class=p>.</span><span class=nf>Lock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>defer</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>mu</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nb>delete</span><span class=p>(</span><span class=nx>s</span><span class=p>.</span><span class=nx>m</span><span class=p>,</span><span class=w> </span><span class=nx>id</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// --- 2. 实现一个最小 Agent（生产环境请使用 adk.NewChatModelAgent） ---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>type</span><span class=w> </span><span class=nx>echoAgent</span><span class=w> </span><span class=kd>struct</span><span class=p>{}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>a</span><span class=w> </span><span class=o>*</span><span class=nx>echoAgent</span><span class=p>)</span><span class=w> </span><span class=nf>Name</span><span class=p>(</span><span class=nx>_</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>)</span><span class=w> </span><span class=kt>string</span><span class=w>        </span><span class=p>{</span><span class=w> </span><span class=k>return</span><span class=w> </span><span class=s>&#34;EchoAgent&#34;</span><span class=w> </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>a</span><span class=w> </span><span class=o>*</span><span class=nx>echoAgent</span><span class=p>)</span><span class=w> </span><span class=nf>Description</span><span class=p>(</span><span class=nx>_</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>)</span><span class=w> </span><span class=kt>string</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=k>return</span><span class=w> </span><span class=s>&#34;echoes input&#34;</span><span class=w> </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>a</span><span class=w> </span><span class=o>*</span><span class=nx>echoAgent</span><span class=p>)</span><span class=w> </span><span class=nf>Run</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>input</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentInput</span><span class=p>,</span><span class=w> </span><span class=nx>_</span><span class=w> </span><span class=o>...</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentRunOption</span><span class=p>)</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AsyncIterator</span><span class=p>[</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentEvent</span><span class=p>]</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>iter</span><span class=p>,</span><span class=w> </span><span class=nx>gen</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>NewAsyncIteratorPair</span><span class=p>[</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentEvent</span><span class=p>]()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>go</span><span class=w> </span><span class=kd>func</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>defer</span><span class=w> </span><span class=nx>gen</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// 模拟耗时处理</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>select</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>case</span><span class=w> </span><span class=o>&lt;-</span><span class=nx>time</span><span class=p>.</span><span class=nf>After</span><span class=p>(</span><span class=mi>500</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=nx>time</span><span class=p>.</span><span class=nx>Millisecond</span><span class=p>):</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>case</span><span class=w> </span><span class=o>&lt;-</span><span class=nx>ctx</span><span class=p>.</span><span class=nf>Done</span><span class=p>():</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>gen</span><span class=p>.</span><span class=nf>Send</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentEvent</span><span class=p>{</span><span class=nx>Err</span><span class=p>:</span><span class=w> </span><span class=nx>ctx</span><span class=p>.</span><span class=nf>Err</span><span class=p>()})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// 返回 echo 结果</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>reply</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=s>&#34;Echo: &#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=nb>len</span><span class=p>(</span><span class=nx>input</span><span class=p>.</span><span class=nx>Messages</span><span class=p>)</span><span class=w> </span><span class=p>&gt;</span><span class=w> </span><span class=mi>0</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>reply</span><span class=w> </span><span class=o>+=</span><span class=w> </span><span class=nx>input</span><span class=p>.</span><span class=nx>Messages</span><span class=p>[</span><span class=mi>0</span><span class=p>].</span><span class=nx>Content</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>gen</span><span class=p>.</span><span class=nf>Send</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentEvent</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>AgentName</span><span class=p>:</span><span class=w> </span><span class=s>&#34;EchoAgent&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>Output</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentOutput</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>MessageOutput</span><span class=p>:</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>MessageVariant</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=nx>Message</span><span class=p>:</span><span class=w> </span><span class=nx>schema</span><span class=p>.</span><span class=nf>AssistantMessage</span><span class=p>(</span><span class=nx>reply</span><span class=p>,</span><span class=w> </span><span class=kc>nil</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>iter</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// --- 3. 优先级排序辅助函数 ---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>sortByPriority</span><span class=p>(</span><span class=nx>items</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>sorted</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nb>make</span><span class=p>([]</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=nb>len</span><span class=p>(</span><span class=nx>items</span><span class=p>))</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nb>copy</span><span class=p>(</span><span class=nx>sorted</span><span class=p>,</span><span class=w> </span><span class=nx>items</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>sort</span><span class=p>.</span><span class=nf>SliceStable</span><span class=p>(</span><span class=nx>sorted</span><span class=p>,</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>i</span><span class=p>,</span><span class=w> </span><span class=nx>j</span><span class=w> </span><span class=kt>int</span><span class=p>)</span><span class=w> </span><span class=kt>bool</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// 以 &#34;!&#34; 开头的视为高优先级</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>strings</span><span class=p>.</span><span class=nf>HasPrefix</span><span class=p>(</span><span class=nx>sorted</span><span class=p>[</span><span class=nx>i</span><span class=p>],</span><span class=w> </span><span class=s>&#34;!&#34;</span><span class=p>)</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=p>!</span><span class=nx>strings</span><span class=p>.</span><span class=nf>HasPrefix</span><span class=p>(</span><span class=nx>sorted</span><span class=p>[</span><span class=nx>j</span><span class=p>],</span><span class=w> </span><span class=s>&#34;!&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>sorted</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// --- 4. 主流程 ---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>func</span><span class=w> </span><span class=nf>main</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>ctx</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nf>Background</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>store</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nf>NewInMemoryStore</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>agent</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=o>&amp;</span><span class=nx>echoAgent</span><span class=p>{}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>cfg</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoopConfig</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>GenInput</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>items</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenInputResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=c1>// 按优先级排序后，只消费第一条，其余留给后续轮次</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>sorted</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nf>sortByPriority</span><span class=p>(</span><span class=nx>items</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenInputResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>Input</span><span class=p>:</span><span class=w>     </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentInput</span><span class=p>{</span><span class=nx>Messages</span><span class=p>:</span><span class=w> </span><span class=p>[]</span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>{</span><span class=nx>schema</span><span class=p>.</span><span class=nf>UserMessage</span><span class=p>(</span><span class=nx>sorted</span><span class=p>[</span><span class=mi>0</span><span class=p>])}},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>Consumed</span><span class=p>:</span><span class=w>  </span><span class=nx>sorted</span><span class=p>[:</span><span class=mi>1</span><span class=p>],</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>Remaining</span><span class=p>:</span><span class=w> </span><span class=nx>sorted</span><span class=p>[</span><span class=mi>1</span><span class=p>:],</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>GenResume</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>interruptedItems</span><span class=p>,</span><span class=w> </span><span class=nx>unhandledItems</span><span class=p>,</span><span class=w> </span><span class=nx>newItems</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenResumeResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>all</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nb>append</span><span class=p>(</span><span class=nb>append</span><span class=p>(</span><span class=nx>interruptedItems</span><span class=p>,</span><span class=w> </span><span class=nx>unhandledItems</span><span class=o>...</span><span class=p>),</span><span class=w> </span><span class=nx>newItems</span><span class=o>...</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=o>&amp;</span><span class=nx>adk</span><span class=p>.</span><span class=nx>GenResumeResult</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>]{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>Consumed</span><span class=p>:</span><span class=w>  </span><span class=nx>all</span><span class=p>[:</span><span class=mi>1</span><span class=p>],</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>Remaining</span><span class=p>:</span><span class=w> </span><span class=nx>all</span><span class=p>[</span><span class=mi>1</span><span class=p>:],</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>PrepareAgent</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>loop</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnLoop</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>consumed</span><span class=w> </span><span class=p>[]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nx>Agent</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=nx>agent</span><span class=p>,</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>OnAgentEvents</span><span class=p>:</span><span class=w> </span><span class=kd>func</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>tc</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>TurnContext</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>],</span><span class=w> </span><span class=nx>events</span><span class=w> </span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AsyncIterator</span><span class=p>[</span><span class=o>*</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AgentEvent</span><span class=p>])</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>for</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>event</span><span class=p>,</span><span class=w> </span><span class=nx>ok</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>events</span><span class=p>.</span><span class=nf>Next</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>if</span><span class=w> </span><span class=p>!</span><span class=nx>ok</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=k>break</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=c1>// 感知抢占/停止信号，做收尾处理</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>select</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>case</span><span class=w> </span><span class=o>&lt;-</span><span class=nx>tc</span><span class=p>.</span><span class=nx>Preempted</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;被更高优先级消息抢占&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>case</span><span class=w> </span><span class=o>&lt;-</span><span class=nx>tc</span><span class=p>.</span><span class=nx>Stopped</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=nx>log</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;服务关停: %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>tc</span><span class=p>.</span><span class=nf>StopCause</span><span class=p>())</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>default</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>if</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=c1>// 不传播 CancelError，框架自动处理</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=k>return</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>if</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Output</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Output</span><span class=p>.</span><span class=nx>MessageOutput</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;[%s] %s\n&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>AgentName</span><span class=p>,</span><span class=w> </span><span class=nx>event</span><span class=p>.</span><span class=nx>Output</span><span class=p>.</span><span class=nx>MessageOutput</span><span class=p>.</span><span class=nx>Message</span><span class=p>.</span><span class=nx>Content</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>Store</span><span class=p>:</span><span class=w>        </span><span class=nx>store</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>CheckpointID</span><span class=p>:</span><span class=w> </span><span class=s>&#34;session-123&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 第一次运行</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>loop</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>adk</span><span class=p>.</span><span class=nf>NewTurnLoop</span><span class=p>(</span><span class=nx>cfg</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>loop</span><span class=p>.</span><span class=nf>Push</span><span class=p>(</span><span class=s>&#34;普通消息&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>loop</span><span class=p>.</span><span class=nf>Push</span><span class=p>(</span><span class=s>&#34;低优先级任务&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>loop</span><span class=p>.</span><span class=nf>Run</span><span class=p>(</span><span class=nx>ctx</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 模拟延迟后推入紧急消息（触发抢占）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>time</span><span class=p>.</span><span class=nf>AfterFunc</span><span class=p>(</span><span class=mi>200</span><span class=o>*</span><span class=nx>time</span><span class=p>.</span><span class=nx>Millisecond</span><span class=p>,</span><span class=w> </span><span class=kd>func</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>accepted</span><span class=p>,</span><span class=w> </span><span class=nx>ack</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Push</span><span class=p>(</span><span class=s>&#34;!紧急消息&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>adk</span><span class=p>.</span><span class=nx>WithPreempt</span><span class=p>[</span><span class=kt>string</span><span class=p>,</span><span class=w> </span><span class=o>*</span><span class=nx>schema</span><span class=p>.</span><span class=nx>Message</span><span class=p>](</span><span class=nx>adk</span><span class=p>.</span><span class=nx>AnySafePoint</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=nx>accepted</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>&lt;-</span><span class=nx>ack</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;抢占信号已确认&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 2 秒后优雅停止</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>time</span><span class=p>.</span><span class=nf>AfterFunc</span><span class=p>(</span><span class=mi>2</span><span class=o>*</span><span class=nx>time</span><span class=p>.</span><span class=nx>Second</span><span class=p>,</span><span class=w> </span><span class=kd>func</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>loop</span><span class=p>.</span><span class=nf>Stop</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithGraceful</span><span class=p>(),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithStopCause</span><span class=p>(</span><span class=s>&#34;demo timeout&#34;</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>result</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Wait</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;退出原因: %v\n&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>ExitReason</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;停止原因: %s\n&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>StopCause</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;checkpoint: attempted=%v, err=%v\n&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>CheckpointAttempted</span><span class=p>,</span><span class=w> </span><span class=nx>result</span><span class=p>.</span><span class=nx>CheckpointErr</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 第二次运行（相同 cfg，包含相同 CheckpointID）将自动从 checkpoint 恢复</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></div><blockquote><p>💡
+生产环境中，将 <code>echoAgent</code> 替换为 <code>adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig{...})</code>。<code>CheckPointStore</code> 实现可使用 Redis / 数据库等持久化方案。</p></blockquote><h2 id=常见问题>常见问题</h2><h3 id=q-安全点取消会不会永远等不到安全点>Q: 安全点取消会不会永远等不到安全点？</h3><p>会。如果 agent 陷入长时间运行的 tool 或 model 调用，安全点可能迟迟不到。<strong>务必配合 WithAgentCancelTimeout 使用</strong>，超时后自动升级为 <code>CancelImmediate</code>。</p><h3 id=q-withrecursive-什么时候需要>Q: <code>WithRecursive</code> 什么时候需要？</h3><p>默认取消仅影响根 agent。当 agent 层级中包含 AgentTool 嵌套的子 agent，且你希望子 agent 也在安全点响应取消时，才需要。不确定时，先不加。</p><h3 id=q-泛型参数-t-有什么要求>Q: 泛型参数 T 有什么要求？</h3><p>当配置了 <code>Store</code> 时，<code>T</code> 必须可被 <code>encoding/gob</code> 编解码。基础类型（<code>string</code>、<code>int</code> 等）和全导出字段的 struct 默认支持。若 <code>T</code> 包含 interface 字段，需通过 <code>gob.Register</code> 注册具体类型。</p><h3 id=q-push-在-loop-停止后会怎样>Q: <code>Push</code> 在 loop 停止后会怎样？</h3><p><code>Push</code> 返回 <code>(false, closedCh)</code>。这些 &ldquo;late items&rdquo; 不会进入 checkpoint，可在 <code>Wait()</code> 返回后通过 <code>result.TakeLateItems()</code> 回收。一旦调用 <code>TakeLateItems()</code>，后续 <code>Push</code> 会 panic 以防数据静默丢失。</p><h3 id=q-多次调用-stop-会怎样>Q: 多次调用 <code>Stop()</code> 会怎样？</h3><p>安全——每次调用可以升级取消策略。典型模式：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>loop</span><span class=p>.</span><span class=nf>Stop</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithGraceful</span><span class=p>())</span><span class=w>           </span><span class=c1>// 先尝试优雅停止</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=nx>time</span><span class=p>.</span><span class=nf>AfterFunc</span><span class=p>(</span><span class=mi>3</span><span class=o>*</span><span class=nx>time</span><span class=p>.</span><span class=nx>Second</span><span class=p>,</span><span class=w> </span><span class=kd>func</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>loop</span><span class=p>.</span><span class=nf>Stop</span><span class=p>(</span><span class=nx>adk</span><span class=p>.</span><span class=nf>WithImmediate</span><span class=p>())</span><span class=w>       </span><span class=c1>// 3 秒后升级为立即取消</span><span class=w>
 </span></span></span><span class=line><span class=cl><span class=w></span><span class=p>})</span><span class=w>
 </span></span></span></code></pre></div><h3 id=q-geninput-返回的-items-不在-consumed-也不在-remaining-会怎样>Q: <code>GenInput</code> 返回的 items 不在 Consumed 也不在 Remaining 会怎样？</h3><p>会被丢弃。这是刻意设计——允许 <code>GenInput</code> 在决策时过滤掉不需要的项目。</p><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>反馈</h2><p class=feedback--question>当前页面对你有帮助吗？</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">是</button>
-<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 May 21, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/14c457e4b31e5215ffb722a7f0d1c47dae30835d>docs(eino): sync docs from feishu (2026-05-21) (#1545) (14c457e4b)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">否</button><p class="feedback--response feedback--response-yes"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p><p class="feedback--response feedback--response-no"><a href=https://github.com/cloudwego/cloudwego.github.io/issues/new>请告诉我们如何改进</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof ga!="function")return;const t={command:"send",hitType:"event",category:"Helpful",action:"click",label:window.location.pathname,value:e};ga(t.command,t.hitType,t.category,t.action,t.label,t.value)};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(1)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br><div class=td-page-meta__lastmod>最后修改 May 22, 2026: <a data-proofer-ignore href=https://github.com/cloudwego/cloudwego.github.io/commit/262c1f1722cae8227c1079e19435a10eac62d46b>docs(eino): update agent cancel and turnloop quickstart (#1550) (262c1f172)</a></div></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class=container-fluid><div class="row mx-sm-5"><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Lark aria-label=Lark><a class=text-white target=_blank rel=noopener href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=693v2544-2664-4421-b50f-7f1912p745r6" aria-label=Lark><img src=/webfonts/lark.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank rel=noopener href=https://twitter.com/CloudWeGo aria-label=Twitter><img src=/webfonts/x-twitter.svg alt style=width:26px;line-height:32.5px;margin-bottom:6px;fill:#fff></a></li></ul></div><div class="col-6 col-sm-4 text-end text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/cloudwego aria-label=GitHub><i class="fa-brands fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-bs-toggle=tooltip data-bs-placement=top title=Discord aria-label=Discord><a class=text-white target=_blank rel=noopener href=https://discord.gg/jceZSE7DsW aria-label=Discord><i class="fa-brands fa-discord"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The CloudWeGo Authors</small><p class="mt-2 text-white"><a class=cloudwego-link href=/about/ target=_blank rel=noopener>About</a>
 |
-<a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.7f61069e37ab04943083fa2376368a557ccd2a7d7da9f302c9b6030b765fc76f.js integrity="sha256-f2EGnjerBJQwg/ojdjaKVXzNKn19qfMCybYDC3Zfx28=" crossorigin=anonymous></script><script defer src=/js/click-to-copy.min.383b566d46ea827745a12d56f9f3bafd4eea8f8788fe225e4d72ff25e2752b35.js integrity="sha256-ODtWbUbqgndFoS1W+fO6/U7qj4eI/iJeTXL/JeJ1KzU=" crossorigin=anonymous></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>
+<a class=cloudwego-link href=https://github.com/cloudwego/cloudwego.github.io/blob/main/LICENSE target=_blank rel=noopener>License</a></p></div></div></div></footer></div><script src=https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js></script><script src=/js/main.min.54d0dd7223fe3e2197b7f524e7b447770198007158f1bc4f5c20a42ea747bbee.js integrity="sha256-VNDdciP+PiGXt/Uk57RHdwGYAHFY8bxPXCCkLqdHu+4=" crossorigin=anonymous></script><script defer src=/js/click-to-copy.min.383b566d46ea827745a12d56f9f3bafd4eea8f8788fe225e4d72ff25e2752b35.js integrity="sha256-ODtWbUbqgndFoS1W+fO6/U7qj4eI/iJeTXL/JeJ1KzU=" crossorigin=anonymous></script><script src=/js/tabpane-persist.js></script><script src=/js/docsearch.js></script><script type=text/javascript>let siteLang=window.location.pathname.startsWith("/zh/")?"zh":"en";docsearch({appId:"V7I042F992",apiKey:"8380a7ac88106841cb43fb000fa2edb4",indexName:"cloudwego",container:"#docsearch",searchParameters:{hitsPerPage:5,facetFilters:[`lang:${siteLang}`]},transformItems(e){return e.map(e=>({...e,url:e.url.replace("www.cloudwego.io",location.host).replace("https:",location.protocol)}))}})</script><script src=/js/outbound-link.js></script><script src=/js/navScroll.js></script></body></html>
