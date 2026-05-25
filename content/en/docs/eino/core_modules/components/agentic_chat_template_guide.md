@@ -1,28 +1,24 @@
 ---
 Description: ""
-date: "2026-03-03"
+date: "2026-05-25"
 lastmod: ""
 tags: []
-title: 'Eino: AgenticChatTemplate Guide [Beta]'
+title: AgenticChatTemplate Guide [Beta]
 weight: 11
 ---
 
 > 💡
-> This feature is available starting from [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2).
+> This feature is available starting from [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2). This document is based on the current main branch source code, with code primarily located in `components/prompt`, `schema/agentic_message.go`, and `compose`.
 
 ## Introduction
 
-The Prompt component is used for processing and formatting prompt templates. AgenticChatTemplate is a component abstraction specifically designed for AgenticMessage, with definitions and usage essentially the same as the existing ChatTemplate abstraction. Its main purpose is to fill user-provided variable values into predefined message templates, generating standardized message formats for interacting with language models. This component can be used in the following scenarios:
+`AgenticChatTemplate` is a Prompt component abstraction designed for `*schema.AgenticMessage`. It fills variables from a `map[string]any` into agentic message templates and outputs `[]*schema.AgenticMessage` for use by `AgenticModel` or subsequent orchestration nodes.
 
-- Building structured system prompts
-- Processing multi-turn dialogue templates (including history)
-- Implementing reusable prompt patterns
+Its design is essentially the same as the existing `ChatTemplate`, but the message type is switched from `*schema.Message` to `*schema.AgenticMessage`, and template rendering only applies to user input content blocks.
 
 ## Component Definition
 
-### Interface
-
-> Code: [https://github.com/cloudwego/eino/tree/main/components/prompt/interface.go](https://github.com/cloudwego/eino/tree/main/components/prompt/interface.go)
+Code location: `components/prompt/interface.go`
 
 ```go
 type AgenticChatTemplate interface {
@@ -30,293 +26,314 @@ type AgenticChatTemplate interface {
 }
 ```
 
-#### Format Method
+`Format` parameter description:
 
-- Purpose: Fill variable values into the message template
-- Params:
-  - ctx: Context object for passing request-level information, also used to pass the Callback Manager
-  - vs: Variable value mapping used to fill placeholders in the template
-  - opts: Optional parameters for configuring formatting behavior
-- Returns:
-  - `[]*schema.AgenticMessage`: Formatted message list
-  - error: Error information during formatting
+<table>
+<tr><td>Parameter</td><td>Description</td></tr>
+<tr><td><pre>ctx</pre></td><td>Request context, also carries runtime information such as the callback manager</td></tr>
+<tr><td><pre>vs</pre></td><td>Template variable map, where the key is the placeholder name and value is the actual value</td></tr>
+<tr><td><pre>opts</pre></td><td>Prompt component Option, supports implementation-side custom extensions</td></tr>
+</table>
 
-### Built-in Templating Methods
+Return values:
 
-The Prompt component has built-in support for three templating methods:
+<table>
+<tr><td>Return Value</td><td>Description</td></tr>
+<tr><td><pre>[]*schema.AgenticMessage</pre></td><td>The rendered agentic message list</td></tr>
+<tr><td><pre>error</pre></td><td>Returns an error when variables are missing, variable types don't match, or template rendering fails</td></tr>
+</table>
 
-1. FString Format (schema.FString)
+## Construction Methods
 
-   - Uses `{variable}` syntax for variable substitution
-   - Simple and intuitive, suitable for basic text replacement scenarios
-   - Example: `"You are a {role}, please help me {task}."`
-2. GoTemplate Format (schema.GoTemplate)
+### FromAgenticMessages
 
-   - Uses Go standard library's text/template syntax
-   - Supports conditional statements, loops, and other complex logic
-   - Example: `"{{if .expert}}As an expert{{end}} please {{.action}}"`
-3. Jinja2 Format (schema.Jinja2)
-
-   - Uses Jinja2 template syntax
-   - Example: `"{% if level == 'expert' %}From an expert perspective{% endif %} analyze {{topic}}"`
-
-### Common Options
-
-AgenticChatTemplate shares a common set of Options with ChatTemplate.
-
-## Usage
-
-AgenticChatTemplate is typically used before AgenticModel to prepare context.
-
-### Creation Methods
-
-- `prompt.FromAgenticMessages()`
-  - Used to combine multiple messages into an agentic chat template.
-- `schema.AgenticMessage{}`
-  - schema.AgenticMessage is a struct that implements the Format interface, so you can directly construct `schema.AgenticMessage{}` as a template
-- `schema.DeveloperAgenticMessage()`
-  - A shortcut method for building a message with role "developer"
-- `schema.SystemAgenticMessage()`
-  - A shortcut method for building a message with role "system"
-- `schema.UserAgenticMessage()`
-  - A shortcut method for building a message with role "user"
-- `schema.FunctionToolResultAgenticMessage()`
-  - A shortcut method for building a tool call message with role "user"
-- `schema.AgenticMessagesPlaceholder()`
-  - Can be used to insert a `[]*schema.AgenticMessage` into the message list, commonly used for inserting conversation history
-
-### Standalone Usage
+Code location: `components/prompt/agentic_chat_template.go`
 
 ```go
-import (
-    "github.com/cloudwego/eino/components/prompt"
-    "github.com/cloudwego/eino/schema"
-)
+func FromAgenticMessages(formatType schema.FormatType, templates ...schema.AgenticMessagesTemplate) *DefaultAgenticChatTemplate
+```
 
-// Create template
+`FromAgenticMessages` does not return an `error`. It accepts a template format and a set of `schema.AgenticMessagesTemplate`, and returns the default implementation `*DefaultAgenticChatTemplate`.
+
+```go
 template := prompt.FromAgenticMessages(schema.FString,
     schema.SystemAgenticMessage("You are a {role}."),
-    schema.AgenticMessagesPlaceholder("history_key", false),
-    schema.UserAgenticMessage("Please help me {task}")
+    schema.AgenticMessagesPlaceholder("history", true),
+    schema.UserAgenticMessage("Please help me {task}."),
 )
+```
 
-// Prepare variables
-variables := map[string]any{
-    "role": "professional assistant",
-    "task": "write a poem",
-    "history_key": []*schema.AgenticMessage{
-       {
-          Role: schema.AgenticRoleTypeUser,
-          ContentBlocks: []*schema.ContentBlock{
-             schema.NewContentBlock(&schema.UserInputText{Text: "Tell me what is oil painting?"}),
-          },
-       },
-       {
-          Role: schema.AgenticRoleTypeAssistant,
-          ContentBlocks: []*schema.ContentBlock{
-             schema.NewContentBlock(&schema.AssistantGenText{Text: "Oil painting is xxx"}),
-          },
-       },
+### Supported FormatTypes
+
+<table>
+<tr><td>Format</td><td>Constant</td><td>Placeholder Example</td><td>Applicable Scenarios</td></tr>
+<tr><td>FString</td><td><pre>schema.FString</pre></td><td><pre>{role}</pre></td><td>Simple variable substitution</td></tr>
+<tr><td>GoTemplate</td><td><pre>schema.GoTemplate</pre></td><td><pre>{{.role}}</pre></td><td>Scenarios requiring Go <pre>text/template</pre> capabilities</td></tr>
+<tr><td>Jinja2</td><td><pre>schema.Jinja2</pre></td><td><pre>{{ role }}</pre></td><td>Scenarios requiring Jinja2 syntax</td></tr>
+</table>
+
+## AgenticMessagesTemplate
+
+Code location: `schema/agentic_message.go`
+
+```go
+type AgenticMessagesTemplate interface {
+    Format(ctx context.Context, vs map[string]any, formatType FormatType) ([]*AgenticMessage, error)
+}
+```
+
+Common implementations include:
+
+<table>
+<tr><td>Construction Method</td><td>Description</td></tr>
+<tr><td><pre>&schema.AgenticMessage{...}</pre></td><td><pre>AgenticMessage</pre> itself implements <pre>AgenticMessagesTemplate</pre></td></tr>
+<tr><td><pre>schema.SystemAgenticMessage(text)</pre></td><td>Constructs a <pre>system</pre> role message</td></tr>
+<tr><td><pre>schema.UserAgenticMessage(text)</pre></td><td>Constructs a <pre>user</pre> role message</td></tr>
+<tr><td><pre>schema.AgenticMessagesPlaceholder(key, optional)</pre></td><td>Inserts a set of historical agentic messages from the variable map</td></tr>
+</table>
+
+### Template Rendering Scope
+
+`AgenticMessage.Format` only formats user input blocks:
+
+- `ContentBlockTypeUserInputText`
+- `ContentBlockTypeUserInputImage`
+- `ContentBlockTypeUserInputAudio`
+- `ContentBlockTypeUserInputVideo`
+- `ContentBlockTypeUserInputFile`
+
+Model output, reasoning, tool call, tool result, MCP, and server tool related blocks are not rendered as prompt template content.
+
+> 💡
+> It is recommended to use `schema.SystemAgenticMessage`, `schema.UserAgenticMessage`, and `schema.NewContentBlock` to construct templates, avoiding inconsistencies between `ContentBlock.Type` and content fields when setting them manually.
+
+## Placeholder
+
+Code location: `schema/agentic_message.go`
+
+```go
+func AgenticMessagesPlaceholder(key string, optional bool) AgenticMessagesTemplate
+```
+
+Behavior rules:
+
+<table>
+<tr><td>Scenario</td><td>Behavior</td></tr>
+<tr><td><pre>vs[key]</pre> exists and type is <pre>[]*schema.AgenticMessage</pre></td><td>Inserts the message list as-is</td></tr>
+<tr><td><pre>vs[key]</pre> does not exist and <pre>optional=true</pre></td><td>Returns an empty slice without error</td></tr>
+<tr><td><pre>vs[key]</pre> does not exist and <pre>optional=false</pre></td><td>Returns an error</td></tr>
+<tr><td><pre>vs[key]</pre> type is not <pre>[]*schema.AgenticMessage</pre></td><td>Returns an error</td></tr>
+</table>
+
+Example:
+
+```go
+history := []*schema.AgenticMessage{
+    schema.UserAgenticMessage("What is oil painting?"),
+    {
+        Role: schema.AgenticRoleTypeAssistant,
+        ContentBlocks: []*schema.ContentBlock{
+            schema.NewContentBlock(&schema.AssistantGenText{Text: "Oil painting is ..."}),
+        },
     },
 }
 
-// Format template
-messages, err := template.Format(context.Background(), variables)
-```
-
-### In Orchestration
-
-```go
-import (
-    "github.com/cloudwego/eino/components/prompt"
-    "github.com/cloudwego/eino/schema"
-    "github.com/cloudwego/eino/compose"
-)
-
-// Use in Chain
-chain := compose.NewChain[map[string]any, []*schema.AgenticMessage]()
-chain.AppendAgenticChatTemplate(template)
-
-// Compile and run
-runnable, err := chain.Compile()
+messages, err := template.Format(ctx, map[string]any{
+    "role":    "professional assistant",
+    "task":    "write a short poem",
+    "history": history,
+})
 if err != nil {
     return err
 }
-result, err := runnable.Invoke(ctx, variables)
-
-// Use in Graph
-graph := compose.NewGraph[map[string]any, []*schema.AgenticMessage]()
-graph.AddAgenticChatTemplateNode("template_node", template)
 ```
 
-### Pull Data from Predecessor Node Output
-
-When using AddNode, you can add the WithOutputKey Option to convert the node's output to a Map:
+## Standalone Usage
 
 ```go
-// This node's output will change from string to map[string]any,
-// and the map will have only one element with key "your_output_key" and value being the actual string output from the node
-graph.AddLambdaNode("your_node_key", compose.InvokableLambda(func(ctx context.Context, input []*schema.AgenticMessage) (str string, err error) {
-    // your logic
-    return
-}), compose.WithOutputKey("your_output_key"))
-```
-
-After converting the predecessor node's output to map[string]any and setting the key, use the value corresponding to that key in the downstream AgenticChatTemplate node.
-
-## Options and Callback Usage
-
-### Callback Usage Example
-
-```go
-import (
-    "context"
-
-    callbackHelper "github.com/cloudwego/eino/utils/callbacks"
-    "github.com/cloudwego/eino/callbacks"
-    "github.com/cloudwego/eino/compose"
-    "github.com/cloudwego/eino/components/prompt"
+template := prompt.FromAgenticMessages(schema.FString,
+    schema.SystemAgenticMessage("You are a {role}."),
+    schema.AgenticMessagesPlaceholder("history", true),
+    schema.UserAgenticMessage("Please help me {task}."),
 )
 
-// Create callback handler
-handler := &callbackHelper.AgenticPromptCallbackHandler{
-    OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *prompt.AgenticCallbackInput) context.Context {
-        fmt.Printf("Starting template formatting, variables: %v\n", input.Variables)
-        return ctx
+messages, err := template.Format(ctx, map[string]any{
+    "role": "concise assistant",
+    "task": "summarize the following requirement",
+    "history": []*schema.AgenticMessage{
+        schema.UserAgenticMessage("Previous question"),
     },
-    OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *prompt.AgenticCallbackOutput) context.Context {
-        fmt.Printf("Template formatting complete, number of messages generated: %d\n", len(output.Result))
-        return ctx
-    },
+})
+if err != nil {
+    return err
+}
+```
+
+## Usage in Orchestration
+
+### Chain
+
+Code location: `compose/chain.go`
+
+```go
+func (c *Chain[I, O]) AppendAgenticChatTemplate(node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *Chain[I, O]
+```
+
+```go
+chain := compose.NewChain[map[string]any, *schema.AgenticMessage]()
+chain.AppendAgenticChatTemplate(template)
+chain.AppendAgenticModel(model)
+```
+
+### Graph
+
+Code location: `compose/graph.go`
+
+```go
+func (g *graph) AddAgenticChatTemplateNode(key string, node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) error
+```
+
+```go
+graph := compose.NewGraph[map[string]any, *schema.AgenticMessage]()
+err := graph.AddAgenticChatTemplateNode("prompt", template)
+if err != nil {
+    return err
+}
+```
+
+### Workflow
+
+Code location: `compose/workflow.go`
+
+```go
+func (wf *Workflow[I, O]) AddAgenticChatTemplateNode(key string, chatTemplate prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *WorkflowNode
+```
+
+### Parallel and ChainBranch
+
+Agentic prompt can also be placed in `Parallel` or `ChainBranch`:
+
+```go
+func (p *Parallel) AddAgenticChatTemplate(outputKey string, node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *Parallel
+
+func (cb *ChainBranch) AddAgenticChatTemplate(key string, node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *ChainBranch
+```
+
+## Getting Variables from Predecessor Nodes
+
+`AgenticChatTemplate.Format` requires `map[string]any`. If the predecessor node's output is not a map, you can use `compose.WithOutputKey` when adding the node to wrap the output as a single-field map.
+
+```go
+graph.AddLambdaNode("query",
+    compose.InvokableLambda(func(ctx context.Context, input string) (string, error) {
+        return input, nil
+    }),
+    compose.WithOutputKey("task"),
+)
+
+graph.AddAgenticChatTemplateNode("prompt", template)
+```
+
+The wrapped map looks like:
+
+```go
+map[string]any{
+    "task": previousNodeOutput,
+}
+```
+
+## Callback
+
+### Component-level Callback Payload
+
+Code location: `components/prompt/agentic_callback_extra.go`
+
+```go
+type AgenticCallbackInput struct {
+    Variables map[string]any
+    Templates []schema.AgenticMessagesTemplate
+    Extra     map[string]any
 }
 
-// Use callback handler
-helper := callbackHelper.NewHandlerHelper().
-    AgenticPrompt(handler).
+type AgenticCallbackOutput struct {
+    Result    []*schema.AgenticMessage
+    Templates []schema.AgenticMessagesTemplate
+    Extra     map[string]any
+}
+
+func ConvAgenticCallbackInput(src callbacks.CallbackInput) *AgenticCallbackInput
+func ConvAgenticCallbackOutput(src callbacks.CallbackOutput) *AgenticCallbackOutput
+```
+
+`DefaultAgenticChatTemplate.Format` triggers callbacks at the start and end, passing the above agentic payload.
+
+### utils/callbacks Helper
+
+Code location: `utils/callbacks/template.go`
+
+The current public signature of `AgenticPromptCallbackHandler` is as follows:
+
+```go
+type AgenticPromptCallbackHandler struct {
+    OnStart func(ctx context.Context, runInfo *callbacks.RunInfo, input *prompt.CallbackInput) context.Context
+    OnEnd   func(ctx context.Context, runInfo *callbacks.RunInfo, output *prompt.CallbackOutput) context.Context
+    OnError func(ctx context.Context, runInfo *callbacks.RunInfo, err error) context.Context
+}
+```
+
+Register using the helper:
+
+```go
+handler := callbackHelper.NewHandlerHelper().
+    AgenticPrompt(&callbackHelper.AgenticPromptCallbackHandler{
+        OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *prompt.CallbackInput) context.Context {
+            if input != nil {
+                fmt.Printf("variables: %v\n", input.Variables)
+            }
+            return ctx
+        },
+        OnError: func(ctx context.Context, info *callbacks.RunInfo, err error) context.Context {
+            fmt.Printf("prompt error: %v\n", err)
+            return ctx
+        },
+    }).
     Handler()
 
-// Use at runtime
-runnable, err := chain.Compile()
-if err != nil {
-    return err
-}
-result, err := runnable.Invoke(ctx, variables, compose.WithCallbacks(helper))
+result, err := runnable.Invoke(ctx, variables, compose.WithCallbacks(handler))
 ```
 
-## Implementation Reference
+> 💡
+> If you need to directly handle `*prompt.AgenticCallbackInput` or `*prompt.AgenticCallbackOutput`, you should use the component-level callback payload along with `prompt.ConvAgenticCallbackInput/Output`. The current public signature of `utils/callbacks.AgenticPromptCallbackHandler` still reuses `prompt.CallbackInput/Output`.
 
-### Option Mechanism
+## Custom Implementation
 
-If needed, component implementers can implement custom prompt options:
-
-```go
-import (
-    "github.com/cloudwego/eino/components/prompt"
-)
-
-// Define Option struct
-type MyPromptOptions struct {
-    StrictMode bool
-    DefaultValues map[string]string
-}
-
-// Define Option functions
-func WithStrictMode(strict bool) prompt.Option {
-    return prompt.WrapImplSpecificOptFn(func(o *MyPromptOptions) {
-        o.StrictMode = strict
-    })
-}
-
-func WithDefaultValues(values map[string]string) prompt.Option {
-    return prompt.WrapImplSpecificOptFn(func(o *MyPromptOptions) {
-        o.DefaultValues = values
-    })
-}
-```
-
-### Callback Handling
-
-Prompt implementations need to trigger callbacks at appropriate times. The following structures are defined by the component:
-
-> Code: [github.com/cloudwego/eino/tree/main/components/prompt/agentic_callback_extra.go](http://github.com/cloudwego/eino/tree/main/components/prompt/agentic_callback_extra.go)
+Implementing a custom `AgenticChatTemplate` only requires satisfying the interface:
 
 ```go
-// AgenticCallbackInput is the input for the callback.
-type AgenticCallbackInput struct {
-    // Variables is the variables for the callback.
-    Variables map[string]any
-    // Templates is the agentic templates for the callback.
-    Templates []schema.AgenticMessagesTemplate
-    // Extra is the extra information for the callback.
-    Extra map[string]any
-}
-
-// AgenticCallbackOutput is the output for the callback.
-type AgenticCallbackOutput struct {
-    // Result is the agentic result for the callback.
-    Result []*schema.AgenticMessage
-    // Templates is the agentic templates for the callback.
-    Templates []schema.AgenticMessagesTemplate
-    // Extra is the extra information for the callback.
-    Extra map[string]any
-}
-```
-
-### Complete Implementation Example
-
-```go
-type MyPrompt struct {
-    templates []schema.AgenticMessagesTemplate
+type MyAgenticPrompt struct {
+    templates  []schema.AgenticMessagesTemplate
     formatType schema.FormatType
-    strictMode bool
-    defaultValues map[string]string
 }
 
-func NewMyPrompt(config *MyPromptConfig) (*MyPrompt, error) {
-    return &MyPrompt{
-        templates: config.Templates,
-        formatType: config.FormatType,
-        strictMode: config.DefaultStrictMode,
-        defaultValues: config.DefaultValues,
-    }, nil
-}
-
-func (p *MyPrompt) Format(ctx context.Context, vs map[string]any, opts ...prompt.Option) ([]*schema.AgenticMessage, error) {
-    // 1. Handle Options
-    options := &MyPromptOptions{
-        StrictMode: p.strictMode,
-        DefaultValues: p.defaultValues,
+func (p *MyAgenticPrompt) Format(ctx context.Context, vs map[string]any, opts ...prompt.Option) ([]*schema.AgenticMessage, error) {
+    result := make([]*schema.AgenticMessage, 0, len(p.templates))
+    for _, tpl := range p.templates {
+        msgs, err := tpl.Format(ctx, vs, p.formatType)
+        if err != nil {
+            return nil, err
+        }
+        result = append(result, msgs...)
     }
-    options = prompt.GetImplSpecificOptions(options, opts...)
-    
-    // 2. Get callback manager
-    cm := callbacks.ManagerFromContext(ctx)
-    
-    // 3. Callback before starting formatting
-    ctx = cm.OnStart(ctx, info, &prompt.AgenticCallbackInput{
-        Variables: vs,
-        Templates: p.templates,
-    })
-    
-    // 4. Execute formatting logic
-    messages, err := p.doFormat(ctx, vs, options)
-    
-    // 5. Handle error and completion callbacks
-    if err != nil {
-        ctx = cm.OnError(ctx, info, err)
-        return nil, err
-    }
-    
-    ctx = cm.OnEnd(ctx, info, &prompt.AgenticCallbackOutput{
-        Result: messages,
-        Templates: p.templates,
-    })
-    
-    return messages, nil
-}
-
-func (p *MyPrompt) doFormat(ctx context.Context, vs map[string]any, opts *MyPromptOptions) ([]*schema.AgenticMessage, error) {
-    // Implement your custom logic
-    return messages, nil
+    return result, nil
 }
 ```
+
+If you need to support custom options, you can implement them using `prompt.WrapImplSpecificOptFn` and `prompt.GetImplSpecificOptions`.
+
+## Best Practices
+
+- `FromAgenticMessages` does not return an `error`, so examples should not be written as `template, err := ...`.
+- The variable value for `AgenticMessagesPlaceholder` must be `[]*schema.AgenticMessage`.
+- Template variable names should be stable and consistent; missing variables will return an error at runtime.
+- Use `AgenticMessagesPlaceholder("history", true)` for conversation history, which naturally returns an empty list when there is no history.
+- In Graph/Chain, ensure that the node following the Agentic prompt accepts `[]*schema.AgenticMessage` type, such as `AgenticModel`.

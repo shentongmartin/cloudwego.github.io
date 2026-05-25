@@ -1,378 +1,412 @@
 ---
 Description: ""
-date: "2026-03-03"
+date: "2026-05-25"
 lastmod: ""
 tags: []
-title: 'AgenticToolsNode & Tool User Guide [Beta]'
+title: AgenticToolsNode & Tool User Guide [Beta]
 weight: 12
 ---
 
 > 💡
-> This feature is available starting from [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2).
+> This feature is available starting from [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2). This document is based on the current main branch source code, with code primarily located in `compose/agentic_tools_node.go`, `compose/tool_node.go`, `components/tool/interface.go`, and `schema/tool.go`.
 
-## **Introduction**
+## Introduction
 
-In the eino framework, a `Tool` is defined as "an external capability that an AgenticModel can choose to invoke", including local functions, MCP server tools, etc.
+`AgenticToolsNode` is the tool execution node on the agentic message path in Eino. It receives `*schema.AgenticMessage`, extracts tool calls from the `FunctionToolCall` content blocks, leverages `ToolsNode`'s execution capabilities to perform local tool execution, and then converts the results into `FunctionToolResult` content blocks for return.
 
-`AgenticToolsNode` is the designated "Tool executor" in the eino framework. The methods for executing tools are defined as follows:
+It is not responsible for "deciding which tool to call". Tool selection is done by the upstream `AgenticModel`; `AgenticToolsNode` only executes the corresponding tools based on the function tool calls in the input message.
 
-> Code location: [https://github.com/cloudwego/eino/tree/main/compose/agentic_tools_node.go](https://github.com/cloudwego/eino/tree/main/compose/agentic_tools_node.go)
+> 💡
+> `AgenticToolsNode` is an agentic wrapper layer around `ToolsNode`, so it reuses `ToolsNodeConfig`, `ToolsNodeOption`, tool aliases, exception handling, execution order, argument handlers, and tool middleware capabilities.
+
+## AgenticToolsNode Definition
+
+Code location: `compose/agentic_tools_node.go`
 
 ```go
-func (a *AgenticToolsNode) Invoke(ctx context.Context, input *schema.AgenticMessage, opts ...ToolsNodeOption) ([]*schema.AgenticMessage, error) {}
+func NewAgenticToolsNode(ctx context.Context, conf *ToolsNodeConfig) (*AgenticToolsNode, error)
 
-func (a *AgenticToolsNode) Stream(ctx context.Context, input *schema.AgenticMessage,
-    opts ...ToolsNodeOption) (*schema.StreamReader[[]*schema.AgenticMessage], error) {}
+type AgenticToolsNode struct {
+    inner *ToolsNode
+}
+
+func (a *AgenticToolsNode) Invoke(ctx context.Context, input *schema.AgenticMessage, opts ...ToolsNodeOption) ([]*schema.AgenticMessage, error)
+
+func (a *AgenticToolsNode) Stream(ctx context.Context, input *schema.AgenticMessage, opts ...ToolsNodeOption) (*schema.StreamReader[[]*schema.AgenticMessage], error)
 ```
 
-AgenticToolsNode and ToolsNode share the same configuration and usage, such as configuring execution sequence, exception handling, input processing, middleware extensions, etc.
+Input/Output rules:
 
-> Code location: [https://github.com/cloudwego/eino/tree/main/compose/tool_node.go](https://github.com/cloudwego/eino/tree/main/compose/tool_node.go)
+<table>
+<tr><td>Method</td><td>Input</td><td>Output</td></tr>
+<tr><td><pre>Invoke</pre></td><td>assistant message containing one or more <pre>FunctionToolCall</pre> blocks</td><td>multiple user messages, each containing one <pre>FunctionToolResult</pre> or <pre>ToolSearchFunctionToolResult</pre> block</td></tr>
+<tr><td><pre>Stream</pre></td><td>assistant message containing one or more <pre>FunctionToolCall</pre> blocks</td><td><pre>StreamReader</pre>, each chunk is <pre>[]*schema.AgenticMessage</pre></td></tr>
+</table>
+
+## Execution Flow
+
+<a href="/img/eino/RHFww5teMhOfEybBazKcMpWynIb.png" target="_blank"><img src="/img/eino/RHFww5teMhOfEybBazKcMpWynIb.png" width="100%" /></a>
+
+Core conversion logic:
+
+- Only processes blocks with `ContentBlockTypeFunctionToolCall` type and non-nil `FunctionToolCall`.
+- `FunctionToolCall.CallID` is converted to `schema.ToolCall.ID` for correlating tool results.
+- Standard tool output is converted to text blocks in `FunctionToolResult.Content`.
+- Enhanced tool output is converted to text/image/audio/video/file blocks in `FunctionToolResult.Content`.
+- Tool search results are converted to `ToolSearchFunctionToolResult` blocks.
+- The output message role is `schema.AgenticRoleTypeUser`.
+
+## ToolsNodeConfig
+
+Code location: `compose/tool_node.go`
 
 ```go
 type ToolsNodeConfig struct {
-    // Tools specify the list of tools can be called which are BaseTool but must implement InvokableTool or StreamableTool.
-    Tools []tool.BaseTool
-
-    // UnknownToolsHandler handles tool calls for non-existent tools when LLM hallucinates.
-    // This field is optional. When not set, calling a non-existent tool will result in an error.
-    // When provided, if the LLM attempts to call a tool that doesn't exist in the Tools list,
-    // this handler will be invoked instead of returning an error, allowing graceful handling of hallucinated tools.
-    // Parameters:
-    //   - ctx: The context for the tool call
-    //   - name: The name of the non-existent tool
-    //   - input: The tool call input generated by llm
-    // Returns:
-    //   - string: The response to be returned as if the tool was executed
-    //   - error: Any error that occurred during handling
-    UnknownToolsHandler func(ctx context.Context, name, input string) (string, error)
-
-    // ExecuteSequentially determines whether tool calls should be executed sequentially (in order) or in parallel.
-    // When set to true, tool calls will be executed one after another in the order they appear in the input message.
-    // When set to false (default), tool calls will be executed in parallel.
-    ExecuteSequentially bool
-
-    // ToolArgumentsHandler allows handling of tool arguments before execution.
-    // When provided, this function will be called for each tool call to process the arguments.
-    // Parameters:
-    //   - ctx: The context for the tool call
-    //   - name: The name of the tool being called
-    //   - arguments: The original arguments string for the tool
-    // Returns:
-    //   - string: The processed arguments string to be used for tool execution
-    //   - error: Any error that occurred during preprocessing
+    Tools                []tool.BaseTool
+    ToolAliases          map[string]ToolAliasConfig
+    UnknownToolsHandler  func(ctx context.Context, name, input string) (string, error)
+    ExecuteSequentially  bool
     ToolArgumentsHandler func(ctx context.Context, name, arguments string) (string, error)
-
-    // ToolCallMiddlewares configures middleware for tool calls.
-    // Each element can contain Invokable and/or Streamable middleware.
-    // Invokable middleware only applies to tools implementing InvokableTool interface.
-    // Streamable middleware only applies to tools implementing StreamableTool interface.
-    ToolCallMiddlewares []ToolMiddleware
+    ToolCallMiddlewares  []ToolMiddleware
 }
 ```
 
-How does AgenticToolsNode "decide" which Tool to execute? It doesn't make decisions; instead, it executes based on the input `*schema.AgenticMessage`. The AgenticModel generates FunctionToolCalls to be invoked (containing ToolName, Argument, etc.) and places them in `*schema.AgenticMessage` to pass to AgenticToolsNode. AgenticToolsNode then actually executes each FunctionToolCall.
+<table>
+<tr><td>Field</td><td>Description</td></tr>
+<tr><td><pre>Tools</pre></td><td>List of executable tools. Each tool must implement <pre>tool.BaseTool</pre> and at least one execution interface</td></tr>
+<tr><td><pre>ToolAliases</pre></td><td>Tool name aliases and argument alias configuration for compatibility with non-standard names generated by models</td></tr>
+<tr><td><pre>UnknownToolsHandler</pre></td><td>Handles unknown tools hallucinated by the model; raises an error for unknown tools when not set</td></tr>
+<tr><td><pre>ExecuteSequentially</pre></td><td><pre>true</pre> means execute tool calls sequentially in order; default <pre>false</pre> executes in parallel</td></tr>
+<tr><td><pre>ToolArgumentsHandler</pre></td><td>Called after argument alias processing and before tool execution; can be used for argument cleaning or completion</td></tr>
+<tr><td><pre>ToolCallMiddlewares</pre></td><td>Tool execution middleware, supporting standard and enhanced, non-streaming and streaming tools</td></tr>
+</table>
 
-If ExecuteSequentially is configured, AgenticToolsNode will execute tools in the order they appear in `[]*ContentBlock`.
-
-After each FunctionToolCall execution completes, the result is wrapped as `*schema.AgenticMessage` and becomes part of the AgenticToolsNode output.
+### ToolsNodeOption
 
 ```go
-// https://github.com/cloudwego/eino/tree/main/schema/agentic_message.go
+type ToolsNodeOption func(o *toolsNodeOptions)
 
-type AgenticMessage struct {
-    // role should be 'assistant' for tool call message
-    Role AgenticRoleType
+func WithToolOption(opts ...tool.Option) ToolsNodeOption
+func WithToolList(tool ...tool.BaseTool) ToolsNodeOption
+func WithToolAliases(toolAliases map[string]ToolAliasConfig) ToolsNodeOption
+```
 
-    // ContentBlocks is the list of content blocks.
-    ContentBlocks []*ContentBlock
+`WithToolList` and `WithToolAliases` are call-level override configurations:
 
-     // other fields...
-}
+- `WithToolList`: Replaces the tool list for the current call.
+- `WithToolAliases` combined with `WithToolList`: Configures aliases for dynamic tool lists.
+- `WithToolAliases` used alone: Replaces the global alias configuration while keeping the original tool list.
 
-type ContentBlock struct {
-    Type ContentBlockType
+## Tool alias
 
-    // FunctionToolCall contains the invocation details for a user-defined tool.
-    FunctionToolCall *FunctionToolCall
+Code location: `compose/tool_node.go`
 
-    // FunctionToolResult contains the result returned from a user-defined tool call.
-    FunctionToolResult *FunctionToolResult
-
-    // other fields...
-}
-
-// FunctionToolCall is the function call in a message.
-// It's used in assistant message.
-type FunctionToolCall struct {
-    // CallID is the unique identifier for the tool call.
-    CallID string
-
-    // Name specifies the function tool invoked.
-    Name string
-
-    // Arguments is the JSON string arguments for the function tool call.
-    Arguments string
-}
-
-// FunctionToolResult is the function call result in a message.
-// It's used in user message.
-type FunctionToolResult struct {
-    // CallID is the unique identifier for the tool call.
-    CallID string
-
-    // Name specifies the function tool invoked.
-    Name string
-
-    // Result is the function tool result returned by the user
-    Result string
+```go
+type ToolAliasConfig struct {
+    NameAliases      []string
+    ArgumentsAliases map[string][]string
 }
 ```
 
-## **Tool Definition**
+Semantic description:
 
-### **Interface Definition**
+<table>
+<tr><td>Config</td><td>Description</td></tr>
+<tr><td><pre>NameAliases</pre></td><td>Tool name aliases. When the model returns an alias, it will be resolved to the canonical tool name</td></tr>
+<tr><td><pre>ArgumentsAliases</pre></td><td>Argument aliases. Key is the canonical argument name, value is a list of aliases</td></tr>
+</table>
 
-The Tool component provides three levels of interfaces:
-
-> Code location: [https://github.com/cloudwego/eino/components/tool/interface.go](https://github.com/cloudwego/eino/components/tool/interface.go)
+Example:
 
 ```go
-// BaseTool get tool info for ChatModel intent recognition.
+toolsNode, err := compose.NewAgenticToolsNode(ctx, &compose.ToolsNodeConfig{
+    Tools: []tool.BaseTool{searchTool},
+    ToolAliases: map[string]compose.ToolAliasConfig{
+        "search": {
+            NameAliases: []string{"web_search", "lookup"},
+            ArgumentsAliases: map[string][]string{
+                "query": {"q", "keyword"},
+                "limit": {"count", "max_results"},
+            },
+        },
+    },
+})
+```
+
+Argument alias processing rules:
+
+- Only processes keys in the top-level JSON object.
+- Returns the original value when the string is empty, not an object, or JSON parsing fails.
+- When the canonical key already exists, the alias will not override the canonical value.
+- Alias remapping occurs before `ToolArgumentsHandler`.
+- Alias configuration validates: empty aliases, empty canonical keys, canonical keys containing `.`, aliases conflicting with schema properties, and the same alias mapping to multiple canonical names.
+
+## Tool Interface
+
+Eino currently does not export a unified interface named `Tool`. Tool capabilities are composed of the following interfaces in the `components/tool` package.
+
+Code location: `components/tool/interface.go`
+
+```go
 type BaseTool interface {
     Info(ctx context.Context) (*schema.ToolInfo, error)
 }
 
-// InvokableTool the tool for ChatModel intent recognition and ToolsNode execution.
 type InvokableTool interface {
     BaseTool
     InvokableRun(ctx context.Context, argumentsInJSON string, opts ...Option) (string, error)
 }
 
-// StreamableTool the stream tool for ChatModel intent recognition and ToolsNode execution.
 type StreamableTool interface {
     BaseTool
     StreamableRun(ctx context.Context, argumentsInJSON string, opts ...Option) (*schema.StreamReader[string], error)
 }
+
+type EnhancedInvokableTool interface {
+    BaseTool
+    InvokableRun(ctx context.Context, toolArgument *schema.ToolArgument, opts ...Option) (*schema.ToolResult, error)
+}
+
+type EnhancedStreamableTool interface {
+    BaseTool
+    StreamableRun(ctx context.Context, toolArgument *schema.ToolArgument, opts ...Option) (*schema.StreamReader[*schema.ToolResult], error)
+}
 ```
 
-#### **Info Method**
+Interface layers:
 
-- Function: Get the tool's description information
-- Parameters:
-  - ctx: Context object
-- Return values:
-  - `*schema.ToolInfo`: Tool description information
-  - error: Error during information retrieval
+<table>
+<tr><td>Interface</td><td>Purpose</td></tr>
+<tr><td><pre>BaseTool</pre></td><td>Provides tool metadata that can be passed to the model for tool recognition</td></tr>
+<tr><td><pre>InvokableTool</pre></td><td>Non-streaming execution; input is a JSON string, returns a string</td></tr>
+<tr><td><pre>StreamableTool</pre></td><td>Streaming execution; input is a JSON string, returns a string stream</td></tr>
+<tr><td><pre>EnhancedInvokableTool</pre></td><td>Non-streaming enhanced tool; input is <pre>*schema.ToolArgument</pre>, returns multimodal <pre>*schema.ToolResult</pre></td></tr>
+<tr><td><pre>EnhancedStreamableTool</pre></td><td>Streaming enhanced tool; returns a <pre>*schema.ToolResult</pre> stream</td></tr>
+</table>
 
-#### **InvokableRun Method**
+> 💡
+> If a tool implements both the standard interface and the enhanced interface, `ToolsNode` will prioritize using the enhanced interface to preserve structured multimodal results.
 
-- Function: Execute the tool synchronously
-- Parameters:
-  - ctx: Context object, used for passing request-level information and also for passing the Callback Manager
-  - `argumentsInJSON`: JSON-formatted argument string
-  - opts: Tool execution options
-- Return values:
-  - string: Execution result
-  - error: Error during execution
+## ToolInfo
 
-#### **StreamableRun Method**
-
-- Function: Execute the tool in streaming mode
-- Parameters:
-  - ctx: Context object, used for passing request-level information and also for passing the Callback Manager
-  - `argumentsInJSON`: JSON-formatted argument string
-  - opts: Tool execution options
-- Return values:
-  - `*schema.StreamReader[string]`: Streaming execution result
-  - error: Error during execution
-
-### **ToolInfo Struct**
-
-> Code location: [https://github.com/cloudwego/eino/components/tool/interface.go](https://github.com/cloudwego/eino/components/tool/interface.go)
+Code location: `schema/tool.go`
 
 ```go
 type ToolInfo struct {
-    // Unique name of the tool that clearly expresses its purpose
-    Name string
-    // Used to tell the model how/when/why to use this tool
-    // Can include few-shot examples in the description
-    Desc string
-    // Definition of parameters accepted by the tool
-    // Can be described in two ways:
-    // 1. Using ParameterInfo: schema.NewParamsOneOfByParams(params)
-    // 2. Using JSONSchema: schema.NewParamsOneOfByJSONSchema(jsonschema)
+    Name  string
+    Desc  string
+    Extra map[string]any
     *ParamsOneOf
 }
 ```
 
-### **Common Options**
+Field descriptions:
 
-The Tool component uses ToolOption to define optional parameters. AgenticToolsNode does not abstract common options. Each specific implementation can define its own specific Options, which are wrapped into the unified ToolOption type through the WrapToolImplSpecificOptFn function.
+<table>
+<tr><td>Field</td><td>Description</td></tr>
+<tr><td><pre>Name</pre></td><td>Unique tool name; should be concise and unique within the tool set</td></tr>
+<tr><td><pre>Desc</pre></td><td>Tells the model when, why, and how to use the tool; can include a few examples</td></tr>
+<tr><td><pre>Extra</pre></td><td>Additional metadata, defined by component implementations or business customizations</td></tr>
+<tr><td><pre>ParamsOneOf</pre></td><td>Parameter definition; can be constructed via <pre>schema.NewParamsOneOfByParams</pre> or <pre>schema.NewParamsOneOfByJSONSchema</pre>; <pre>nil</pre> means no parameters</td></tr>
+</table>
 
-## **Usage**
+## ToolArgument and ToolResult
 
-ToolsNode is typically not used alone; it is generally used in orchestration after an AgenticModel.
+Enhanced tools use structured input and multimodal output.
 
 ```go
-import (
-    "github.com/cloudwego/eino/components/tool"
-    "github.com/cloudwego/eino/compose"
-    "github.com/cloudwego/eino/schema"
-)
+type ToolArgument struct {
+    Text string
+}
 
-// Create tools node
-toolsNode := compose.NewAgenticToolsNode([]tool.Tool{
-    searchTool,    // Search tool
-    weatherTool,   // Weather query tool
-    calculatorTool, // Calculator tool
+type ToolResult struct {
+    Parts []ToolOutputPart
+}
+```
+
+`ToolOutputPart` can represent text, image, audio, video, file, and tool search results. `AgenticToolsNode` converts enhanced output into multimodal blocks in `FunctionToolResult.Content`.
+
+## FunctionToolCall and FunctionToolResult
+
+The input to `AgenticToolsNode` comes from `FunctionToolCall` blocks in `schema.AgenticMessage`:
+
+```go
+type FunctionToolCall struct {
+    CallID    string
+    Name      string
+    Arguments string
+}
+```
+
+Tool execution results are converted to `FunctionToolResult`:
+
+```go
+type FunctionToolResult struct {
+    CallID  string
+    Name    string
+    Content []*FunctionToolResultContentBlock
+}
+```
+
+`FunctionToolResultContentBlock` supports five content types: text, image, audio, video, and file. The current implementation no longer uses the `Result string` field.
+
+## Standalone Usage Example
+
+```go
+toolsNode, err := compose.NewAgenticToolsNode(ctx, &compose.ToolsNodeConfig{
+    Tools: []tool.BaseTool{weatherTool},
 })
-
-// Mock LLM output as input
-input := &schema.AgenticMessage{
-    Role: schema.AgenticRoleTypeAssistant,
-    ContentBlocks: []*schema.ContentBlock{
-       {
-          Type: schema.ContentBlockTypeFunctionToolCall,
-          FunctionToolCall: &schema.FunctionToolCall{
-             CallID:    "1",
-             Name:      "get_weather",
-             Arguments: `{"city": "深圳", "date": "tomorrow"}`,
-          },
-       },
-    },
-}
-
-toolMessages, err := toolsNode.Invoke(ctx, input)
-```
-
-### **Using in Orchestration**
-
-```go
-import (
-    "github.com/cloudwego/eino/components/tool"
-    "github.com/cloudwego/eino/compose"
-    "github.com/cloudwego/eino/schema"
-)
-
-// Create tools node
-toolsNode := compose.NewAgenticToolsNode([]tool.Tool{
-    searchTool,    // Search tool
-    weatherTool,   // Weather query tool
-    calculatorTool, // Calculator tool
-})
-
-// Use in Chain
-chain := compose.NewChain[*schema.AgenticMessage, []*schema.AgenticMessage]()
-chain.AppendAgenticToolsNode(toolsNode)
-
-// In graph
-graph := compose.NewGraph[*schema.AgenticMessage, []*schema.AgenticMessage]()
-graph.AddAgenticToolsNode(toolsNode)
-```
-
-## **Option Mechanism**
-
-Custom Tools can implement specific Options as needed:
-
-```go
-import "github.com/cloudwego/eino/components/tool"
-
-// Define Option struct
-type MyToolOptions struct {
-    Timeout time.Duration
-    MaxRetries int
-    RetryInterval time.Duration
-}
-
-// Define Option function
-func WithTimeout(timeout time.Duration) tool.Option {
-    return tool.WrapImplSpecificOptFn(func(o *MyToolOptions) {
-        o.Timeout = timeout
-    })
-}
-```
-
-## **Option and Callback Usage**
-
-### **Callback Usage Example**
-
-```go
-import (
-    "context"
-
-    callbackHelper "github.com/cloudwego/eino/utils/callbacks"
-    "github.com/cloudwego/eino/callbacks"
-    "github.com/cloudwego/eino/compose"
-    "github.com/cloudwego/eino/components/tool"
-)
-
-// Create callback handler
-handler := &callbackHelper.ToolCallbackHandler{
-    OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *tool.CallbackInput) context.Context {
-       fmt.Printf("Starting tool execution, arguments: %s\n", input.ArgumentsInJSON)
-       return ctx
-    },
-    OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *tool.CallbackOutput) context.Context {
-       fmt.Printf("Tool execution completed, result: %s\n", output.Response)
-       return ctx
-    },
-    OnEndWithStreamOutput: func(ctx context.Context, info *callbacks.RunInfo, output *schema.StreamReader[*tool.CallbackOutput]) context.Context {
-       fmt.Println("Tool starting streaming output")
-       go func() {
-          defer output.Close()
-
-          for {
-             chunk, err := output.Recv()
-             if errors.Is(err, io.EOF) {
-                return
-             }
-             if err != nil {
-                return
-             }
-             fmt.Printf("Received streaming output: %s\n", chunk.Response)
-          }
-       }()
-       return ctx
-    },
-}
-
-// Use callback handler
-helper := callbackHelper.NewHandlerHelper().
-    Tool(handler).
-    Handler()
- 
-/*** compose a chain
-* chain := NewChain
-* chain.appendxxx().
-*       appendxxx().
-*       ...
-*/
-
-// Use at runtime
-runnable, err := chain.Compile()
 if err != nil {
     return err
 }
-result, err := runnable.Invoke(ctx, input, compose.WithCallbacks(helper))
+
+input := &schema.AgenticMessage{
+    Role: schema.AgenticRoleTypeAssistant,
+    ContentBlocks: []*schema.ContentBlock{
+        schema.NewContentBlock(&schema.FunctionToolCall{
+            CallID:    "call_1",
+            Name:      "get_weather",
+            Arguments: `{"city":"Shenzhen","date":"tomorrow"}`,
+        }),
+    },
+}
+
+messages, err := toolsNode.Invoke(ctx, input)
+if err != nil {
+    return err
+}
 ```
 
-## How to Get ToolCallID
+Output example:
 
-In the tool function body and tool callback handler, you can use the `compose.GetToolCallID(ctx)` function to get the ToolCallID of the current Tool.
+```go
+[]*schema.AgenticMessage{
+    {
+        Role: schema.AgenticRoleTypeUser,
+        ContentBlocks: []*schema.ContentBlock{
+            schema.NewContentBlock(&schema.FunctionToolResult{
+                CallID: "call_1",
+                Name:   "get_weather",
+                Content: []*schema.FunctionToolResultContentBlock{
+                    {
+                        Type: schema.FunctionToolResultContentBlockTypeText,
+                        Text: &schema.UserInputText{Text: "sunny"},
+                    },
+                },
+            }),
+        },
+    },
+}
+```
 
-## **Existing Implementations**
+## Using in Orchestration
+
+### Chain
+
+Code location: `compose/chain.go`
+
+```go
+func (c *Chain[I, O]) AppendAgenticToolsNode(node *AgenticToolsNode, opts ...GraphAddNodeOpt) *Chain[I, O]
+```
+
+```go
+chain := compose.NewChain[*schema.AgenticMessage, []*schema.AgenticMessage]()
+chain.AppendAgenticToolsNode(toolsNode)
+```
+
+### Graph
+
+Code location: `compose/graph.go`
+
+```go
+func (g *graph) AddAgenticToolsNode(key string, node *AgenticToolsNode, opts ...GraphAddNodeOpt) error
+```
+
+```go
+graph := compose.NewGraph[*schema.AgenticMessage, []*schema.AgenticMessage]()
+err := graph.AddAgenticToolsNode("tools", toolsNode)
+if err != nil {
+    return err
+}
+```
+
+### Workflow, Parallel, ChainBranch
+
+```go
+func (wf *Workflow[I, O]) AddAgenticToolsNode(key string, tools *AgenticToolsNode, opts ...GraphAddNodeOpt) *WorkflowNode
+
+func (p *Parallel) AddAgenticToolsNode(outputKey string, node *AgenticToolsNode, opts ...GraphAddNodeOpt) *Parallel
+
+func (cb *ChainBranch) AddAgenticToolsNode(key string, node *AgenticToolsNode, opts ...GraphAddNodeOpt) *ChainBranch
+```
+
+## Callback
+
+Code location: `utils/callbacks/template.go`
+
+```go
+type AgenticToolsNodeCallbackHandlers struct {
+    OnStart               func(ctx context.Context, info *callbacks.RunInfo, input *schema.AgenticMessage) context.Context
+    OnEnd                 func(ctx context.Context, info *callbacks.RunInfo, input []*schema.AgenticMessage) context.Context
+    OnEndWithStreamOutput func(ctx context.Context, info *callbacks.RunInfo, output *schema.StreamReader[[]*schema.AgenticMessage]) context.Context
+    OnError               func(ctx context.Context, info *callbacks.RunInfo, err error) context.Context
+}
+```
+
+Registration example:
+
+```go
+handler := callbackHelper.NewHandlerHelper().
+    AgenticToolsNode(&callbackHelper.AgenticToolsNodeCallbackHandlers{
+        OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *schema.AgenticMessage) context.Context {
+            fmt.Printf("tool call blocks: %d\n", len(input.ContentBlocks))
+            return ctx
+        },
+        OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output []*schema.AgenticMessage) context.Context {
+            fmt.Printf("tool results: %d\n", len(output))
+            return ctx
+        },
+    }).
+    Handler()
+
+result, err := runnable.Invoke(ctx, input, compose.WithCallbacks(handler))
+```
+
+## Getting ToolCallID
+
+Code location: `compose/tool_node.go`
+
+```go
+func GetToolCallID(ctx context.Context) string
+```
+
+Within a tool function body or tool callback handler, you can use `compose.GetToolCallID(ctx)` to get the current tool call ID.
+
+```go
+func (t *MyTool) InvokableRun(ctx context.Context, args string, opts ...tool.Option) (string, error) {
+    callID := compose.GetToolCallID(ctx)
+    // An empty callID indicates the current ctx is not in a tool call execution context, or the context value type does not match.
+    return callID, nil
+}
+```
+
+## Usage Recommendations
+
+- In documentation and code, refer to `tool.BaseTool`, `InvokableTool`, `StreamableTool`, `EnhancedInvokableTool`, `EnhancedStreamableTool`—do not use an exported `Tool` interface that does not exist in the source code.
+- If a tool may return images, audio, video, or files, prefer implementing the enhanced interface to avoid flattening multimodal results into a string.
+- Multiple tool calls execute in parallel by default; set `ExecuteSequentially: true` when order needs to be preserved or tools have side-effect dependencies.
+- When using `ToolArgumentsHandler` for argument cleaning, note that it executes after argument alias remapping.
+- `UnknownToolsHandler` is suitable as a fallback for tool names hallucinated by the model, but should not mask real configuration errors.
+
+## Existing Implementations
 
 1. Google Search Tool: Tool implementation based on Google search [Tool - Googlesearch](/docs/eino/ecosystem_integration/tool/tool_googlesearch)
 2. DuckDuckGo Search Tool: Tool implementation based on DuckDuckGo search [Tool - DuckDuckGoSearch](/docs/eino/ecosystem_integration/tool/tool_duckduckgo_search)
 3. MCP: Use MCP server as a tool [Eino Tool - MCP](/docs/eino/ecosystem_integration/tool/tool_mcp)
 
-## **Tool Implementation Methods**
-
-There are multiple ways to implement tools. You can refer to the following approaches:
+## Tool Implementation Methods
 
 - HTTP API-based tool implementation: [How to create a tool/function call using OpenAPI?](https://bytedance.larkoffice.com/wiki/FjXzwf3exijtKyk2hh7cAmnZn1g)
 - gRPC-based tool implementation: [How to create a tool/function call using proto3?](https://bytedance.larkoffice.com/wiki/EPkawUVbdiGwxCkWCJTcAMQonbh)
 - Thrift-based tool implementation: [How to create a tool/function call using thrift IDL?](https://bytedance.larkoffice.com/wiki/PcHfwo6x0iOrXxkIjJecez8xnNg)
 - Local function-based tool implementation: [How to create a tool?](/docs/eino/core_modules/components/tools_node_guide/how_to_create_a_tool)
-- ……
