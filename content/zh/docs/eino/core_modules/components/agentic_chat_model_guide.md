@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-03"
+date: "2026-05-25"
 lastmod: ""
 tags: []
 title: AgenticModel 使用说明[Beta]
@@ -8,1184 +8,449 @@ weight: 10
 ---
 
 > 💡
-> 本功能在 [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2) 版本开始提供。
+> 本功能在 [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2) 版本开始提供。本文以当前 main 分支源码为准，代码位置主要包括 `components/model/interface.go`、`components/model/option.go` 与 `schema/agentic_message.go`。
 
 ## 基本介绍
 
-AgenticModel 是一种以 “目标驱动的自主执行” 为核心的模型能力抽象。随着缓存、内置工具等能力在 OpenAI Responses API、Claude API 等先进厂商的 API 中得到原生支持，模型正在从 “一次性问答引擎” 升级为 “面向用户目标的自主行动体”：能够围绕目标进行闭环规划、调用工具与迭代执行，从而完成更复杂的任务。
+`AgenticModel` 是 Eino 面向 agentic provider API 的模型组件抽象。它使用 `*schema.AgenticMessage` 作为消息载体，通过有序的 `ContentBlock` 表达文本、reasoning、多模态内容、函数工具调用、服务端内置工具调用、MCP 工具调用和审批结果。
 
-### 与 ChatModel 差异
+与传统 `ChatModel` 相比，`AgenticModel` 更适合直接承接 OpenAI Responses API、Claude API、Gemini API 等 provider 原生的 agentic 能力：一次模型请求中可能包含多段 reasoning、多次工具调用、服务端工具结果或 MCP 审批信息。Eino 不再把这些内容压平成单一文本字段，而是保留为结构化块。
+
+## 与 ChatModel 的关系
 
 <table>
-<tr><td></td><td>AgenticModel</td><td>ChatModel</td></tr>
-<tr><td>定位</td><td>基于 AgenticMessage 的 Model 组件抽象</td><td>基于 Message 的 Model 组件抽象</td></tr>
-<tr><td>核心实体</td><td><li>AgenticMessage</li><li>ContentBlock</li></td><td>Message</td></tr>
-<tr><td>能力</td><td><li>模型多轮对话生成</li><li>会话缓存</li><li>支持调用多种内置工具</li><li>支持调用 MCP 工具</li><li>更好的模型适配性</li></td><td><li>模型单轮对话生成</li><li>会话缓存</li><li>支持调用简单的内置工具</li></td></tr>
-<tr><td>相关组件</td><td><li>AgenticTemplate</li><li>AgenticToolsNode</li></td><td><li>ChatTemplate</li><li>ToolsNode</li></td></tr>
+<tr><td>维度</td><td>AgenticModel</td><td>ChatModel</td></tr>
+<tr><td>基础接口</td><td><pre>model.BaseModel[*schema.AgenticMessage]</pre></td><td><pre>model.BaseModel[*schema.Message]</pre></td></tr>
+<tr><td>类型别名</td><td><pre>type AgenticModel = BaseModel[*schema.AgenticMessage]</pre></td><td><pre>type BaseChatModel = BaseModel[*schema.Message]</pre></td></tr>
+<tr><td>消息结构</td><td><pre>AgenticMessage.ContentBlocks</pre></td><td><pre>Message.Content</pre>、<pre>ToolCalls</pre>、<pre>ToolCallID</pre> 等字段</td></tr>
+<tr><td>工具绑定</td><td>调用时通过 <pre>model.WithTools(...)</pre>、<pre>model.WithAgenticToolChoice(...)</pre> 传入</td><td><pre>ToolCallingChatModel.WithTools(...)</pre> 或调用时 Option</td></tr>
+<tr><td>表达能力</td><td>reasoning、多模态输入输出、function tool、server tool、MCP tool、approval</td><td>传统 chat completion 消息与 tool call</td></tr>
+<tr><td>下游执行器</td><td><pre>compose.AgenticToolsNode</pre></td><td><pre>compose.ToolsNode</pre></td></tr>
 </table>
 
-Server-side tool（如 web_search）、MCP tool 在模型提供商得到了原生支持，继而一次接口请求响应中可能会包含多次推理-行动的结果。以使用联网搜索这个能力举例
-
-- 基于 ChatModel 实现，需要预先自定义实现联网搜索工具。一次推理-行动过程如下：
-  1. 模型生成 tool call 参数
-  2. 用户侧执行工具
-  3. 给模型返回 tool result
-- 基于 AgenticModel 实现，可以直接配置由模型提供商提供的原生联网搜索工具。一次接口请求过程如下：
-  1. 模型根据用户问题自行调用联网搜索工具，并在模型服务端完成多次工具调用，即会产生多次推理-行动结果，直到完成用户任务。
-  2. 用户侧只管接收结果。
+> 💡
+> `AgenticModel` 没有 `WithTools` 方法。`WithTools` 是 `ToolCallingChatModel` 的实例方法；agentic 路径的工具信息通过 `model.WithTools(tools)` 作为请求级 Option 传入。
 
 ## 组件定义
 
-### 接口定义
+### BaseModel 与 AgenticModel
 
-> 代码位置：[https://github.com/cloudwego/eino/tree/main/components/model/interface.go](https://github.com/cloudwego/eino/tree/main/components/model/interface.go)
+代码位置：`components/model/interface.go`
 
 ```go
-type AgenticModel interface {
-    Generate(ctx context.Context, input []*schema.AgenticMessage, opts ...Option) (*schema.AgenticMessage, error)
-    Stream(ctx context.Context, input []*schema.AgenticMessage, opts ...Option) (*schema.StreamReader[*schema.AgenticMessage], error)
+// BaseModel is the generic base model interface parameterized by message type M.
+type BaseModel[M any] interface {
+    Generate(ctx context.Context, input []M, opts ...Option) (M, error)
+    Stream(ctx context.Context, input []M, opts ...Option) (*schema.StreamReader[M], error)
+}
 
-    // WithTools returns a new Model instance with the specified tools bound.
-    // This method does not modify the current instance, making it safer for concurrent use.
-    WithTools(tools []*schema.ToolInfo) (AgenticModel, error)
+// AgenticModel is a type alias for BaseModel specialized with
+// *schema.AgenticMessage.
+type AgenticModel = BaseModel[*schema.AgenticMessage]
+```
+
+### Generate
+
+`Generate` 阻塞直到模型返回完整响应。
+
+```go
+Generate(ctx context.Context, input []*schema.AgenticMessage, opts ...model.Option) (*schema.AgenticMessage, error)
+```
+
+参数说明：
+
+<table>
+<tr><td>参数</td><td>说明</td></tr>
+<tr><td><pre>ctx</pre></td><td>请求上下文，也承载 callback manager 等运行时信息</td></tr>
+<tr><td><pre>input</pre></td><td>按时间顺序排列的 agentic message 列表</td></tr>
+<tr><td><pre>opts</pre></td><td>请求级模型配置，例如温度、工具、tool choice、模型名等</td></tr>
+</table>
+
+### Stream
+
+`Stream` 返回增量消息流。调用方负责读取并关闭 `StreamReader`。
+
+```go
+Stream(ctx context.Context, input []*schema.AgenticMessage, opts ...model.Option) (*schema.StreamReader[*schema.AgenticMessage], error)
+```
+
+```go
+reader, err := m.Stream(ctx, messages)
+if err != nil {
+    return err
+}
+defer reader.Close()
+
+for {
+    chunk, err := reader.Recv()
+    if errors.Is(err, io.EOF) {
+        break
+    }
+    if err != nil {
+        return err
+    }
+    // handle chunk
 }
 ```
 
-#### Generate 方法
+> 💡
+> `schema.StreamReader` 只能消费一次。如需多个消费者读取同一个流，应在读取前复制 reader，而不是在消费后复用。
 
-- 功能：生成完整的模型响应
-- 参数：
-  - ctx：上下文对象，用于传递请求级别的信息，同时也用于传递 Callback Manager
-  - input：输入消息列表
-  - opts：可选参数，用于配置模型行为
-- 返回值：
-  - `*schema.AgenticMessage`：模型生成的响应消息
-  - error：生成过程中的错误信息
+## 请求级 Option
 
-#### Stream 方法
+代码位置：`components/model/option.go`
 
-- 功能：以流式方式生成模型响应
-- 参数：与 Generate 方法相同
-- 返回值：
-  - `*schema.StreamReader[*schema.AgenticMessage]`：模型响应的流式读取器
-  - error：生成过程中的错误信息
+<table>
+<tr><td>Option</td><td>适用范围</td><td>说明</td></tr>
+<tr><td><pre>model.WithTools(tools)</pre></td><td>通用，agentic 路径常用</td><td>设置本次请求可被模型调用的工具定义；<pre>nil</pre> 会被规范化为空切片</td></tr>
+<tr><td><pre>model.WithDeferredTools(tools)</pre></td><td>AgenticModel</td><td>注册可被模型内置 tool search 延迟加载的工具；不要同时放入 <pre>WithTools</pre></td></tr>
+<tr><td><pre>model.WithToolSearchTool(tool)</pre></td><td>AgenticModel</td><td>注册模型用于检索 deferred tools 的 tool search 工具；不要放入 <pre>WithTools</pre></td></tr>
+<tr><td><pre>model.WithAgenticToolChoice(choice)</pre></td><td>AgenticModel</td><td>控制 agentic 模型如何选择 function/MCP/server tool</td></tr>
+<tr><td><pre>model.WithToolChoice(choice, names...)</pre></td><td>ChatModel</td><td>仅适用于 ChatModel 的 tool choice</td></tr>
+</table>
 
-#### WithTools 方法
-
-- 功能：为模型绑定可用的工具
-- 参数：
-  - tools：工具信息列表
-- 返回值：
-  - Model: 绑定了 tools 的 AgenticModel 新实例
-  - error：绑定过程中的错误信息
-
-### AgenticMessage 结构体
-
-> 代码位置：[https://github.com/cloudwego/eino/tree/main/schema/agentic_message.go](https://github.com/cloudwego/eino/tree/main/schema/agentic_message.go)
-
-`AgenticMessage` 是与模型交互的基本单元。模型的一次完整响应被封装成一个 `AgenticMessage` ，它通过包含一组有序的 `ContentBlock` 来承载复杂的复合内容。`AgenticMessage` 对比 `Message` 最大的差异就是引入了 `ContentBlock` 数组的概念，能够承载 `AgenticModel` 的多次推理-行动输出。定义如下：
+`AgenticToolChoice` 定义在 `schema/tool.go`：
 
 ```go
-type AgenticMessage struct {
-    // Role is the message role.
-    Role AgenticRoleType
+type AgenticToolChoice struct {
+    Type    ToolChoice
+    Allowed *AgenticAllowedToolChoice
+    Forced  *AgenticForcedToolChoice
+}
 
-    // ContentBlocks is the list of content blocks.
-    ContentBlocks []*ContentBlock
-    
-    // ResponseMeta is the response metadata.
-    ResponseMeta *AgenticResponseMeta
-
-    // Extra is the additional information.
-    Extra map[string]any
+type AllowedTool struct {
+    FunctionName string
+    MCPTool      *AllowedMCPTool
+    ServerTool   *AllowedServerTool
 }
 ```
 
-`ContentBlock` 是 `AgenticMessage` 的基本组成单元，用于承载消息的具体内容。它被设计成一个多态结构，通过 `Type` 字段来标识当前块包含了哪种具体类型的数据，并持有对应的非空指针字段。`ContentBlock` 使得一条消息可以包含混合类型的富媒体内容或结构化数据，例如“文本 + 图片”或“推理过程 + 工具调用”，定义如下：
+## AgenticMessage
+
+代码位置：`schema/agentic_message.go`
 
 ```go
-type ContentBlockType string
+type AgenticRoleType string
 
 const (
-    ContentBlockTypeReasoning               ContentBlockType = "reasoning"
-    ContentBlockTypeUserInputText           ContentBlockType = "user_input_text"
-    ContentBlockTypeUserInputImage          ContentBlockType = "user_input_image"
-    ContentBlockTypeUserInputAudio          ContentBlockType = "user_input_audio"
-    ContentBlockTypeUserInputVideo          ContentBlockType = "user_input_video"
-    ContentBlockTypeUserInputFile           ContentBlockType = "user_input_file"
-    ContentBlockTypeAssistantGenText        ContentBlockType = "assistant_gen_text"
-    ContentBlockTypeAssistantGenImage       ContentBlockType = "assistant_gen_image"
-    ContentBlockTypeAssistantGenAudio       ContentBlockType = "assistant_gen_audio"
-    ContentBlockTypeAssistantGenVideo       ContentBlockType = "assistant_gen_video"
-    ContentBlockTypeFunctionToolCall        ContentBlockType = "function_tool_call"
-    ContentBlockTypeFunctionToolResult      ContentBlockType = "function_tool_result"
-    ContentBlockTypeServerToolCall          ContentBlockType = "server_tool_call"
-    ContentBlockTypeServerToolResult        ContentBlockType = "server_tool_result"
-    ContentBlockTypeMCPToolCall             ContentBlockType = "mcp_tool_call"
-    ContentBlockTypeMCPToolResult           ContentBlockType = "mcp_tool_result"
-    ContentBlockTypeMCPListToolsResult      ContentBlockType = "mcp_list_tools_result"
-    ContentBlockTypeMCPToolApprovalRequest  ContentBlockType = "mcp_tool_approval_request"
-    ContentBlockTypeMCPToolApprovalResponse ContentBlockType = "mcp_tool_approval_response"
+    AgenticRoleTypeSystem    AgenticRoleType = "system"
+    AgenticRoleTypeUser      AgenticRoleType = "user"
+    AgenticRoleTypeAssistant AgenticRoleType = "assistant"
 )
 
-type ContentBlock struct {
-    Type ContentBlockType
-
-    // Reasoning contains the reasoning content generated by the model.
-    Reasoning *Reasoning
-
-    // UserInputText contains the text content provided by the user.
-    UserInputText *UserInputText
-
-    // UserInputImage contains the image content provided by the user.
-    UserInputImage *UserInputImage
-
-    // UserInputAudio contains the audio content provided by the user.
-    UserInputAudio *UserInputAudio
-
-    // UserInputVideo contains the video content provided by the user.
-    UserInputVideo *UserInputVideo
-
-    // UserInputFile contains the file content provided by the user.
-    UserInputFile *UserInputFile
-
-    // AssistantGenText contains the text content generated by the model.
-    AssistantGenText *AssistantGenText
-
-    // AssistantGenImage contains the image content generated by the model.
-    AssistantGenImage *AssistantGenImage
-
-    // AssistantGenAudio contains the audio content generated by the model.
-    AssistantGenAudio *AssistantGenAudio
-
-    // AssistantGenVideo contains the video content generated by the model.
-    AssistantGenVideo *AssistantGenVideo
-
-    // FunctionToolCall contains the invocation details for a user-defined tool.
-    FunctionToolCall *FunctionToolCall
-
-    // FunctionToolResult contains the result returned from a user-defined tool call.
-    FunctionToolResult *FunctionToolResult
-
-    // ServerToolCall contains the invocation details for a provider built-in tool executed on the model server.
-    ServerToolCall *ServerToolCall
-
-    // ServerToolResult contains the result returned from a provider built-in tool executed on the model server.
-    ServerToolResult *ServerToolResult
-
-    // MCPToolCall contains the invocation details for an MCP tool managed by the model server.
-    MCPToolCall *MCPToolCall
-
-    // MCPToolResult contains the result returned from an MCP tool managed by the model server.
-    MCPToolResult *MCPToolResult
-
-    // MCPListToolsResult contains the list of available MCP tools reported by the model server.
-    MCPListToolsResult *MCPListToolsResult
-
-    // MCPToolApprovalRequest contains the user approval request for an MCP tool call when required.
-    MCPToolApprovalRequest *MCPToolApprovalRequest
-
-    // MCPToolApprovalResponse contains the user's approval decision for an MCP tool call.
-    MCPToolApprovalResponse *MCPToolApprovalResponse
-
-    // StreamingMeta contains metadata for streaming responses.
-    StreamingMeta *StreamingMeta
-
-    // Extra contains additional information for the content block.
-    Extra map[string]any
+type AgenticMessage struct {
+    Role          AgenticRoleType
+    ContentBlocks []*ContentBlock
+    ResponseMeta  *AgenticResponseMeta
+    Extra         map[string]any
 }
 ```
 
-`AgenticResponseMeta` 是模型响应返回的元信息数据，其中 `TokenUsage` 是所有模型提供商都会返回的元信息。 `OpenAIExtension` 、`GeminiExtension` 、`ClaudeExtension` 分别是 OpenAI 、Gemini 、Claude 模型独有的扩展字段定义；其他模型提供商的扩展信息统一放在 `Extension` 中，具体定义由 **eino-ext** 中对应组件实现提供。
+`AgenticMessage` 只有 `system`、`user`、`assistant` 三类 role。工具调用和工具结果不是独立 role，而是由 `ContentBlock` 表达。
+
+### ResponseMeta
 
 ```go
 type AgenticResponseMeta struct {
-    // TokenUsage is the token usage.
-    TokenUsage *TokenUsage
-
-    // OpenAIExtension is the extension for OpenAI.
+    TokenUsage      *TokenUsage
     OpenAIExtension *openai.ResponseMetaExtension
-
-    // GeminiExtension is the extension for Gemini.
     GeminiExtension *gemini.ResponseMetaExtension
-
-    // ClaudeExtension is the extension for Claude.
     ClaudeExtension *claude.ResponseMetaExtension
-
-    // Extension is the extension for other models, supplied by the component implementer.
-    Extension any
+    Extension       any
 }
 ```
 
-#### Reasoning
+`TokenUsage` 是通用 token 统计；OpenAI、Gemini、Claude 的 provider 扩展使用专门字段；其他模型实现可以放入 `Extension`。
 
-Reasoning 类型用于表示模型的推理过程和思考内容。某些高级模型能够在生成最终回答之前进行内部推理，这些推理内容可以通过该类型进行传递。
+## ContentBlock
 
-- 定义
+`ContentBlock` 是 `AgenticMessage` 的最小内容单元。一个 message 可以包含多个有序 block，用于表达一次响应中的多段 reasoning、文本、多模态输出和工具事件。
+
+```go
+type ContentBlock struct {
+    Type ContentBlockType
+
+    Reasoning *Reasoning
+
+    UserInputText  *UserInputText
+    UserInputImage *UserInputImage
+    UserInputAudio *UserInputAudio
+    UserInputVideo *UserInputVideo
+    UserInputFile  *UserInputFile
+
+    AssistantGenText  *AssistantGenText
+    AssistantGenImage *AssistantGenImage
+    AssistantGenAudio *AssistantGenAudio
+    AssistantGenVideo *AssistantGenVideo
+
+    FunctionToolCall   *FunctionToolCall
+    FunctionToolResult *FunctionToolResult
+
+    ToolSearchFunctionToolResult *ToolSearchFunctionToolResult
+
+    ServerToolCall   *ServerToolCall
+    ServerToolResult *ServerToolResult
+
+    MCPToolCall             *MCPToolCall
+    MCPToolResult           *MCPToolResult
+    MCPListToolsResult      *MCPListToolsResult
+    MCPToolApprovalRequest  *MCPToolApprovalRequest
+    MCPToolApprovalResponse *MCPToolApprovalResponse
+
+    StreamingMeta *StreamingMeta
+    Extra         map[string]any
+}
+```
+
+<table>
+<tr><td>类型</td><td>常量</td><td>对应字段</td><td>说明</td></tr>
+<tr><td>reasoning</td><td><pre>ContentBlockTypeReasoning</pre></td><td><pre>Reasoning</pre></td><td>模型 reasoning 摘要或原始 reasoning 文本</td></tr>
+<tr><td>用户输入</td><td><pre>ContentBlockTypeUserInputText/Image/Audio/Video/File</pre></td><td><pre>UserInput*</pre></td><td>用户侧文本与多模态输入</td></tr>
+<tr><td>模型输出</td><td><pre>ContentBlockTypeAssistantGenText/Image/Audio/Video</pre></td><td><pre>AssistantGen*</pre></td><td>模型生成的文本或多模态内容</td></tr>
+<tr><td>函数工具调用</td><td><pre>ContentBlockTypeFunctionToolCall</pre></td><td><pre>FunctionToolCall</pre></td><td>provider 生成的本地 function tool call</td></tr>
+<tr><td>函数工具结果</td><td><pre>ContentBlockTypeFunctionToolResult</pre></td><td><pre>FunctionToolResult</pre></td><td>用户侧执行 function tool 后返回给模型的结果</td></tr>
+<tr><td>tool search 结果</td><td><pre>ContentBlockTypeToolSearchResult</pre></td><td><pre>ToolSearchFunctionToolResult</pre></td><td>客户端 tool search 发现并加载的工具定义</td></tr>
+<tr><td>服务端工具</td><td><pre>ContentBlockTypeServerToolCall/Result</pre></td><td><pre>ServerToolCall/Result</pre></td><td>provider 服务端执行的内置工具，例如 web search</td></tr>
+<tr><td>MCP 工具</td><td><pre>ContentBlockTypeMCPToolCall/Result/ListToolsResult</pre></td><td><pre>MCP*</pre></td><td>provider 侧托管的 MCP 工具调用、结果与工具列表</td></tr>
+<tr><td>MCP 审批</td><td><pre>ContentBlockTypeMCPToolApprovalRequest/Response</pre></td><td><pre>MCPToolApproval*</pre></td><td>MCP 工具执行前的人类审批请求和响应</td></tr>
+</table>
+
+> 💡
+> 当前 `ToolSearchFunctionToolResult` 字段的 JSON tag 是 `tool_search_function_tool_result`，但 `ContentBlockTypeToolSearchResult` 的字符串值是 `tool_search_result`。文档和业务逻辑应以源码定义为准。
+
+## 常用内容结构
+
+### Reasoning
 
 ```go
 type Reasoning struct {
-    // Text is either the thought summary or the raw reasoning text itself.
-    Text string
-
-    // Signature contains encrypted reasoning tokens.
-    // Required by some models when passing reasoning text back.
+    Text      string
     Signature string
 }
 ```
 
-- 示例
+`Signature` 用于某些 provider 的加密 reasoning token 回传场景。
 
-```go
-reasoning := &schema.Reasoning{
-    Text: "用户现在需要我解决...",
-    Signature: "asjkhvipausdgy23oadlfdsf"
-}
-```
-
-#### UserInputText
-
-UserInputText 是最基础的内容类型，用于传递纯文本输入。它是用户与模型交互的主要方式，适用于自然语言对话、指令传递和问题提问等场景。
-
-- 定义
+### 用户输入内容
 
 ```go
 type UserInputText struct {
-    // Text is the text content.
     Text string
 }
-```
 
-- 示例
-
-```go
-textInput := &schema.UserInputText{
-    Text: "请帮我分析这段代码的性能瓶颈",
-}
-
-// 或使用便捷函数创建消息
-textInput := schema.UserAgenticMessage("请帮我分析这段代码的性能瓶颈")
-textInput := schema.SystemAgenticMessage("你是一个智能助理")
-textInput := schema.DeveloperAgenticMessage("你是一个智能助理")
-```
-
-#### UserInputImage
-
-UserInputImage 用于向模型提供图像内容。支持通过 URL 引用或 Base64 编码的方式传递图像数据，适用于视觉理解、图像分析和多模态对话等场景。
-
-- 定义
-
-```go
 type UserInputImage struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Base64Data is the binary data in Base64 encoded string format.
+    URL        string
     Base64Data string
-
-    // MIMEType is the mime type, e.g. "image/png".
-    MIMEType string
-
-    // Detail is the quality of the image url.
-    Detail ImageURLDetail
-}
-```
-
-- 示例
-
-```go
-// 使用 URL 方式
-imageInput := &schema.UserInputImage{
-    URL:      "https://example.com/chart.png",
-    MIMEType: "image/png",
-    Detail:   schema.ImageURLDetailHigh,
+    MIMEType   string
+    Detail     ImageURLDetail
 }
 
-// 使用 Base64 编码方式
-imageInput := &schema.UserInputImage{
-    Base64Data: "iVBORw0KGgoAAAANSUhEUgAAAAUA...",
-    MIMEType:   "image/png",
-}
-```
-
-#### UserInputAudio
-
-UserInputAudio 用于向模型提供音频内容。适用于语音识别、音频分析和多模态理解等场景。
-
-- 定义
-
-```go
-type UserInputAudio struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Base64Data is the binary data in Base64 encoded string format.
-    Base64Data string
-
-    // MIMEType is the mime type, e.g. "audio/wav".
-    MIMEType string
-}
-```
-
-- 示例
-
-```go
-audioInput := &schema.UserInputAudio{
-    URL:      "https://example.com/voice.wav",
-    MIMEType: "audio/wav",
-}
-```
-
-#### UserInputVideo
-
-UserInputVideo 用于向模型提供视频内容。适用于视频理解、场景分析和动作识别等高级视觉任务。
-
-- 定义
-
-```go
-type UserInputVideo struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Base64Data is the binary data in Base64 encoded string format.
-    Base64Data string
-
-    // MIMEType is the mime type, e.g. "video/mp4".
-    MIMEType string
-}
-```
-
-- 示例
-
-```go
-videoInput := &schema.UserInputVideo{
-    URL:      "https://example.com/demo.mp4",
-    MIMEType: "video/mp4",
-}
-```
-
-#### UserInputFile
-
-UserInputFile 用于向模型提供文件内容。适用于文档分析、数据提取和知识理解等场景。
-
-- 定义
-
-```go
 type UserInputFile struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Name is the filename.
-    Name string
-
-    // Base64Data is the binary data in Base64 encoded string format.
+    URL        string
+    Name       string
     Base64Data string
-
-    // MIMEType is the mime type, e.g. "application/pdf".
-    MIMEType string
+    MIMEType   string
 }
 ```
 
-- 示例
+`UserInputAudio` 与 `UserInputVideo` 同样支持 `URL`、`Base64Data`、`MIMEType`。
+
+### 模型生成内容
 
 ```go
-fileInput := &schema.UserInputFile{
-    URL:      "https://example.com/report.pdf",
-    Name:     "report.pdf",
-    MIMEType: "application/pdf",
-}
-```
-
-#### AssistantGenText
-
-AssistantGenText 是模型生成的文本内容，是最常见的模型输出形式。针对不同模型提供商，扩展字段的定义有所区分：OpenAI 模型使用 `OpenAIExtension`，Claude 模型使用 `ClaudeExtension`；其他模型提供商的扩展信息统一放在 `Extension` 中，具体定义由 **eino-ext** 中对应组件实现提供。
-
-- 定义
-
-```go
-import (
-    "github.com/cloudwego/eino/schema/claude"
-    "github.com/cloudwego/eino/schema/openai"
-)
-
 type AssistantGenText struct {
-    // Text is the generated text.
-    Text string
-
-    // OpenAIExtension is the extension for OpenAI.
+    Text            string
     OpenAIExtension *openai.AssistantGenTextExtension
-
-    // ClaudeExtension is the extension for Claude.
     ClaudeExtension *claude.AssistantGenTextExtension
-
-    // Extension is the extension for other models.
-    Extension any
+    Extension       any
 }
 ```
 
-- 示例
+`AssistantGenImage`、`AssistantGenAudio`、`AssistantGenVideo` 支持 `URL`、`Base64Data`、`MIMEType`。
 
-  - 创建响应
-
-  ```go
-  textGen := &schema.AssistantGenText{
-      Text: "根据您的需求,我建议采用以下方案...",
-      Extension: &AssistantGenTextExtension{
-          Annotations: []*TextAnnotation{annotation},
-      },
-  }
-  ```
-
-  - 解析响应
-
-  ```go
-  import (
-      "github.com/cloudwego/eino-ext/components/model/agenticark"
-  )
-
-  // 断言成具体实现定义
-  ext := textGen.Extension.(*agenticark.AssistantGenTextExtension)
-  ```
-
-#### AssistantGenImage
-
-AssistantGenImage 是模型生成的图像内容。某些模型具备图像生成能力，可以根据文本描述创建图像，输出结果通过该类型传递。
-
-- 定义
-
-```go
-type AssistantGenImage struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Base64Data is the binary data in Base64 encoded string format.
-    Base64Data string
-
-    // MIMEType is the mime type, e.g. "image/png".
-    MIMEType string
-}
-```
-
-- 示例
-
-```go
-imageGen := &schema.AssistantGenImage{
-    URL:      "https://api.example.com/generated/image123.png",
-    MIMEType: "image/png",
-}
-```
-
-#### AssistantGenAudio
-
-AssistantGenAudio 是模型生成的音频内容。某些模型具备音频生成的能力，输出的音频数据通过该类型传递。
-
-- 定义
-
-```go
-type AssistantGenAudio struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Base64Data is the binary data in Base64 encoded string format.
-    Base64Data string
-
-    // MIMEType is the mime type, e.g. "audio/wav".
-    MIMEType string
-}
-```
-
-- 示例
-
-```go
-audioGen := &schema.AssistantGenAudio{
-    URL:      "https://api.example.com/generated/audio123.wav",
-    MIMEType: "audio/wav",
-}
-```
-
-#### AssistantGenVideo
-
-AssistantGenVideo 是模型生成的视频内容。某些模型具备视频生成的能力，输出的视频数据通过该类型传递。
-
-- 定义
-
-```go
-type AssistantGenVideo struct {
-    // URL is the HTTP/HTTPS link.
-    URL string
-
-    // Base64Data is the binary data in Base64 encoded string format.
-    Base64Data string
-
-    // MIMEType is the mime type, e.g. "video/mp4".
-    MIMEType string
-}
-```
-
-- 示例
-
-```go
-audioGen := &schema.AssistantGenAudio{
-    URL:      "https://api.example.com/generated/audio123.wav",
-    MIMEType: "audio/wav",
-}
-```
-
-#### FunctionToolCall
-
-FunctionToolCall 表示模型发起的用户自定义函数工具调用。当模型需要执行特定功能时，会生成工具调用请求，包含工具名称和参数，由用户侧负责实际执行。
-
-- 定义
+### Function tool call
 
 ```go
 type FunctionToolCall struct {
-    // CallID is the unique identifier for the tool call.
-    CallID string
-
-    // Name specifies the function tool invoked.
-    Name string
-
-    // Arguments is the JSON string arguments for the function tool call.
+    CallID    string
+    Name      string
     Arguments string
 }
 ```
 
-- 示例
+`Arguments` 是 JSON 字符串，由模型生成并交给 `AgenticToolsNode` 执行。
 
-```go
-toolCall := &schema.FunctionToolCall{
-    CallID:    "call_abc123",
-    Name:      "get_weather",
-    Arguments: `{"location": "北京", "unit": "celsius"}`,
-}
-```
+### Function tool result
 
-#### FunctionToolResult
-
-FunctionToolResult 表示用户自定义函数工具的执行结果。在用户侧执行完工具调用后，通过该类型将结果返回给模型，使模型继续生成响应。
-
-- 定义
+当前实现中，`FunctionToolResult` 不再使用 `Result string`，而是使用 `Content []*FunctionToolResultContentBlock`，以统一承载文本和多模态工具结果。
 
 ```go
 type FunctionToolResult struct {
-    // CallID is the unique identifier for the tool call.
-    CallID string
+    CallID  string
+    Name    string
+    Content []*FunctionToolResultContentBlock
+}
 
-    // Name specifies the function tool invoked.
-    Name string
-
-    // Result is the function tool result returned by the user
-    Result string
+type FunctionToolResultContentBlock struct {
+    Type  FunctionToolResultContentBlockType
+    Text  *UserInputText
+    Image *UserInputImage
+    Audio *UserInputAudio
+    Video *UserInputVideo
+    File  *UserInputFile
+    Extra  map[string]any
 }
 ```
 
-- 示例
-
-```go
-toolResult := &schema.FunctionToolResult{
-    CallID: "call_abc123",
-    Name:   "get_weather",
-    Result: `{"temperature": 15, "condition": "晴朗"}`,
-}
-
-// 或使用便捷函数创建消息
-msg := schema.FunctionToolResultAgenticMessage(
-    "call_abc123",
-    "get_weather",
-    `{"temperature": 15, "condition": "晴朗"}`,
-)
-```
-
-#### ServerToolCall
-
-ServerToolCall 表示模型服务端内置工具的调用。某些模型提供商在服务端集成了特定工具（如网页搜索、代码执行器），模型可以自主调用这些工具，无需用户介入。`Arguments` 是模型调用服务端内置工具的参数，具体定义由 **eino-ext** 中对应组件实现提供。
-
-- 定义
+### Server tool
 
 ```go
 type ServerToolCall struct {
-    // Name specifies the server-side tool invoked.
-    // Supplied by the model server (e.g., `web_search` for OpenAI, `googleSearch` for Gemini).
-    Name string
-
-    // CallID is the unique identifier for the tool call.
-    // Empty if not provided by the model server.
-    CallID string
-
-    // Arguments are the raw inputs to the server-side tool,
-    // supplied by the component implementer.
+    Name      string
+    CallID    string
     Arguments any
 }
-```
 
-- 示例
-
-  - 创建响应
-
-  ```go
-  serverCall := &schema.ServerToolCall{
-      Name:      "web_search",
-      CallID:    "search_123",
-      Arguments: &ServerToolCallArguments{
-          WebSearch: &WebSearchArguments{
-              ActionType: WebSearchActionSearch,
-              Search: &WebSearchQuery{
-                 Query: "北京今天的天气",
-              },
-          },
-      },
-  }
-  ```
-
-  - 解析响应
-
-  ```go
-  import (
-      "github.com/cloudwego/eino-ext/components/model/agenticopenai"
-  )
-
-  // 断言成具体实现定义
-  args := serverCall.Arguments.(*agenticopenai.ServerToolCallArguments)
-  ```
-
-#### ServerToolResult
-
-ServerToolResult 表示服务端内置工具的执行结果。模型服务端执行完工具调用后，将通过该类型返回结果。`Result` 是模型调用服务端内置工具的结果，具体定义由 **eino-ext** 中对应组件实现提供。
-
-- 定义
-
-```go
 type ServerToolResult struct {
-    // Name specifies the server-side tool invoked.
-    // Supplied by the model server (e.g., `web_search` for OpenAI, `googleSearch` for Gemini).
-    Name string
-
-    // CallID is the unique identifier for the tool call.
-    // Empty if not provided by the model server.
-    CallID string
-
-    // Result refers to the raw output generated by the server-side tool,
-    // supplied by the component implementer.
-    Result any
+    Name    string
+    CallID  string
+    Content any
 }
 ```
 
-- 示例
+Server tool 由模型服务端执行，`Arguments` 与 `Content` 的具体结构由组件实现和 provider 协议决定。
 
-  - 创建响应
-
-  ```go
-  serverResult := &schema.ServerToolResult{
-      Name:   "web_search",
-      CallID: "search_123",
-      Result: &ServerToolResult{
-          WebSearch: &WebSearchResult{
-             ActionType: WebSearchActionSearch,
-             Search: &WebSearchQueryResult{
-                Sources: sources,
-             },
-          },
-      },
-  }
-  ```
-
-  - 解析响应
-
-  ```go
-  import (
-      "github.com/cloudwego/eino-ext/components/model/agenticopenai"
-  )
-
-  // 断言成具体实现定义
-  args := serverResult.Result.(*agenticopenai.ServerToolResult)
-  ```
-
-#### MCPToolCall
-
-MCPToolCall 表示模型发起的 MCP (Model Context Protocol) 工具调用。某些模型允许配置 MCP 工具并自主调用，无需用户介入。
-
-- 定义
+### MCP tool
 
 ```go
 type MCPToolCall struct {
-    // ServerLabel is the MCP server label used to identify it in tool calls
-    ServerLabel string
-
-    // ApprovalRequestID is the approval request ID.
+    ServerLabel       string
     ApprovalRequestID string
-
-    // CallID is the unique ID of the tool call.
-    CallID string
-
-    // Name is the name of the tool to run.
-    Name string
-
-    // Arguments is the JSON string arguments for the tool call.
-    Arguments string
+    CallID            string
+    Name              string
+    Arguments         string
 }
-```
 
-- 示例
-
-```go
-mcpCall := &schema.MCPToolCall{
-    ServerLabel: "database-server",
-    CallID:      "mcp_call_456",
-    Name:        "execute_query",
-    Arguments:   `{"sql": "SELECT * FROM users LIMIT 10"}`,
-}
-```
-
-#### MCPToolResult
-
-MCPToolResult 表示模型返回的 MCP 工具执行结果。模型自主完成 MCP 工具调用后，结果或错误信息会通过该类型返回。
-
-- 定义
-
-```go
 type MCPToolResult struct {
-    // ServerLabel is the MCP server label used to identify it in tool calls
     ServerLabel string
-
-    // CallID is the unique ID of the tool call.
-    CallID string
-
-    // Name is the name of the tool to run.
-    Name string
-
-    // Result is the JSON string with the tool result.
-    Result string
-
-    // Error returned when the server fails to run the tool.
-    Error *MCPToolCallError
-}
-
-type MCPToolCallError struct {
-    // Code is the error code.
-    Code *int64
-    
-    // Message is the error message.
-    Message string
+    CallID      string
+    Name        string
+    Content     string
+    Error       *MCPToolCallError
 }
 ```
 
-- 示例
-
-```go
-// MCP 工具调用成功
-mcpResult := &schema.MCPToolResult{
-    ServerLabel: "database-server",
-    CallID:      "mcp_call_456",
-    Name:        "execute_query",
-    Result:      `{"rows": [...], "count": 10}`,
-}
-
-// MCP 工具调用失败
-errorCode := int64(500)
-mcpError := &schema.MCPToolResult{
-    ServerLabel: "database-server",
-    CallID:      "mcp_call_456",
-    Name:        "execute_query",
-    Error: &schema.MCPToolCallError{
-        Code:    &errorCode,
-        Message: "数据库连接失败",
-    },
-}
-```
-
-#### MCPListToolsResult
-
-MCPListToolsResult 表示模型返回的 MCP 服务器可用工具列表的查询结果。支持配置 MCP 工具的模型，可以向 MCP 服务器自主发起可用工具列表查询请求，查询结果将通过该类型返回。
-
-- 定义
-
-```go
-type MCPListToolsResult struct {
-    // ServerLabel is the MCP server label used to identify it in tool calls.
-    ServerLabel string
-
-    // Tools is the list of tools available on the server.
-    Tools []*MCPListToolsItem
-
-    // Error returned when the server fails to list tools.
-    Error string
-}
-
-type MCPListToolsItem struct {
-    // Name is the name of the tool.
-    Name string
-
-    // Description is the description of the tool.
-    Description string
-
-    // InputSchema is the JSON schema that describes the tool input parameters.
-    InputSchema *jsonschema.Schema
-}
-```
-
-- 示例
-
-```go
-toolsList := &schema.MCPListToolsResult{
-    ServerLabel: "database-server",
-    Tools: []*schema.MCPListToolsItem{
-        {
-            Name:        "execute_query",
-            Description: "执行 SQL 查询",
-            InputSchema: &jsonschema.Schema{...},
-        },
-        {
-            Name:        "create_table",
-            Description: "创建数据表",
-            InputSchema: &jsonschema.Schema{...},
-        },
-    },
-}
-```
-
-#### MCPToolApprovalRequest
-
-MCPToolApprovalRequest 表示需要用户批准的 MCP 工具调用请求。在模型自主调用 MCP 工具流程中，某些敏感或高风险操作（如数据删除、外部支付等）需要用户明确授权才能执行。部分模型支持配置 MCP 工具调用审批策略，模型每次调用高危 MCP 工具前，会通过该类型返回调用授权请求。
-
-- 定义
+MCP 审批相关结构：
 
 ```go
 type MCPToolApprovalRequest struct {
-    // ID is the approval request ID.
-    ID string
-
-    // Name is the name of the tool to run.
-    Name string
-
-    // Arguments is the JSON string arguments for the tool call.
-    Arguments string
-
-    // ServerLabel is the MCP server label used to identify it in tool calls.
+    ID          string
+    Name        string
+    Arguments   string
     ServerLabel string
 }
-```
 
-- 示例
-
-```go
-approvalReq := &schema.MCPToolApprovalRequest{
-    ID:          "approval_20260112_001",
-    Name:        "delete_records",
-    Arguments:   `{"table": "users", "condition": "inactive=true", "estimated_count": 150}`,
-    ServerLabel: "database-server",
-}
-```
-
-#### MCPToolApprovalResponse
-
-MCPToolApprovalResponse 表示用户对 MCP 工具调用的审批决策。在收到 MCPToolApprovalRequest 后，用户需要审查操作详情并做出决策，用户可以选择批准或拒绝操作，并可选提供决策理由。
-
-- 定义
-
-```go
 type MCPToolApprovalResponse struct {
-    // ApprovalRequestID is the approval request ID being responded to.
     ApprovalRequestID string
-
-    // Approve indicates whether the request is approved.
-    Approve bool
-
-    // Reason is the rationale for the decision.
-    // Optional.
-    Reason string
+    Approve           bool
+    Reason            string
 }
 ```
 
-- 示例
+## 构造辅助函数
+
+### 快捷消息
 
 ```go
-approvalResp := &schema.MCPToolApprovalResponse{
-    ApprovalRequestID: "approval_789",
-    Approve:           true,
-    Reason:            "已确认删除非活跃用户",
-}
+msg := schema.SystemAgenticMessage("You are a helpful assistant.")
+msg := schema.UserAgenticMessage("Analyze this file.")
 ```
 
-#### StreamingMeta
+`SystemAgenticMessage` 与 `UserAgenticMessage` 都会创建一个带 `UserInputText` block 的 `AgenticMessage`。
 
-StreamingMeta 用于流式响应场景，标识内容块在最终响应中的位置。在流式生成过程中，内容可能以多个块的形式逐步返回，通过索引可以正确组装完整响应。
-
-- 定义
+### NewContentBlock
 
 ```go
-type StreamingMeta struct {
-    // Index specifies the index position of this block in the final response.
-    Index int
-}
-```
+block := schema.NewContentBlock(&schema.AssistantGenText{
+    Text: "done",
+})
 
-- 示例
-
-```go
-textGen := &schema.AssistantGenText{Text: "这是第一部分"}
-meta := &schema.StreamingMeta{Index: 0}
-block := schema.NewContentBlockChunk(textGen, meta)
-```
-
-### 公共 Option
-
-AgenticModel 与 ChatModel 复用一套公共 Option 用于配置模型行为。此外，AgenticModel 还提供了一些仅面向自身的专属配置项。
-
-> 代码位置：[https://github.com/cloudwego/eino/tree/main/components/model/option.go](https://github.com/cloudwego/eino/tree/main/components/model/option.go)
-
-<table>
-<tr><td></td><td>AgenticModel</td><td>ChatModel</td></tr>
-<tr><td>Temperature</td><td>支持</td><td>支持</td></tr>
-<tr><td>Model</td><td>支持</td><td>支持</td></tr>
-<tr><td>TopP</td><td>支持</td><td>支持</td></tr>
-<tr><td>Tools</td><td>支持</td><td>支持</td></tr>
-<tr><td>ToolChoice</td><td>支持</td><td>支持</td></tr>
-<tr><td>MaxTokens</td><td>支持</td><td>支持</td></tr>
-<tr><td>AllowedToolNames</td><td>不支持</td><td>支持</td></tr>
-<tr><td>Stop</td><td>部分组件实现支持</td><td>支持</td></tr>
-<tr><td>AllowedTools</td><td>支持</td><td>不支持</td></tr>
-</table>
-
-相应地，AgenticModel 新增了以下方法设置 Option
-
-```go
-// WithAgenticToolChoice is the option to set tool choice for the agentic model.
-func WithAgenticToolChoice(toolChoice schema.ToolChoice, allowedTools ...*schema.AllowedTool) Option {}
-```
-
-#### 组件实现自定义 Option
-
-WrapImplSpecificOptFn 方法为组件实现提供注入自定义 Option 的能力。开发者需要在具体实现中定义专属的 Option 类型，并提供对应的 Option 配置方法。
-
-```go
-type openaiOptions struct {
-    maxToolCalls      *int
-    maxOutputTokens   *int64
-}
-
-func WithMaxToolCalls(maxToolCalls int) model.Option {
-    return model.WrapImplSpecificOptFn(func(o *openaiOptions) {
-       o.maxToolCalls = &maxToolCalls
-    })
-}
-
-func WithMaxOutputTokens(maxOutputTokens int64) model.Option {
-    return model.WrapImplSpecificOptFn(func(o *openaiOptions) {
-       o.maxOutputTokens = &maxOutputTokens
-    })
-}
-```
-
-## 使用方式
-
-### 单独使用
-
-- 非流式调用
-
-```go
-import (
-    "context"
-
-    "github.com/cloudwego/eino-ext/components/model/agenticopenai"
-    "github.com/cloudwego/eino/schema"
-    openaischema "github.com/cloudwego/eino/schema/openai"
-    "github.com/eino-contrib/jsonschema"
-    "github.com/openai/openai-go/v3/responses"
-    "github.com/wk8/go-ordered-map/v2"
-)
-
-func main() {
-    ctx := context.Background()
-
-    am, _ := agenticopenai.New(ctx, &agenticopenai.Config{})
-
-    input := []*schema.AgenticMessage{
-       schema.UserAgenticMessage("what is the weather like in Beijing"),
-    }
-
-    am_, _ := am.WithTools([]*schema.ToolInfo{
-       {
-          Name: "get_weather",
-          Desc: "get the weather in a city",
-          ParamsOneOf: schema.NewParamsOneOfByJSONSchema(&jsonschema.Schema{
-             Type: "object",
-             Properties: orderedmap.New[string, *jsonschema.Schema](
-                orderedmap.WithInitialData(
-                   orderedmap.Pair[string, *jsonschema.Schema]{
-                      Key: "city",
-                      Value: &jsonschema.Schema{
-                         Type:        "string",
-                         Description: "the city to get the weather",
-                      },
-                   },
-                ),
-             ),
-             Required: []string{"city"},
-          }),
-       },
-    })
-    
-    msg, _ := am_.Generate(ctx, input)
-}
-```
-
-- 流式调用
-
-```go
-import (
-    "context"
-    "errors"
-    "io"
-
-    "github.com/cloudwego/eino-ext/components/model/agenticopenai"
-    "github.com/cloudwego/eino/components/model"
-    "github.com/cloudwego/eino/schema"
-    "github.com/openai/openai-go/v3/responses"
-)
-
-func main() {
-    ctx := context.Background()
-
-    am, _ := agenticopenai.New(ctx, &agenticopenai.Config{})
-
-    serverTools := []*agenticopenai.ServerToolConfig{
-       {
-          WebSearch: &responses.WebSearchToolParam{
-             Type: responses.WebSearchToolTypeWebSearch,
-          },
-       },
-    }
-
-    allowedTools := []*schema.AllowedTool{
-       {
-          ServerTool: &schema.AllowedServerTool{
-             Name: string(agenticopenai.ServerToolNameWebSearch),
-          },
-       },
-    }
-
-    opts := []model.Option{
-       model.WithToolChoice(schema.ToolChoiceForced, allowedTools...),
-       agenticopenai.WithServerTools(serverTools),
-    }
-
-    input := []*schema.AgenticMessage{
-       schema.UserAgenticMessage("what's cloudwego/eino"),
-    }
-
-    resp, _ := am.Stream(ctx, input, opts...)
-
-    var msgs []*schema.AgenticMessage
-    for {
-       msg, err := resp.Recv()
-       if err != nil {
-          if errors.Is(err, io.EOF) {
-             break
-          }
-       }
-       msgs = append(msgs, msg)
-    }
-
-    concatenated, _ := schema.ConcatAgenticMessages(msgs)
-}
-```
-
-### 在编排中使用
-
-```go
-import (
-    "github.com/cloudwego/eino/schema"
-    "github.com/cloudwego/eino/compose"
-)
-
-func main() {
-    /* 初始化 AgenticModel
-    * am, err := xxx
-    */
-    
-    // 在 Chain 中使用
-    c := compose.NewChain[[]*schema.AgenticMessage, *schema.AgenticMessage]()
-    c.AppendAgenticModel(am)
-    
-    
-    // 在 Graph 中使用
-    g := compose.NewGraph[[]*schema.AgenticMessage, *schema.AgenticMessage]()
-    g.AddAgenticModelNode("model_node", cm)
-}
-```
-
-## Option 和 Callback 使用
-
-### Option 使用
-
-```go
-import "github.com/cloudwego/eino/components/model"
-
-response, err := am.Generate(ctx, messages,
-    model.WithTemperature(0.7),
-    model.WithModel("gpt-5"),
+chunk := schema.NewContentBlockChunk(
+    &schema.AssistantGenText{Text: "partial"},
+    &schema.StreamingMeta{Index: 0},
 )
 ```
 
-### Callback 使用
+`NewContentBlock` 会根据传入的具体内容类型自动设置 `ContentBlock.Type` 与对应字段；不支持的类型会返回 `nil`。
+
+## 与 AgenticToolsNode 的协作
+
+`AgenticModel` 生成本地函数工具调用时，会在 assistant message 中产生 `FunctionToolCall` block。`compose.AgenticToolsNode` 会读取这些 block，执行对应 `tool.BaseTool`，再把结果转换成 role 为 `user` 的 `FunctionToolResult` block 返回给模型。
 
 ```go
-import (
-    "context"
-
-    "github.com/cloudwego/eino/callbacks"
-    "github.com/cloudwego/eino/components/model"
-    "github.com/cloudwego/eino/compose"
-    "github.com/cloudwego/eino/schema"
-    callbacksHelper "github.com/cloudwego/eino/utils/callbacks"
-)
-
-// 创建 callback handler
-handler := &callbacksHelper.AgenticModelCallbackHandler{
-    OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *model.AgenticCallbackInput) context.Context {
-       return ctx
-    },
-    OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *model.AgenticCallbackOutput) context.Context {
-       return ctx
-    },
-    OnError: func(ctx context.Context, info *callbacks.RunInfo, err error) context.Context {
-       return ctx
-    },
-    OnEndWithStreamOutput: func(ctx context.Context, info *callbacks.RunInfo, output *schema.StreamReader[*model.AgenticCallbackOutput]) context.Context {
-        defer output.Close()
-    
-        for {
-            chunk, err := output.Recv()
-            if errors.Is(err, io.EOF) {
-                break
-            }
-            ...
-        }
-    
-        return ctx
+input := &schema.AgenticMessage{
+    Role: schema.AgenticRoleTypeAssistant,
+    ContentBlocks: []*schema.ContentBlock{
+        schema.NewContentBlock(&schema.FunctionToolCall{
+            CallID:    "call_1",
+            Name:      "get_weather",
+            Arguments: `{"city":"Beijing"}`,
+        }),
     },
 }
 
-// 使用 callback handler
-helper := callbacksHelper.NewHandlerHelper().
-    AgenticModel(handler).
-    Handler()
+results, err := toolsNode.Invoke(ctx, input)
+```
 
-/*** compose a chain
-* chain := NewChain
-* chain.Appendxxx().
-*       Appendxxx().
-*       ...
-*/
+输出结构示意：
 
-// 在运行时使用
-runnable, err := chain.Compile()
+```go
+&schema.AgenticMessage{
+    Role: schema.AgenticRoleTypeUser,
+    ContentBlocks: []*schema.ContentBlock{
+        schema.NewContentBlock(&schema.FunctionToolResult{
+            CallID: "call_1",
+            Name:   "get_weather",
+            Content: []*schema.FunctionToolResultContentBlock{
+                {
+                    Type: schema.FunctionToolResultContentBlockTypeText,
+                    Text: &schema.UserInputText{Text: "sunny"},
+                },
+            },
+        }),
+    },
+}
+```
+
+## 最小调用示例
+
+```go
+messages := []*schema.AgenticMessage{
+    schema.SystemAgenticMessage("You are a concise assistant."),
+    schema.UserAgenticMessage("Search recent Go release notes and summarize them."),
+}
+
+resp, err := m.Generate(ctx, messages,
+    model.WithTools([]*schema.ToolInfo{searchToolInfo}),
+    model.WithAgenticToolChoice(&schema.AgenticToolChoice{
+        Type: schema.ToolChoiceAllowed,
+    }),
+)
 if err != nil {
     return err
 }
-result, err := runnable.Invoke(ctx, messages, compose.WithCallbacks(helper))
+
+for _, block := range resp.ContentBlocks {
+    if block.Type == schema.ContentBlockTypeAssistantGenText && block.AssistantGenText != nil {
+        fmt.Println(block.AssistantGenText.Text)
+    }
+}
 ```
 
-## 官方实现
+## 使用建议
 
-待补充
+- 优先使用 `schema.NewContentBlock` 构造 block，避免 `Type` 与内容字段不一致。
+- 工具结果应使用 `FunctionToolResult.Content` 表达，避免把多模态结果压平成字符串。
+- Provider 专属响应信息应放入对应扩展字段或 `Extension`，不要写入主结构的通用字段。
+- 流式输出中可以通过 `StreamingMeta.Index` 表示当前 chunk 对应最终响应中的 block 索引。
+- 文档和业务代码中不要假设存在 `tool` role；agentic 路径的工具事件由 `ContentBlock` 承载。

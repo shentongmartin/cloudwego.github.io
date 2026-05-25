@@ -1,6 +1,6 @@
 ---
 Description: ""
-date: "2026-03-03"
+date: "2026-05-25"
 lastmod: ""
 tags: []
 title: AgenticChatTemplate 使用说明[Beta]
@@ -8,21 +8,17 @@ weight: 11
 ---
 
 > 💡
-> 本功能在 [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2) 版本开始提供。
+> 本功能在 [v0.9](https://github.com/cloudwego/eino/releases/tag/v0.9.0-alpha.2) 版本开始提供。本文以当前 main 分支源码为准，代码位置主要包括 `components/prompt`、`schema/agentic_message.go` 与 `compose`。
 
-## **基本介绍**
+## 基本介绍
 
-Prompt 组件是一个用于处理和格式化提示模板的组件，其中 AgenticChatTemplate 是专为 AgenticMessage 定义组件抽象，定义与用法与现存的 ChatTemplate 抽象基本相同。它的主要作用是将用户提供的变量值填充到预定义的消息模板中，生成用于与语言模型交互的标准消息格式。这个组件可用于以下场景：
+`AgenticChatTemplate` 是面向 `*schema.AgenticMessage` 的 Prompt 组件抽象，用于把 `map[string]any` 中的变量填充到 agentic message 模板中，并输出 `[]*schema.AgenticMessage` 供 `AgenticModel` 或后续编排节点使用。
 
-- 构建结构化的系统提示
-- 处理多轮对话的模板 (包括 history)
-- 实现可复用的提示模式
+它与已有 `ChatTemplate` 的设计基本一致，但消息类型从 `*schema.Message` 切换为 `*schema.AgenticMessage`，并且模板渲染只作用于用户输入类内容块。
 
-## **组件定义**
+## 组件定义
 
-### **接口定义**
-
-> 代码位置：[https://github.com/cloudwego/eino/tree/main/components/prompt/interface.go](https://github.com/cloudwego/eino/tree/main/components/prompt/interface.go)
+代码位置：`components/prompt/interface.go`
 
 ```go
 type AgenticChatTemplate interface {
@@ -30,293 +26,314 @@ type AgenticChatTemplate interface {
 }
 ```
 
-#### **Format 方法**
+`Format` 参数说明：
 
-- 功能：将变量值填充到消息模板中
-- 参数：
-  - ctx：上下文对象，用于传递请求级别的信息，同时也用于传递 Callback Manager
-  - vs：变量值映射，用于填充模板中的占位符
-  - opts：可选参数，用于配置格式化行为
-- 返回值：
-  - `[]*schema.AgenticMessage`：格式化后的消息列表
-  - error：格式化过程中的错误信息
+<table>
+<tr><td>参数</td><td>说明</td></tr>
+<tr><td><pre>ctx</pre></td><td>请求上下文，也承载 callback manager 等运行时信息</td></tr>
+<tr><td><pre>vs</pre></td><td>模板变量表，key 为占位符名称，value 为实际值</td></tr>
+<tr><td><pre>opts</pre></td><td>Prompt 组件 Option，支持实现侧自定义扩展</td></tr>
+</table>
 
-### **内置模板化方式**
+返回值：
 
-Prompt 组件内置支持三种模板化方式：
+<table>
+<tr><td>返回值</td><td>说明</td></tr>
+<tr><td><pre>[]*schema.AgenticMessage</pre></td><td>渲染后的 agentic message 列表</td></tr>
+<tr><td><pre>error</pre></td><td>缺少变量、变量类型不匹配或模板渲染失败时返回错误</td></tr>
+</table>
 
-1. FString 格式 (schema.FString)
+## 构造方式
 
-   - 使用 `{variable}` 语法进行变量替换
-   - 简单直观，适合基础文本替换场景
-   - 示例：`"你是一个{role}，请帮我{task}。"`
-2. GoTemplate 格式 (schema.GoTemplate)
+### FromAgenticMessages
 
-   - 使用 Go 标准库的 text/template 语法
-   - 支持条件判断、循环等复杂逻辑
-   - 示例：`"{{if .expert}}作为专家{{end}}请{{.action}}"`
-3. Jinja2 格式 (schema.Jinja2)
-
-   - 使用 Jinja2 模板语法
-   - 示例：`"{% if level == 'expert' %}以专家的角度{% endif %}分析{{topic}}"`
-
-### **公共 Option**
-
-AgenticChatTemplate 与 ChatTemplate 共用一组公共 Option 。
-
-## **使用方式**
-
-AgenticChatTemplate 一般用于 AgenticModel 之前做上下文准备的。
-
-### 创建方法
-
-- `prompt.FromAgenticMessages()`
-  - 用于把多个 message 变成一个 agentic chat template。
-- `schema.AgenticMessage{}`
-  - schema.AgenticMessage 是实现了 Format 接口的结构体，因此可直接构建 `schema.AgenticMes``sa``ge{}` 作为 template
-- `schema.DeveloperAgenticMessage()`
-  - 此方法是构建 role 为 "developer" 的 message 快捷方法
-- `schema.SystemAgenticMessage()`
-  - 此方法是构建 role 为 "system" 的 message 快捷方法
-- `schema.UserAgenticMessage()`
-  - 此方法是构建 role 为 "user" 的 message 快捷方法
-- `schema.FunctionToolResultAgenticMessage()`
-  - 此方法是构建 role 为 "user" 的 tool call message 快捷方法
-- `schema.AgenticMessagesPlaceholder()`
-  - 可用于把一个 `[]*schema.AgenticMessage` 插入到 message 列表中，常用于插入历史对话
-
-### **单独使用**
+代码位置：`components/prompt/agentic_chat_template.go`
 
 ```go
-import (
-    "github.com/cloudwego/eino/components/prompt"
-    "github.com/cloudwego/eino/schema"
-)
+func FromAgenticMessages(formatType schema.FormatType, templates ...schema.AgenticMessagesTemplate) *DefaultAgenticChatTemplate
+```
 
-// 创建模板
+`FromAgenticMessages` 不返回 `error`。它接收模板格式和一组 `schema.AgenticMessagesTemplate`，返回默认实现 `*DefaultAgenticChatTemplate`。
+
+```go
 template := prompt.FromAgenticMessages(schema.FString,
-    schema.SystemAgenticMessage("你是一个{role}。"),
-    schema.AgenticMessagesPlaceholder("history_key", false),
-    schema.UserAgenticMessage("请帮我{task}")
+    schema.SystemAgenticMessage("You are a {role}."),
+    schema.AgenticMessagesPlaceholder("history", true),
+    schema.UserAgenticMessage("Please help me {task}."),
 )
+```
 
-// 准备变量
-variables := map[string]any{
-    "role": "专业的助手",
-    "task": "写一首诗",
-    "history_key": []*schema.AgenticMessage{
-       {
-          Role: schema.AgenticRoleTypeUser,
-          ContentBlocks: []*schema.ContentBlock{
-             schema.NewContentBlock(&schema.UserInputText{Text: "告诉我油画是什么?"}),
-          },
-       },
-       {
-          Role: schema.AgenticRoleTypeAssistant,
-          ContentBlocks: []*schema.ContentBlock{
-             schema.NewContentBlock(&schema.AssistantGenText{Text: "油画是xxx"}),
-          },
-       },
+### 支持的 FormatType
+
+<table>
+<tr><td>格式</td><td>常量</td><td>占位符示例</td><td>适用场景</td></tr>
+<tr><td>FString</td><td><pre>schema.FString</pre></td><td><pre>{role}</pre></td><td>简单变量替换</td></tr>
+<tr><td>GoTemplate</td><td><pre>schema.GoTemplate</pre></td><td><pre>{{.role}}</pre></td><td>需要 Go <pre>text/template</pre> 能力的场景</td></tr>
+<tr><td>Jinja2</td><td><pre>schema.Jinja2</pre></td><td><pre>{{ role }}</pre></td><td>需要 Jinja2 语法的场景</td></tr>
+</table>
+
+## AgenticMessagesTemplate
+
+代码位置：`schema/agentic_message.go`
+
+```go
+type AgenticMessagesTemplate interface {
+    Format(ctx context.Context, vs map[string]any, formatType FormatType) ([]*AgenticMessage, error)
+}
+```
+
+当前常用实现包括：
+
+<table>
+<tr><td>构造方式</td><td>说明</td></tr>
+<tr><td><pre>&schema.AgenticMessage{...}</pre></td><td><pre>AgenticMessage</pre> 自身实现了 <pre>AgenticMessagesTemplate</pre></td></tr>
+<tr><td><pre>schema.SystemAgenticMessage(text)</pre></td><td>构造 <pre>system</pre> role 消息</td></tr>
+<tr><td><pre>schema.UserAgenticMessage(text)</pre></td><td>构造 <pre>user</pre> role 消息</td></tr>
+<tr><td><pre>schema.AgenticMessagesPlaceholder(key, optional)</pre></td><td>从变量表中插入一组历史 agentic messages</td></tr>
+</table>
+
+### 模板渲染范围
+
+`AgenticMessage.Format` 只格式化用户输入类 block：
+
+- `ContentBlockTypeUserInputText`
+- `ContentBlockTypeUserInputImage`
+- `ContentBlockTypeUserInputAudio`
+- `ContentBlockTypeUserInputVideo`
+- `ContentBlockTypeUserInputFile`
+
+模型输出、reasoning、tool call、tool result、MCP 和 server tool 相关 block 不作为 prompt 模板内容渲染。
+
+> 💡
+> 推荐用 `schema.SystemAgenticMessage`、`schema.UserAgenticMessage` 和 `schema.NewContentBlock` 构造模板，避免手动设置 `ContentBlock.Type` 时与内容字段不一致。
+
+## Placeholder
+
+代码位置：`schema/agentic_message.go`
+
+```go
+func AgenticMessagesPlaceholder(key string, optional bool) AgenticMessagesTemplate
+```
+
+行为规则：
+
+<table>
+<tr><td>场景</td><td>行为</td></tr>
+<tr><td><pre>vs[key]</pre> 存在且类型为 <pre>[]*schema.AgenticMessage</pre></td><td>原样插入该消息列表</td></tr>
+<tr><td><pre>vs[key]</pre> 不存在且 <pre>optional=true</pre></td><td>返回空切片，不报错</td></tr>
+<tr><td><pre>vs[key]</pre> 不存在且 <pre>optional=false</pre></td><td>返回错误</td></tr>
+<tr><td><pre>vs[key]</pre> 类型不是 <pre>[]*schema.AgenticMessage</pre></td><td>返回错误</td></tr>
+</table>
+
+示例：
+
+```go
+history := []*schema.AgenticMessage{
+    schema.UserAgenticMessage("What is oil painting?"),
+    {
+        Role: schema.AgenticRoleTypeAssistant,
+        ContentBlocks: []*schema.ContentBlock{
+            schema.NewContentBlock(&schema.AssistantGenText{Text: "Oil painting is ..."}),
+        },
     },
 }
 
-// 格式化模板
-messages, err := template.Format(context.Background(), variables)
-```
-
-### **在编排中使用**
-
-```go
-import (
-    "github.com/cloudwego/eino/components/prompt"
-    "github.com/cloudwego/eino/schema"
-    "github.com/cloudwego/eino/compose"
-)
-
-// 在 Chain 中使用
-chain := compose.NewChain[map[string]any, []*schema.AgenticMessage]()
-chain.AppendAgenticChatTemplate(template)
-
-// 编译并运行
-runnable, err := chain.Compile()
+messages, err := template.Format(ctx, map[string]any{
+    "role":    "professional assistant",
+    "task":    "write a short poem",
+    "history": history,
+})
 if err != nil {
     return err
 }
-result, err := runnable.Invoke(ctx, variables)
-
-// 在 Graph 中使用
-graph := compose.NewGraph[map[string]any, []*schema.AgenticMessage]()
-graph.AddAgenticChatTemplateNode("template_node", template)
 ```
 
-### 从前驱节点的输出中获取数据
-
-在 AddNode 时，可以通过添加 WithOutputKey 这个 Option 来把节点的输出转成 Map：
+## 单独使用
 
 ```go
-// 这个节点的输出，会从 string 改成 map[string]any，
-// 且 map 中只有一个元素，key 是 your_output_key，value 是实际的的节点输出的 string
-graph.AddLambdaNode("your_node_key", compose.InvokableLambda(func(ctx context.Context, input []*schema.AgenticMessage) (str string, err error) {
-    // your logic
-    return
-}), compose.WithOutputKey("your_output_key"))
-```
-
-把前驱节点的输出转成 map[string]any 并设置好 key 后，在后置的 AgenticChatTemplate 节点中使用该 key 对应的 value。
-
-## **Option 和 Callback 使用**
-
-### **Callback 使用示例**
-
-```go
-import (
-    "context"
-
-    callbackHelper "github.com/cloudwego/eino/utils/callbacks"
-    "github.com/cloudwego/eino/callbacks"
-    "github.com/cloudwego/eino/compose"
-    "github.com/cloudwego/eino/components/prompt"
+template := prompt.FromAgenticMessages(schema.FString,
+    schema.SystemAgenticMessage("You are a {role}."),
+    schema.AgenticMessagesPlaceholder("history", true),
+    schema.UserAgenticMessage("Please help me {task}."),
 )
 
-// 创建 callback handler
-handler := &callbackHelper.AgenticPromptCallbackHandler{
-    OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *prompt.AgenticCallbackInput) context.Context {
-        fmt.Printf("开始格式化模板，变量: %v\n", input.Variables)
-        return ctx
+messages, err := template.Format(ctx, map[string]any{
+    "role": "concise assistant",
+    "task": "summarize the following requirement",
+    "history": []*schema.AgenticMessage{
+        schema.UserAgenticMessage("Previous question"),
     },
-    OnEnd: func(ctx context.Context, info *callbacks.RunInfo, output *prompt.AgenticCallbackOutput) context.Context {
-        fmt.Printf("模板格式化完成，生成消息数量: %d\n", len(output.Result))
-        return ctx
-    },
+})
+if err != nil {
+    return err
+}
+```
+
+## 在编排中使用
+
+### Chain
+
+代码位置：`compose/chain.go`
+
+```go
+func (c *Chain[I, O]) AppendAgenticChatTemplate(node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *Chain[I, O]
+```
+
+```go
+chain := compose.NewChain[map[string]any, *schema.AgenticMessage]()
+chain.AppendAgenticChatTemplate(template)
+chain.AppendAgenticModel(model)
+```
+
+### Graph
+
+代码位置：`compose/graph.go`
+
+```go
+func (g *graph) AddAgenticChatTemplateNode(key string, node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) error
+```
+
+```go
+graph := compose.NewGraph[map[string]any, *schema.AgenticMessage]()
+err := graph.AddAgenticChatTemplateNode("prompt", template)
+if err != nil {
+    return err
+}
+```
+
+### Workflow
+
+代码位置：`compose/workflow.go`
+
+```go
+func (wf *Workflow[I, O]) AddAgenticChatTemplateNode(key string, chatTemplate prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *WorkflowNode
+```
+
+### Parallel 与 ChainBranch
+
+Agentic prompt 也可以放入 `Parallel` 或 `ChainBranch`：
+
+```go
+func (p *Parallel) AddAgenticChatTemplate(outputKey string, node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *Parallel
+
+func (cb *ChainBranch) AddAgenticChatTemplate(key string, node prompt.AgenticChatTemplate, opts ...GraphAddNodeOpt) *ChainBranch
+```
+
+## 从前驱节点获取变量
+
+`AgenticChatTemplate.Format` 需要 `map[string]any`。如果前驱节点输出不是 map，可以在加节点时使用 `compose.WithOutputKey` 把输出包装为单字段 map。
+
+```go
+graph.AddLambdaNode("query",
+    compose.InvokableLambda(func(ctx context.Context, input string) (string, error) {
+        return input, nil
+    }),
+    compose.WithOutputKey("task"),
+)
+
+graph.AddAgenticChatTemplateNode("prompt", template)
+```
+
+包装后的 map 形如：
+
+```go
+map[string]any{
+    "task": previousNodeOutput,
+}
+```
+
+## Callback
+
+### 组件级 callback payload
+
+代码位置：`components/prompt/agentic_callback_extra.go`
+
+```go
+type AgenticCallbackInput struct {
+    Variables map[string]any
+    Templates []schema.AgenticMessagesTemplate
+    Extra     map[string]any
 }
 
-// 使用 callback handler
-helper := callbackHelper.NewHandlerHelper().
-    AgenticPrompt(handler).
+type AgenticCallbackOutput struct {
+    Result    []*schema.AgenticMessage
+    Templates []schema.AgenticMessagesTemplate
+    Extra     map[string]any
+}
+
+func ConvAgenticCallbackInput(src callbacks.CallbackInput) *AgenticCallbackInput
+func ConvAgenticCallbackOutput(src callbacks.CallbackOutput) *AgenticCallbackOutput
+```
+
+`DefaultAgenticChatTemplate.Format` 会在开始和结束时触发 callback，并传递上述 agentic payload。
+
+### utils/callbacks helper
+
+代码位置：`utils/callbacks/template.go`
+
+当前 `AgenticPromptCallbackHandler` 的公开签名如下：
+
+```go
+type AgenticPromptCallbackHandler struct {
+    OnStart func(ctx context.Context, runInfo *callbacks.RunInfo, input *prompt.CallbackInput) context.Context
+    OnEnd   func(ctx context.Context, runInfo *callbacks.RunInfo, output *prompt.CallbackOutput) context.Context
+    OnError func(ctx context.Context, runInfo *callbacks.RunInfo, err error) context.Context
+}
+```
+
+使用 helper 注册：
+
+```go
+handler := callbackHelper.NewHandlerHelper().
+    AgenticPrompt(&callbackHelper.AgenticPromptCallbackHandler{
+        OnStart: func(ctx context.Context, info *callbacks.RunInfo, input *prompt.CallbackInput) context.Context {
+            if input != nil {
+                fmt.Printf("variables: %v\n", input.Variables)
+            }
+            return ctx
+        },
+        OnError: func(ctx context.Context, info *callbacks.RunInfo, err error) context.Context {
+            fmt.Printf("prompt error: %v\n", err)
+            return ctx
+        },
+    }).
     Handler()
 
-// 在运行时使用
-runnable, err := chain.Compile()
-if err != nil {
-    return err
-}
-result, err := runnable.Invoke(ctx, variables, compose.WithCallbacks(helper))
+result, err := runnable.Invoke(ctx, variables, compose.WithCallbacks(handler))
 ```
 
-## **自行实现参考**
+> 💡
+> 如果需要直接处理 `*prompt.AgenticCallbackInput` 或 `*prompt.AgenticCallbackOutput`，应使用组件级 callback payload 和 `prompt.ConvAgenticCallbackInput/Output`。`utils/callbacks.AgenticPromptCallbackHandler` 当前公开签名仍复用 `prompt.CallbackInput/Output`。
 
-### Option **机制**
+## 自定义实现
 
-若有需要，组件实现者可实现自定义 prompt option：
-
-```go
-import (
-    "github.com/cloudwego/eino/components/prompt"
-)
-
-// 定义 Option 结构体
-type MyPromptOptions struct {
-    StrictMode bool
-    DefaultValues map[string]string
-}
-
-// 定义 Option 函数
-func WithStrictMode(strict bool) prompt.Option {
-    return prompt.WrapImplSpecificOptFn(func(o *MyPromptOptions) {
-        o.StrictMode = strict
-    })
-}
-
-func WithDefaultValues(values map[string]string) prompt.Option {
-    return prompt.WrapImplSpecificOptFn(func(o *MyPromptOptions) {
-        o.DefaultValues = values
-    })
-}
-```
-
-### **Callback 处理**
-
-Prompt 实现需要在适当的时机触发回调，以下结构是组件定义好的：
-
-> 代码位置：[github.com/cloudwego/eino/tree/main/components/prompt/agentic_callback_extra.go](http://github.com/cloudwego/eino/tree/main/components/prompt/agentic_callback_extra.go)
+实现自定义 `AgenticChatTemplate` 只需要满足接口：
 
 ```go
-// AgenticCallbackInput is the input for the callback.
-type AgenticCallbackInput struct {
-    // Variables is the variables for the callback.
-    Variables map[string]any
-    // Templates is the agentic templates for the callback.
-    Templates []schema.AgenticMessagesTemplate
-    // Extra is the extra information for the callback.
-    Extra map[string]any
-}
-
-// AgenticCallbackOutput is the output for the callback.
-type AgenticCallbackOutput struct {
-    // Result is the agentic result for the callback.
-    Result []*schema.AgenticMessage
-    // Templates is the agentic templates for the callback.
-    Templates []schema.AgenticMessagesTemplate
-    // Extra is the extra information for the callback.
-    Extra map[string]any
-}
-```
-
-### **完整实现示例**
-
-```go
-type MyPrompt struct {
-    templates []schema.AgenticMessagesTemplate
+type MyAgenticPrompt struct {
+    templates  []schema.AgenticMessagesTemplate
     formatType schema.FormatType
-    strictMode bool
-    defaultValues map[string]string
 }
 
-func NewMyPrompt(config *MyPromptConfig) (*MyPrompt, error) {
-    return &MyPrompt{
-        templates: config.Templates,
-        formatType: config.FormatType,
-        strictMode: config.DefaultStrictMode,
-        defaultValues: config.DefaultValues,
-    }, nil
-}
-
-func (p *MyPrompt) Format(ctx context.Context, vs map[string]any, opts ...prompt.Option) ([]*schema.AgenticMessage, error) {
-    // 1. 处理 Option
-    options := &MyPromptOptions{
-        StrictMode: p.strictMode,
-        DefaultValues: p.defaultValues,
+func (p *MyAgenticPrompt) Format(ctx context.Context, vs map[string]any, opts ...prompt.Option) ([]*schema.AgenticMessage, error) {
+    result := make([]*schema.AgenticMessage, 0, len(p.templates))
+    for _, tpl := range p.templates {
+        msgs, err := tpl.Format(ctx, vs, p.formatType)
+        if err != nil {
+            return nil, err
+        }
+        result = append(result, msgs...)
     }
-    options = prompt.GetImplSpecificOptions(options, opts...)
-    
-    // 2. 获取 callback manager
-    cm := callbacks.ManagerFromContext(ctx)
-    
-    // 3. 开始格式化前的回调
-    ctx = cm.OnStart(ctx, info, &prompt.AgenticCallbackInput{
-        Variables: vs,
-        Templates: p.templates,
-    })
-    
-    // 4. 执行格式化逻辑
-    messages, err := p.doFormat(ctx, vs, options)
-    
-    // 5. 处理错误和完成回调
-    if err != nil {
-        ctx = cm.OnError(ctx, info, err)
-        return nil, err
-    }
-    
-    ctx = cm.OnEnd(ctx, info, &prompt.AgenticCallbackOutput{
-        Result: messages,
-        Templates: p.templates,
-    })
-    
-    return messages, nil
-}
-
-func (p *MyPrompt) doFormat(ctx context.Context, vs map[string]any, opts *MyPromptOptions) ([]*schema.AgenticMessage, error) {
-    // 实现自己定义逻辑
-    return messages, nil
+    return result, nil
 }
 ```
+
+如需支持自定义 option，可通过 `prompt.WrapImplSpecificOptFn` 和 `prompt.GetImplSpecificOptions` 实现。
+
+## 使用建议
+
+- `FromAgenticMessages` 不返回 `error`，示例中不应写成 `template, err := ...`。
+- `AgenticMessagesPlaceholder` 的变量值必须是 `[]*schema.AgenticMessage`。
+- 模板变量命名应稳定一致，缺失变量会在运行时返回错误。
+- 对历史对话使用 `AgenticMessagesPlaceholder("history", true)`，可以在无历史时自然返回空列表。
+- 在 Graph/Chain 中，确保 Agentic prompt 后接收的是 `[]*schema.AgenticMessage` 类型的节点，例如 `AgenticModel`。
